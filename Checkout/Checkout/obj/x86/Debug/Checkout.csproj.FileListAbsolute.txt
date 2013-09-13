@@ -1,0 +1,40 @@
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\bin\Debug\Checkout.exe
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\bin\Debug\Checkout.pdb
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.CheckoutForm.resources
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.Properties.Resources.resources
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.exe
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.pdb
+E:\Documents and Settings\L\my documents\visual studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.csproj.ResolveComReference.cache
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\Checkout.exe
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\Checkout.pdb
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Core.dll
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\bin\Debug\Checkout.exe
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\bin\Debug\Checkout.pdb
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Interop.Word.dll
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\Checkout.csproj.ResolveComReference.cache
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\Checkout.CheckoutForm.resources
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\Checkout.Properties.Resources.resources
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Documents and Settings\XPMUser\My Documents\Dropbox\台灣世家拍賣系統\Checkout\Checkout\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\bin\Debug\Checkout.exe
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\bin\Debug\Checkout.pdb
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Core.dll
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Interop.Word.dll
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.csproj.ResolveComReference.cache
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.CheckoutForm.resources
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.Properties.Resources.resources
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.exe
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Core.dll
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Interop.Word.dll
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\bin\Debug\Checkout.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\bin\Debug\Checkout.application
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.application

@@ -1,0 +1,41 @@
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.exe
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.pdb
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.DisplayForm.resources
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.Properties.Resources.resources
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.csproj.GenerateResource.Cache
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.exe
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.pdb
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.Form1.resources
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.exe.manifest
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.application
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.exe.manifest
+C:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.application
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.exe
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.pdb
+D:\帶走\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.exe.manifest
+D:\帶走\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.application
+D:\帶走\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.exe
+D:\帶走\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.pdb
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\ResolveAssemblyReference.cache
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.DisplayForm.resources
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.Form1.resources
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.Properties.Resources.resources
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\GenerateResource.read.1.tlog
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\GenerateResource.write.1.tlog
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.exe.manifest
+D:\帶走\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.application
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.application
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\AA Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.DisplayForm.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.Form1.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA_Bidding_System.Properties.Resources.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\GenerateResource.read.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\GenerateResource.write.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\AA Bidding System.application

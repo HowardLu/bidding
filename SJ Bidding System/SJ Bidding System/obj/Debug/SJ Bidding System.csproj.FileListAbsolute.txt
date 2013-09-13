@@ -1,0 +1,52 @@
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\GenerateResource.read.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\GenerateResource.write.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\SJ Bidding System.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\SJ Bidding System.application
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\SJ Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\bin\Debug\SJ Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\SJ_Bidding_System.Form1.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\SJ Bidding System.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\SJ Bidding System.application
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\SJ Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\AA Bidding System\AA Bidding System\obj\Debug\SJ Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\AA Bidding System\obj\Debug\SJ Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\AA Bidding System\obj\Debug\SJ Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.application
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Form1.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe.manifest
+E:\Documents and Settings\L\My Documents\Visual Studio 2008\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.application
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.ControlForm.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetAuctionForm.resources
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.pdb
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.ControlForm.resources
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetAuctionForm.resources
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe
+C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.pdb
