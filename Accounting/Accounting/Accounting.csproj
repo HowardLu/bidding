@@ -60,6 +60,9 @@
     <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Tools.Excel.v4.0.Utilities">
+      <HintPath>..\..\..\..\..\..\..\..\Microsoft.Office.Tools.Excel.v4.0.Utilities\X86\10.0.30319.1\Microsoft.Office.Tools.Excel.v4.0.Utilities.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -72,12 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcelWrapper.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ExcelWrapper.designer.cs">
-      <DependentUpon>ExcelWrapper.cs</DependentUpon>
-    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,9 +83,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ExcelWrapper.resx">
-      <DependentUpon>ExcelWrapper.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
