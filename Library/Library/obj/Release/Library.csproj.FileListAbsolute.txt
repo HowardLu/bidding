@@ -1,0 +1,12 @@
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\obj\Release\ResolveAssemblyReference.cache
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\Library.dll
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\Library.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\MongoDB.Bson.dll
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\MongoDB.Driver.dll
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\MongoDB.Bson.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\MongoDB.Bson.xml
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\MongoDB.Driver.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\bin\Release\MongoDB.Driver.xml
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\obj\Release\Library.dll
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\obj\Release\Library.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\obj\Release\Library.csproj.ResolveComReference.cache
