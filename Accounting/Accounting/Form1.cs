@@ -13,16 +13,16 @@ using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 using System.IO;
 using System.Data.OleDb;
+using InternetLibrary;
+using Bidding;
 
 namespace Accounting
 {
     public partial class Form1 : Form
     {
         #region Properties
-        // Contains a reference to the hosting application
-        //private Microsoft.Office.Interop.Excel.Application m_XlApplication = null;
-        // Contains a reference to the active workbook
-        //private Workbook m_Workbook = null;
+        //private String m_connectionStr = "mongodb://1.34.233.143:27017";
+        private Internet<AuctionEntity> m_internet = new Internet<AuctionEntity>("mongodb://localhost:27017", "test", "entities");
         #endregion
 
         #region Constructors
@@ -35,13 +35,20 @@ namespace Accounting
         #region windows form event handler
         private void Form1_Load(object sender, EventArgs e)
         {
-            //this.excelWrapper1.OpenFile(Path.Combine(System.Windows.Forms.Application.StartupPath, @"../316.xls"));
-            //this.excelWrapper1.OpenFile(@"https://www.google.com.tw/");
+            // LoadExcelTemplate();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoadExcelTemplate();
+            Microsoft.Office.Interop.Excel.Application a = new Microsoft.Office.Interop.Excel.Application();
+            _Application a = new _Application();
+        }
+
+        private void connectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_internet.Connect();
+            m_internet.Update();
+            LoadCollectionToDataGridView();
         }
         #endregion
 
@@ -67,6 +74,46 @@ namespace Accounting
             comm.Dispose();
             conn.Close();
             conn.Dispose();
+
+            for(int i=0; i < this.dataGridView1.Columns.Count; i++)
+            {
+                DataGridViewColumn col = this.dataGridView1.Columns[i];
+                if (col.Name == "歸還狀態")
+                {
+                    SetComboBoxCol(i, typeof(ReturnState));
+                }
+                else if (col.Name == "保證金繳納")
+                {
+                    SetComboBoxCol(i, typeof(PayGuarantee));
+                }
+                else if (col.Name == "保證金退還")
+                {
+                    SetComboBoxCol(i, typeof(ReturnGuarantee));
+                }
+                else if (col.Name == "付款方式")
+                {
+                    SetComboBoxCol(i, typeof(PayWay));
+                }
+            }
+        }
+
+        private void SetComboBoxCol(int index, Type enumType)
+        {
+            DataGridViewColumn col = this.dataGridView1.Columns[index];
+            DataGridViewComboBoxColumn cbcol = new DataGridViewComboBoxColumn();
+            cbcol.Name = col.Name;
+            foreach (string rs in Enum.GetNames(enumType))
+            {
+                cbcol.Items.Add(rs);
+            }
+            this.dataGridView1.Columns.RemoveAt(index);
+            this.dataGridView1.Columns.Insert(index, cbcol);
+        }
+
+        private void LoadCollectionToDataGridView()
+        {
+            dataGridView1.ReadOnly = false;
+            dataGridView1.DataSource = m_internet.Collection.FindAll().ToList<AuctionEntity>();
         }
         #endregion
     }
