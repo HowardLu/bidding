@@ -31,6 +31,52 @@ namespace InternetLibrary
         public string PhotoUrl { get; set; }
     }
 
+    public enum AuctionColumnHeader
+    {
+        拍品編號 = 0,
+        拍品名稱,
+        尺寸,
+        得標牌號,
+        庫存狀態,
+        賣家,
+        歸還狀態,
+        落槌價,
+        買家適用服務費,
+        成交價,
+        保證金繳納,
+        保證金繳納金額,
+        保證金退還,
+        保證金退還金額,
+        付款方式,
+        賣家服務及保險費,
+        保留價,
+        應負賣家金額,
+        Count
+    }
+
+    public class AuctionEntityTW
+    {
+        public ObjectId Id { get; set; }
+        public string 拍品編號 { get; set; }
+        public string 拍品名稱 { get; set; }
+        public string 尺寸 { get; set; }
+        public string 得標牌號 { get; set; }
+        public string 庫存狀態 { get; set; }
+        public string 賣家 { get; set; }
+        public int 歸還狀態 { get; set; }
+        public int 落槌價 { get; set; }
+        public int 買家適用服務費 { get; set; }
+        public int 成交價 { get; set; }
+        public int 保證金繳納 { get; set; }
+        public int 保證金繳納金額 { get; set; }
+        public int 保證金退還 { get; set; }
+        public int 保證金退還金額 { get; set; }
+        public int 付款方式 { get; set; }
+        public int 賣家服務及保險費 { get; set; }
+        public int 保留價 { get; set; }
+        public int 應負賣家金額 { get; set; }
+    }
+
     public class Internet<TEntity>
     {
         private MongoClient m_client;

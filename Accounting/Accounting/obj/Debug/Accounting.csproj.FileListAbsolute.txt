@@ -17,3 +17,18 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Acc
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.xml
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\bin\Debug\Library.dll
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\bin\Debug\Library.pdb
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\ResolveAssemblyReference.cache
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Accounting.exe
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Accounting.pdb
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Accounting.Form1.resources
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Accounting.Properties.Resources.resources
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\GenerateResource.read.1.tlog
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\Accounting.exe
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\Accounting.pdb
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\Library.dll
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\Library.pdb
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.pdb
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.xml
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.pdb
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.xml
