@@ -1,0 +1,11 @@
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\Accounting.csproj.ResolveComReference.cache
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\bin\Debug\Accounting.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\bin\Debug\Accounting.pdb
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\EmbeddedExcel.ExcelWrapper.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\Accounting.Form1.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\Accounting.Properties.Resources.resources
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\GenerateResource.read.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\GenerateResource.write.1.tlog
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\Accounting.exe
+E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Accounting\Accounting\obj\x86\Debug\Accounting.pdb
