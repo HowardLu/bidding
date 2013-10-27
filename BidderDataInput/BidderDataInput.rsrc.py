@@ -4,7 +4,7 @@
     {'type':'Background',
           'name':'bgTemplate',
           'title':u'bgTemplate',
-          'size':(600, 510),
+          'size':(600, 478),
 
          'strings': {
          },
@@ -13,86 +13,39 @@
 
 {'type':'Button', 
     'name':'ButtonDelBidder', 
-    'position':(172, 277), 
-    'size':(65, -1), 
+    'position':(287, 277), 
+    'size':(100, -1), 
     'backgroundColor':(255, 128, 128, 255), 
-    'enabled':False, 
     'label':'ButtonDelBidder', 
     },
 
 {'type':'Button', 
     'name':'ButtonFixBidder', 
-    'position':(248, 277), 
-    'size':(65, -1), 
+    'position':(153, 277), 
+    'size':(100, -1), 
     'backgroundColor':(255, 255, 128, 255), 
-    'enabled':False, 
     'label':'ButtonFixBidder', 
-    },
-
-{'type':'StaticText', 
-    'name':'StaticTextDataFileName', 
-    'position':(403, 15), 
-    'text':'StaticTextDataFileName', 
-    },
-
-{'type':'Button', 
-    'name':'ButtonNewFile', 
-    'position':(19, 310), 
-    'size':(65, -1), 
-    'label':'ButtonNewFile', 
     },
 
 {'type':'Button', 
     'name':'ButtonAddBidder', 
-    'position':(323, 277), 
-    'size':(65, -1), 
+    'position':(19, 277), 
+    'size':(100, -1), 
     'backgroundColor':(128, 255, 128, 255), 
-    'enabled':False, 
     'label':'ButtonAddBidder', 
-    },
-
-{'type':'Button', 
-    'name':'ButtonOpen', 
-    'position':(96, 310), 
-    'size':(65, -1), 
-    'label':'ButtonOpen', 
     },
 
 {'type':'TextArea', 
     'name':'TextAreaLog', 
-    'position':(19, 344), 
+    'position':(19, 312), 
     'size':(558, 124), 
     'editable':False, 
     },
 
-{'type':'Button', 
-    'name':'ButtonSendAll', 
-    'position':(323, 310), 
-    'size':(65, -1), 
-    'enabled':False, 
-    'label':'ButtonSendAll', 
-    },
-
-{'type':'Button', 
-    'name':'ButtonSendSingle', 
-    'position':(248, 310), 
-    'size':(65, -1), 
-    'enabled':False, 
-    'label':'ButtonSendSingle', 
-    },
-
-{'type':'Button', 
-    'name':'ButtonConnect', 
-    'position':(172, 310), 
-    'size':(65, -1), 
-    'enabled':False, 
-    'label':'ButtonConnect', 
-    },
-
 {'type':'List', 
     'name':'ListBidders', 
-    'position':(398, 33), 
-    'size':(179, 303), 
+    'position':(398, 9), 
+    'size':(179, 297), 
     'items':[], 
     },
 
@@ -101,7 +54,6 @@
     'position':(289, 9), 
     'size':(-1, 28), 
     'backgroundColor':(255, 128, 64, 255), 
-    'enabled':False, 
     'font':{'style': 'bold', 'faceName': u'Tahoma', 'family': 'sansSerif', 'size': 14}, 
     },
 
@@ -116,7 +68,6 @@
     'name':'TextFieldCreditCardType', 
     'position':(319, 242), 
     'size':(70, -1), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -130,7 +81,6 @@
     'name':'TextFieldCreditCardID', 
     'position':(88, 242), 
     'size':(150, -1), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -143,7 +93,6 @@
 {'type':'TextField', 
     'name':'TextFieldBankContactTel', 
     'position':(256, 217), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -156,7 +105,6 @@
 {'type':'TextField', 
     'name':'TextFieldBankContact', 
     'position':(88, 217), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -169,7 +117,6 @@
 {'type':'TextField', 
     'name':'TextFieldBankAcc', 
     'position':(50, 192), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -182,7 +129,6 @@
 {'type':'TextField', 
     'name':'TextFieldBank', 
     'position':(102, 167), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -196,7 +142,6 @@
     'name':'TextFieldEMail', 
     'position':(54, 142), 
     'size':(150, -1), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -210,7 +155,6 @@
     'name':'TextFieldAddress', 
     'position':(50, 117), 
     'size':(304, -1), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -223,7 +167,6 @@
 {'type':'TextField', 
     'name':'TextFieldFax', 
     'position':(194, 92), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -236,7 +179,6 @@
 {'type':'TextField', 
     'name':'TextFieldCareerTitle', 
     'position':(239, 42), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -249,7 +191,6 @@
 {'type':'TextField', 
     'name':'TextFieldTel', 
     'position':(50, 92), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -263,7 +204,6 @@
     'name':'TextFieldIDNumber', 
     'position':(116, 67), 
     'size':(92, -1), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -277,7 +217,6 @@
     'name':'TextFieldCompany', 
     'position':(75, 42), 
     'size':(120, -1), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 
@@ -291,7 +230,6 @@
     'name':'TextFieldName', 
     'position':(88, 16), 
     'size':(120, -1), 
-    'enabled':False, 
     },
 
 {'type':'StaticText', 

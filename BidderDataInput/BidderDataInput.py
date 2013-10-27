@@ -5,22 +5,24 @@ __version__ = "$Revision: 1.3 $"
 __date__ = "$Date: 2004/04/14 02:38:47 $"
 """
 
-import sys
-sys.path.append( "..\\" )
-
 from PythonCard import dialog, model
-from threading import Thread
-from socket import *
-from Modules.bidder_data_handler import bidder_data_handler as bdh
-from Modules.bidder_data_handler_const import *
-from BidderDataServer.server_id import CONNECTER_DATA_INPUT
-import re
+import pymongo, sys, re
+
+# 買家所有屬性
+BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel", "Fax", "Address", "EMail", "Bank", "BankAcc",
+									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType"
+								]
+
+BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel" ]
 
 # 連線port
-DEFAULT_PORT	= 5566
+DB_CFG_IP		= "1.34.233.143"
+DB_CFG_PORT	= 27017
 
-# 牌號最大位數
-MAX_DIGIT			= 5
+# 無效牌號
+INVALID_ID	= -1
+
+NONEMPTY_ATTRS = BIDDER_NONEMPTY_ATTRS
 
 # 暫存的IP存檔路徑
 CACHED_IP_PATH	= "cached_ip.ini"
@@ -53,7 +55,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"FILE_RULE":								"買家資料檔(*.txt)|*.txt",
 							"NEW_FILE_FAILED":					"你取消了資料檔的建立",
 							"NEW_FILE_SUCCESS":					u"成功建立了新的資料檔，路徑為%s",
-							"FILE_NOT_IMPORT":					"<<你還沒有匯入你的資料檔>>",
+							"FILE_NOT_IMPORT":					"<<你尚未與資料庫建立連線>>",
 							"OPEN_FILE_TITLE":					"請開啟一個資料檔",
 							"OPEN_FILE_FAILED":					"你取消了資料檔的開啟",
 							"OPEN_FILE_SUCCESS":				u"成功匯入資料檔，路徑為%s",
@@ -84,83 +86,9 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"CONNECT_SUCCESS":					"成功連線到[%s]",
 							"BIDDER_DATA_SENT":					u"已送出買家[%s]的完整資料至拍賣中心",
 							"CONNECT_BEGIN":						u"正在連線至[%s]，請耐心等候",
+							"ERRMSG_DB_CNCT_FAIL":			u"無法連線到資料庫( %s, %d )",
+							"ERRMSG_DB_CNCT_OK":				u"成功連線到資料庫( %s, %d )",
 						}
-
-# 所有開檔後才能使用的元件屬性
-ACTIVATE_ATTRS = []
-for attr in BIDDER_ATTRS:
-	ACTIVATE_ATTRS.append( "TextField" + attr )
-ACTIVATE_ATTRS += [ "ButtonConnect", "ButtonAddBidder", "ButtonFixBidder", "ButtonDelBidder" ]
-
-# 所有連線後才能使用的元件屬性
-CONNECT_ATTRS = [ "ButtonSendSingle", "ButtonSendAll" ]
-
-# 收訊息執行緒物件
-class class_socket_recv( Thread ):
-	def __init__( self, win_ob, socket_ob ):
-		Thread.__init__( self )
-		
-		self.win_ob			= win_ob
-		self.socket_ob	= socket_ob
-		
-		self.last_remain_str = ""
-		
-	def do_recv_data_input( self, recv_str ):
-		print "==="
-		print "do_recv_data_input"
-		print "len_ori = %d" % len( recv_str )
-		# 要先接在一起
-		recv_str = self.last_remain_str + recv_str
-		print "len_now = %d" % len( recv_str )
-		# 用封包分隔字串切開封包
-		recv_str_list = recv_str.split( SEP_PACKET )
-		# cache最後面的剩餘字串(一般來說沒超過buffer都會是"")
-		self.last_remain_str = recv_str_list[ -1 ]
-		
-		if self.last_remain_str != "":
-			print "last_remain_str set to %s" % self.last_remain_str
-			
-		else:
-			print "perfect packet"
-		
-		recv_str_list.pop( -1 )
-		for index, recv_str_iter in enumerate( recv_str_list ):
-			print "-packet NO.%d, str = %s" % ( index, recv_str_iter )
-			self.win_ob.add_msg( recv_str_iter )
-			
-	def run( self ):
-		while True:
-			recv_str = self.socket_ob.recv( 1024 )
-			self.do_recv_data_input( recv_str )
-		
-# 連線執行緒物件
-class class_socket_connect( Thread ):
-	def __init__( self, win_ob ):
-		Thread.__init__( self )
-		
-		self.win_ob			= win_ob;
-		self.socket_ob	= socket( AF_INET, SOCK_STREAM )
-		
-	def run( self ):
-		ip, port = self.win_ob.connect_ip.encode( STR_CODE ), DEFAULT_PORT
-		try:
-			self.socket_ob.connect( ( ip, port ) )
-		except:
-			self.win_ob.add_msg( Const[ "CONNECT_FAILED" ] % ip )
-			return
-			
-		self.win_ob.add_msg( Const[ "CONNECT_SUCCESS" ] % ip )
-		self.win_ob.connected_socket_ob = self.socket_ob
-		
-		com = self.win_ob.components
-		for attr in CONNECT_ATTRS:
-			getattr( com, attr ).enabled = True
-			
-		self.revc_process = class_socket_recv( self.win_ob, self.socket_ob )
-		self.revc_process.start()
-		
-		# 先送驗證資訊
-		self.socket_ob.send( CONNECTER_DATA_INPUT )
 
 # 視窗表單物件
 class MyBackground( model.Background ):
@@ -188,183 +116,60 @@ class MyBackground( model.Background ):
 		com.StaticTextBidderID.text				= Const[ "STATICTEXTBIDDERID" ]
 		
 		# 按鈕
-		com.ButtonNewFile.label						= Const[ "BUTTONTEXTNEWFILE" ]
-		com.ButtonOpen.label							= Const[ "BUTTONTEXTOPEN" ]
-		com.ButtonConnect.label						= Const[ "BUTTONTEXTCONNECT" ]
-		com.ButtonSendSingle.label				= Const[ "BUTTONTEXTSENDSINGLE" ]
-		com.ButtonSendAll.label						= Const[ "BUTTONTEXTSENDALL" ]
 		com.ButtonAddBidder.label					= Const[ "BUTTONTEXTADDBIDDER" ]
 		com.ButtonFixBidder.label					= Const[ "BUTTONTEXTFIXBIDDER" ]
 		com.ButtonDelBidder.label					= Const[ "BUTTONTEXTDELBIDDER" ]
 		
-		# 顯示檔名
-		com.StaticTextDataFileName.text		= Const[ "FILE_NOT_IMPORT" ]
-		
-		# 建立買家資料結構
-		self.bidder_data_map = {}
-		
-		# 目前牌號最大位數
-		self.max_digit = 0
-		
-		# 目前的檔案路徑
-		self.cur_file_path = ""
-		
-		# 目前的資料是否已儲存
-		self.saved_flag = True
-		
-		# 網路相關
-		# 收封包的執行緒
-		self.socket_process = None
-		self.connect_ip = u""
-		self.connected_socket_ob = None
-		
-	# 讀取暫存的IP
-	def load_cached_ip( self ):
+		# 嘗試連上資料庫
 		try:
-			file_ob = open( CACHED_IP_PATH, "r" )
-			
+			self.__mongo_client = pymongo.MongoClient( DB_CFG_IP, DB_CFG_PORT )
 		except:
-			return Const[ "DEFAULT_IP" ]
+			self.__add_msg( Const[ "ERRMSG_DB_CNCT_FAIL" ] % ( DB_CFG_IP, DB_CFG_PORT ), True )
+			sys.exit( 0 )
+			
+		self.__add_msg( Const[ "ERRMSG_DB_CNCT_OK" ] % ( DB_CFG_IP, DB_CFG_PORT ), True )
+		 
+		# 取得資料庫相關資料表
+		self.__mongo_db = self.__mongo_client.bidding_data
+		self.__dbtable_buyer = self.__mongo_db.buyer_table
 		
-		line = file_ob.readline()
-		if line[ -1 ] == "\n":
-			line = line[ : -1 ]
+		# 直接顯示所有買家
+		self.__gen_list_ui_by_bidder_data()
 		
-		file_ob.close()
-		return line
-		
-	# 儲存暫存的IP
-	def save_cached_ip( self ):
+	# 嘗試新增使用者
+	def __add_buyer( self, bidder_data ):
 		try:
-			file_ob = open( CACHED_IP_PATH, "w" )
-			
+			self.__dbtable_buyer.insert( bidder_data )
 		except:
-			print "open file %s failed" % CACHED_IP_PATH
-			return
+			self.__add_msg( Const[ "BIDDER_ID_REPEAT" ] % self.__gen_bid_id_plus_name_str( bidder_data[ "BidderID_int" ] ), True )
+			return 0
+			
+		return 1
 		
-		file_ob.write( self.connect_ip )
-		file_ob.close()
-		
-	# 按下 建立連線 按鈕
-	def on_ButtonConnect_mouseClick( self, event ):
-		result = dialog.textEntryDialog( self, Const[ "PLZ_ENTER_AUCTION_IP" ], Const[ "READY_TO_CONNECT" ], self.load_cached_ip() )
-		if not result.accepted:
-			return
-		
-		self.connect_ip = result.text
-		self.save_cached_ip()
-		
-		if self.socket_process:
-			del self.socket_process
-		self.socket_process = class_socket_connect( self )
-		self.socket_process.start()
-		
-		self.add_msg( Const[ "CONNECT_BEGIN" ] % self.connect_ip )
-		
-	# 按下 單筆資料送出 按鈕
-	def on_ButtonSendSingle_mouseClick( self, event ):
-		if not self.saved_flag:
-			self.add_msg( Const[ "UNSAVED_MODS_DENY" ] )
-			return
-		
-		self.send_bidder_data( self.get_bidder_id_by_selection() )
-		
-	# 按下 所有資料送出 按鈕
-	def on_ButtonSendAll_mouseClick( self, event ):
-		if not self.saved_flag:
-			self.add_msg( Const[ "UNSAVED_MODS_DENY" ] )
-			return
-		
-		for bidder_id in self.bidder_data_map:
-			self.send_bidder_data( bidder_id )
-		
-	# 送出資料
-	def send_bidder_data( self, bidder_id ):
-		if bidder_id not in self.bidder_data_map:
-			self.add_msg( Const[ "NO_BIDDER_DATA" ] % bidder_id )
-			return
-		
-		bidder_data = self.bidder_data_map[ bidder_id ]
-		self.connected_socket_ob.send( bdh.gen_bidder_str_data( bidder_data ) + SEP_PACKET )
-		
-		self.add_msg( Const[ "BIDDER_DATA_SENT" ] % self.gen_bid_id_plus_name_str( bidder_id ) )
-	
-	# 按下 新建檔案 按鈕
-	def on_ButtonNewFile_mouseClick( self, event ):
-		result = dialog.saveFileDialog( title = Const[ "NEW_FILE_TITLE" ], wildcard = Const[ "FILE_RULE" ] )
-		if not result.paths:
-			self.add_msg( Const[ "NEW_FILE_FAILED" ] )
-			return
-		
-		# 建立一個空白文字檔
-		path = result.paths[ 0 ]
-		file_ob = open( path, "w" )
-		file_ob.close()
-		self.add_msg( Const[ "NEW_FILE_SUCCESS" ] % path )
-		
-		self.run_open_file( path )
-	
-	# 按下 匯入檔案 按鈕
-	def on_ButtonOpen_mouseClick( self, event ):
-		result = dialog.openFileDialog( title = Const[ "OPEN_FILE_TITLE" ], wildcard = Const[ "FILE_RULE" ] )
-		if not result.paths:
-			self.add_msg( Const[ "OPEN_FILE_FAILED" ] )
-			return
-		
-		self.run_open_file( result.paths[ 0 ] )
-	
-	# 執行匯入檔案
-	def run_open_file( self, path ):
-		# 讀取既有的檔案
-		self.cur_file_path = path
-		
-		# 重置買家資料結構
-		self.bidder_data_map, max_digit = bdh.load_data( path )
-		
-		self.gen_list_ui_by_bidder_data()
-		
-		# 設定最大位數
-		self.set_max_digit( max_digit )
-		
-		# 更新列表的標題
-		fname = path[ path.rfind( "\\" ) + 1 : ]
-		com = self.components
-		com.StaticTextDataFileName.text = Const[ "OPEN_FILE_NAME" ] % fname
-		
-		# 啟用各個元件
-		for attr in ACTIVATE_ATTRS:
-			ui_unit = getattr( com, attr )
-			ui_unit.enabled = True
-			if attr.find( "TextField" ) > -1:
-				ui_unit.text = ""
-		
-		self.update_list_ui()
-		self.add_msg( Const[ "OPEN_FILE_SUCCESS" ] % path )
-		self.saved_flag = True
-	
 	# 按下 新增使用者 按鈕
 	def on_ButtonAddBidder_mouseClick( self, event ):
 		# 如果無法取得資料 下面的function會送系統訊息
 		bidder_data = self.gen_bidder_data_by_text_field()
 		if not bidder_data:
 			return
-		
-		index = self.add_bidder_data( bidder_data )
-		if index < 0:
+
+		# 插入資料並重新整理頁面
+		if not self.__add_buyer( bidder_data ):
 			return
 		
+		self.__gen_list_ui_by_bidder_data()
+		bidder_id = bidder_data[ "BidderID_int" ]
+		self.__add_msg( Const[ "ADD_BIDDER_SUCCESS" ] % self.__gen_bid_id_plus_name_str( bidder_id ) )
+		
+		index, bidder_data = self.__chched_data[ bidder_id ]
 		self.components.ListBidders.selection = index
-		self.add_msg( Const[ "ADD_BIDDER_SUCCESS" ] % self.gen_bid_id_plus_name_str( int( bidder_data[ "BidderID" ] ) ) )
-		self.save_bidder_data()
-	
+		
 	# 按下 編輯買家資料 按鈕
 	def on_ButtonFixBidder_mouseClick( self, event ):
-		com = self.components
-		
 		# 沒有選取的項目
-		selected_str = com.ListBidders.stringSelection
-		if selected_str == "":
-			self.add_msg( Const[ "NO_SELECTED_BIDDER" ] )
+		index, bidder_id_ori = self.get_bidder_id_by_selection()
+		if bidder_id_ori not in self.__chched_data:
+			self.__add_msg( Const[ "NO_SELECTED_BIDDER" ] )
 			return
 			
 		# 如果無法取得資料 下面的function會送系統訊息
@@ -372,221 +177,137 @@ class MyBackground( model.Background ):
 		if not bidder_data:
 			return
 		
-		# 取得當前所選擇的ID
-		bidder_id_str	= bidder_data[ "BidderID" ]
-		bidder_id			= int( bidder_id_str )
-		bidder_id_now	= self.get_bidder_id_by_selection()
+		bidder_id = bidder_data[ "BidderID_int" ]
 		
 		# 如果沒改牌號 那就是單純改資料
-		index = com.ListBidders.selection
-		if bidder_id == bidder_id_now:
-			self.bidder_data_map[ bidder_id ] = bidder_data
-			new_title = self.gen_bid_id_plus_name_str( bidder_id )
-			# 以防萬一 List的文字也更新一下
-			com.ListBidders.setString( index, new_title )
+		search_key = { "BidderID_int": bidder_id_ori }
+		if bidder_id_ori == bidder_id:
+			self.__dbtable_buyer.update( search_key, bidder_data )
+		
+		# 如果要改牌號
+		else:
+			# 嘗試插入資料 如果失敗代表重複
+			if not self.__add_buyer( bidder_data ):
+				return
 			
-			self.add_msg( Const[ "FIX_BIDDER_DONE" ] % new_title )
-			self.save_bidder_data()
-			return
-		
-		# 如果改了牌號 不可以跟現有的重複
-		if bidder_id in self.bidder_data_map:
-			self.add_msg( Const[ "BIDDER_ID_REPEAT" ] % self.gen_bid_id_plus_name_str( bidder_id ), True )
-			return
+			# 刪除舊牌號資料
+			self.__dbtable_buyer.remove( search_key )
 			
-		# 先刪掉現在的
-		self.del_bidder_by_index( index )
+		self.__gen_list_ui_by_bidder_data()
+		self.__add_msg( Const[ "FIX_BIDDER_DONE" ] % self.__gen_bid_id_plus_name_str( bidder_id ) )
 		
-		index = self.add_bidder_data( bidder_data )
-		if index < 0:
-			return
-		
+		index, bidder_data = self.__chched_data[ bidder_id ]
 		self.components.ListBidders.selection = index
-		self.add_msg( Const[ "FIX_BIDDER_DONE" ] % self.gen_bid_id_plus_name_str( bidder_id ) )
-		self.save_bidder_data()
-		
-	# 按下買家列表資料
-	def on_ListBidders_select( self, event = None ):
-		bidder_id = self.get_bidder_id_by_selection()
-		if bidder_id not in self.bidder_data_map:
-			self.add_msg( Const[ "NO_BIDDER_DATA" ] % bidder_id )
-			return
-		
-		bidder_data = self.bidder_data_map[ bidder_id ]
-		for attr in BIDDER_ATTRS:
-			getattr( self.components, "TextField" + attr ).text = bidder_data[ attr ]
-			
-		self.saved_flag = True
 		
 	# 按下 刪除買家資料 按鈕
 	def on_ButtonDelBidder_mouseClick( self, event ):
-		com = self.components
-		
 		# 沒有選取的項目
-		index = com.ListBidders.selection
-		if index < 0:
-			self.add_msg( Const[ "NO_SELECTED_BIDDER" ] )
+		index, bidder_id = self.get_bidder_id_by_selection()
+		if bidder_id not in self.__chched_data:
+			self.__add_msg( Const[ "NO_SELECTED_BIDDER" ] )
 			return
 		
-		bidder_id = self.get_bidder_id_by_selection()
-		bid_id_plus_name_str = self.gen_bid_id_plus_name_str( bidder_id )
+		# 取得要顯示的文字/index
+		mag_arg = self.__gen_bid_id_plus_name_str( bidder_id );
+		index, bidder_data = self.__chched_data[ bidder_id ]
 		
-		result = self.del_bidder_by_index( index )
-		if not result:
+		# 刪除牌號資料
+		self.__dbtable_buyer.remove( { "BidderID_int": bidder_id } )
+		
+		# 刷新資料
+		index_the_last = self.__gen_list_ui_by_bidder_data()
+		self.__add_msg( Const[ "DEL_BIDDER_SUCCESS" ] % mag_arg )
+		
+		if index > index_the_last:
+			index = index_the_last
+		
+		self.components.ListBidders.selection = index
+		
+	# 按下買家列表資料
+	def on_ListBidders_select( self, event = None ):
+		index, bidder_id = self.get_bidder_id_by_selection()
+		if bidder_id not in self.__chched_data:
+			self.__add_msg( Const[ "NO_BIDDER_DATA" ] % bidder_id )
 			return
 		
-		self.update_list_ui()
-			
-		self.add_msg( Const[ "DEL_BIDDER_SUCCESS" ] % bid_id_plus_name_str )
-		self.save_bidder_data()
-		
-	# 按下 [X] 按鈕
-	def on_close( self, event ):
-		# 已經儲存了 直接關閉
-		if self.saved_flag:
-			event.skip()
-			return
-		
-		# 仍然選擇關閉 才真的關閉
-		result = dialog.singleChoiceDialog( self, Const[ "UNSAVED_MODS_QUESTION" ], Const[ "UNSAVED_MODS_TITLE" ], [ Const[ "UNSAVED_MODS_RESUME" ], Const[ "UNSAVED_MODS_QUIT" ] ] )
-		if result.selection == Const[ "UNSAVED_MODS_QUIT" ]:
-			event.skip()
-			return
+		index, bidder_data = self.__chched_data[ bidder_id ]
+		for attr in BIDDER_ATTRS:
+			getattr( self.components, "TextField" + attr ).text = bidder_data[ attr ]
 	
-	# 儲存資料
-	def save_bidder_data( self ):
-		bdh.save_data( self.cur_file_path, self.bidder_data_map )
-		
-		self.add_msg( Const[ "SAVE_FILE_SUCCESS" ] )
-		self.saved_flag = True
-	
-	# 更新列表界面
-	def update_list_ui( self ):
-		# 如果還有剩下的資料 選擇第一個 否則清空所有文字
-		com = self.components
-		if com.ListBidders.getCount() > 0:
-			com.ListBidders.selection = 0;
-			self.on_ListBidders_select()
-			
-		else:
-			for attr in BIDDER_ATTRS:
-				getattr( com, "TextField" + attr ).text = ""
-		
-	# 由索引值刪除的買家資料
-	def del_bidder_by_index( self, index ):
-		bidder_id = self.get_bidder_id_by_index( index )
-		if bidder_id not in self.bidder_data_map:
-			self.add_msg( Const[ "NO_BIDDER_DATA" ] % bidder_id )
-			return False
-			
-		self.bidder_data_map.pop( bidder_id )
-		self.components.ListBidders.delete( index )
-		return True
-		
 	# 利用索引值取得牌號ID
 	def get_bidder_id_by_index( self, index ):
-		ui_str = self.components.ListBidders.getString( index )
-		if ui_str == "":
-			return -1;
+		if index in self.__chched_index:
+			return self.__chched_index[ index ]
 		
-		return int( ui_str[ : ui_str.find( ":" ) ] )
+		return INVALID_ID
 		
 	# 利用介面選取取得牌號ID
 	def get_bidder_id_by_selection( self ):
 		index = self.components.ListBidders.selection
 		if index < 0:
-			return -1;
+			return index, INVALID_ID
 		
-		return self.get_bidder_id_by_index( index )
-	
-	# 新增買家資料
-	def add_bidder_data( self, bidder_data ):
-		result, bidder_id, is_update_len, new_max_digit = bdh.add_data( bidder_data, self.max_digit, self.bidder_data_map )
-		
-		# 牌號不可重複
-		if not result:
-			self.add_msg( Const[ "BIDDER_ID_REPEAT" ] % self.gen_bid_id_plus_name_str( bidder_id ), True )
-			return -1
-			
-		# 插入在正確的UI位置
-		bidder_id_list = self.bidder_data_map.keys()
-		bidder_id_list.sort()
-		index = bidder_id_list.index( bidder_id );
-		bid_id_plus_name_str = self.gen_bid_id_plus_name_str( bidder_id )
-		
-		self.components.ListBidders.insertItems( [ bid_id_plus_name_str ], index )
-		
-		# 最大牌號被改了 刷新整個列表
-		if is_update_len:
-			# 介面端
-			self.gen_list_ui_by_bidder_data()
-			
-			self.set_max_digit( new_max_digit )
-		return index
-	
-	# 設定當前牌號最大位數
-	def set_max_digit( self, max_digit ):
-		self.max_digit = max_digit
-		self.add_msg( Const[ "MAX_DIGIT_NOW" ] % max_digit )
+		return index, self.get_bidder_id_by_index( index )
 	
 	# 由界面的文字輸入格 產生買家資料
 	def gen_bidder_data_by_text_field( self ):
 		# 作基本資料檢測
 		com = self.components
 		
-		# 所有資料皆不可為空
+		# 部分資料不可為空
 		bidder_data = {}
 		for attr in BIDDER_ATTRS:
 			chk_text = getattr( com, "TextField" + attr ).text
 			if attr in NONEMPTY_ATTRS and not len( chk_text ):
-				self.add_msg( Const[ "TEXT_CHK_FAIL_EMPTY" ] % getattr( com, "StaticText" + attr ).text )
+				self.__add_msg( Const[ "TEXT_CHK_FAIL_EMPTY" ] % getattr( com, "StaticText" + attr ).text )
 				return None
 			
 			bidder_data[ attr ] = chk_text
 		
-		# 牌號位數不可超過最大值
-		bidder_id_str = bidder_data[ "BidderID" ]
-		bidder_id_len = len( bidder_id_str )
-		if bidder_id_len > MAX_DIGIT:
-			self.add_msg( Const[ "BIDDER_ID_LEN_EXCEEDED" ] )
-			return None
-			
 		# 牌號過濾規則(不可有4, 7)
 		re_ob = re.compile( "[47]+" )
+		bidder_id_str = bidder_data[ "BidderID" ]
 		if re_ob.search( bidder_id_str ):
-			self.add_msg( Const[ "BIDDER_ID_HAS_FOUR" ] )
+			self.__add_msg( Const[ "BIDDER_ID_HAS_FOUR" ] )
 			return None
 			
 		# 牌號必須是純數字
 		if not bidder_id_str.isdigit():
-			self.add_msg( Const[ "BIDDER_ID_NOT_DIGIT" ] )
+			self.__add_msg( Const[ "BIDDER_ID_NOT_DIGIT" ] )
 			return None
 		
-		# 修正牌號字串
-		bidder_data[ "BidderID" ] = bdh.complete_str_by_zero( bidder_data[ "BidderID" ], self.max_digit )
+		# ID是整數
+		bidder_data[ "BidderID_int" ] = int( bidder_data[ "BidderID" ] )
+		
+		# 建立PK
+		bidder_data[ "_id" ] = bidder_data[ "BidderID_int" ]
 		return bidder_data
 		
 	# 依買家資料產生界面顯示
-	def gen_list_ui_by_bidder_data( self ):
+	def __gen_list_ui_by_bidder_data( self ):
 		com = self.components
 		
 		com.ListBidders.clear()
-		bidder_data_ui = []
-		# 先排序
-		bidder_id_list = self.bidder_data_map.keys()
-		bidder_id_list.sort()
-		for bidder_id in bidder_id_list:
-			bidder_data_ui.append( self.gen_bid_id_plus_name_str( bidder_id ) )
 		
-		com.ListBidders.insertItems( bidder_data_ui, 0 )
+		self.__chched_data = {}
+		self.__chched_index = {}
+		index = -1
+		for index, collection in enumerate( self.__dbtable_buyer.find().sort( "BidderID_int", 1 ) ):
+			id = collection[ "BidderID_int" ]
+			
+			self.__chched_data[ id ] = index, collection
+			self.__chched_index[ index ] = id
+			com.ListBidders.append( self.__gen_bid_id_plus_name_str( id ) )
+			
+		return index
 		
 	# 產生牌號:姓名的字串
-	def gen_bid_id_plus_name_str( self, bidder_id ):
-		bidder_data = self.bidder_data_map[ bidder_id ]
+	def __gen_bid_id_plus_name_str( self, bidder_id ):
+		index, bidder_data = self.__chched_data[ bidder_id ]
 		return "%s: %s" % ( bidder_data[ "BidderID" ], bidder_data[ "Name" ] )
 		
 	# 程序紀錄
-	def add_msg( self, msg, plus_pop = False ):
+	def __add_msg( self, msg, plus_pop = False ):
 		if plus_pop:
 			dialog.alertDialog( self, msg, Const[ "WARNING" ] )
 		self.components.TextAreaLog.appendText( msg + "\n" )
