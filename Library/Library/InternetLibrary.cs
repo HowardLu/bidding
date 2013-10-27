@@ -79,24 +79,40 @@ namespace InternetLibrary
 
     public class Internet<TEntity>
     {
+        #region Enum, Internal Class
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Member Variables
         private MongoClient m_client;
         private String m_connectionStr = "mongodb://localhost:27017";
         private String m_dbName = "test";
         private String m_collectionName = "Auctions";
         private MongoCollection<TEntity> m_collection;
+        #endregion
 
+        #region Properties
         public String ConnectionString { get { return m_connectionStr; } set { m_connectionStr = value; } }
         public String DbName { get { return m_dbName; } set { m_dbName = value; } }
         public String CollectionName { get { return m_collectionName; } set { m_collectionName = value; } }
         public MongoCollection<TEntity> Collection { get { return m_collection; } }
+        #endregion
 
+        #region Constructors
         public Internet(string connectionString, string dbName, string collectionName)
         {
             m_connectionStr = connectionString;
             m_dbName = dbName;
             m_collectionName = collectionName;
         }
+        #endregion
 
+        #region Windows Form Events
+        #endregion
+
+        #region Public Methods
         public void Connect()
         {
             m_client = new MongoClient(m_connectionStr);
@@ -115,6 +131,14 @@ namespace InternetLibrary
             m_collection.Update(query, update);
         }
 
+        public void UpdateStockState(string auctionId, string stockState)
+        {
+            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
+            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
+            IMongoUpdate update = Update<AuctionEntity>.Set(e => e.StockState, stockState);
+            m_collection.Update(query, update);
+        }
+
         public void Insert(TEntity entity)
         {
             m_collection.Insert(entity);
@@ -124,5 +148,12 @@ namespace InternetLibrary
                 Console.WriteLine("[Mongo] Insert error!");
             }
         }
+        #endregion
+
+        #region Protected Methods
+        #endregion
+
+        #region Private Methods
+        #endregion
     }
 }

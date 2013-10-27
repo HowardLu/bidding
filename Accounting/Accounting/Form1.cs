@@ -20,10 +20,19 @@ namespace Accounting
 {
     public partial class Form1 : Form
     {
-        #region Properties
+        #region Enum, Internal Class
+        #endregion
+
+        #region Events
+        #endregion
+
+        #region Member Variables
         //private String m_connectionStr = "mongodb://1.34.233.143:27017";
         private Internet<AuctionEntity> m_internet = new Internet<AuctionEntity>("mongodb://localhost:27017", "test", "entities");
         //private Internet<AuctionEntityTW> m_internet = new Internet<AuctionEntityTW>("mongodb://localhost:27017", "bidding_data", "auction_table");
+        #endregion
+
+        #region Properties
         #endregion
 
         #region Constructors
@@ -33,7 +42,7 @@ namespace Accounting
         }
         #endregion
 
-        #region windows form event handler
+        #region Windows Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
             // LoadExcelTemplate();
@@ -46,7 +55,7 @@ namespace Accounting
             sfd.FileName = "account.xls";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                ToCsV(dataGridView1, sfd.FileName); // Here dataGridview1 is your grid view name 
+                DataGridViewToCsv(dataGridView1, sfd.FileName); // Here dataGridview1 is your grid view name 
             }
         }
 
@@ -59,7 +68,7 @@ namespace Accounting
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            
+
         }
 
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -86,10 +95,47 @@ namespace Accounting
         {
 
         }
+
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show("Error happened " + e.Context.ToString());
+
+            if (e.Context == DataGridViewDataErrorContexts.Commit)
+            {
+                MessageBox.Show("Commit error");
+            }
+            if (e.Context == DataGridViewDataErrorContexts.CurrentCellChange)
+            {
+                MessageBox.Show("Cell change");
+            }
+            if (e.Context == DataGridViewDataErrorContexts.Parsing)
+            {
+                MessageBox.Show("parsing error");
+            }
+            if (e.Context == DataGridViewDataErrorContexts.LeaveControl)
+            {
+                MessageBox.Show("leave control error");
+            }
+
+            if ((e.Exception) is ConstraintException)
+            {
+                DataGridView view = (DataGridView)sender;
+                view.Rows[e.RowIndex].ErrorText = "an error";
+                view.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = "an error";
+
+                e.ThrowException = false;
+            }
+        }
+        #endregion
+
+        #region Public Methods
+        #endregion
+
+        #region Protected Methods
         #endregion
 
         #region Private Methods
-        private void LoadExcelTemplate()
+        /*private void LoadExcelTemplate()
         {
             String sheetName = "Sheet1";
             String fileName = @"../AccountingTemplate.xls";
@@ -131,7 +177,7 @@ namespace Accounting
                     SetComboBoxCol(i, typeof(PayWay));
                 }
             }
-        }
+        }*/
 
         private void SetComboBoxCol(int index, Type enumType)
         {
@@ -174,22 +220,33 @@ namespace Accounting
                 }
             }
 
-            List<AuctionEntity> auctionEntities = m_internet.Collection.FindAll().ToList<AuctionEntity>();
+            List<AuctionEntity> auctionEntities = null;
+            try
+            {
+                auctionEntities = m_internet.Collection.FindAll().ToList<AuctionEntity>();
+            }
+            catch (MongoDB.Driver.MongoException e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+            if (auctionEntities == null)
+                return;
             foreach (AuctionEntity auction in auctionEntities)
             {
-                dataGridView1.Rows.Add(new string[] { auction.AuctionId, auction.Name, auction.Size, auction.BidderNumber, auction.StockState,
-                                                      auction.Seller, auction.ReturnState.ToString(), auction.HammerPrice.ToString(),
-                                                      auction.BuyerServiceCharge.ToString(), auction.FinalPrice.ToString(),
-                                                      auction.PayGuaranteeState.ToString(), auction.PayGuaranteeNumber.ToString(),
-                                                      auction.ReturnGuaranteeState.ToString(), auction.ReturnGuaranteeNumber.ToString(),
-                                                      auction.PayWayState.ToString(), auction.SellerServiceCharge.ToString(),
-                                                      auction.ReservePrice.ToString(), auction.SellerAccountPayable.ToString()});
+                dataGridView1.Rows.Add(auction.AuctionId, auction.Name, auction.Size, auction.BidderNumber, auction.StockState,
+                                        auction.Seller, auction.ReturnState, auction.HammerPrice,
+                                        auction.BuyerServiceCharge, auction.FinalPrice,
+                                        auction.PayGuaranteeState, auction.PayGuaranteeNumber,
+                                        auction.ReturnGuaranteeState, auction.ReturnGuaranteeNumber,
+                                        auction.PayWayState, auction.SellerServiceCharge,
+                                        auction.ReservePrice, auction.SellerAccountPayable);
             }
 
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.ColumnHeader);
         }
 
-        private void ToCsV(DataGridView dgv, string filename)
+        private void DataGridViewToCsv(DataGridView dgv, string filename)
         {
             string stOutput = "";
             // Export titles:
