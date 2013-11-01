@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
-
+using System.Collections.Generic;
+using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -91,6 +92,7 @@ namespace InternetLibrary
         private String m_dbName = "test";
         private String m_collectionName = "Auctions";
         private MongoCollection<TEntity> m_collection;
+        private List<TEntity> m_collectionList = null;
         #endregion
 
         #region Properties
@@ -147,6 +149,14 @@ namespace InternetLibrary
             {
                 Console.WriteLine("[Mongo] Insert error!");
             }
+        }
+
+        public List<TEntity> GetCollectionList()
+        {
+            if(m_collectionList == null)
+                m_collectionList = m_collection.FindAll().ToList<TEntity>();
+
+            return m_collectionList;
         }
         #endregion
 

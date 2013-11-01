@@ -46,6 +46,21 @@ namespace Accounting
         private void Form1_Load(object sender, EventArgs e)
         {
             // LoadExcelTemplate();
+            m_internet.Connect();
+            List<AuctionEntity> auctions = m_internet.GetCollectionList();
+            if (auctions.Count == 0)
+            {
+                AuctionEntity auction = new AuctionEntity();
+                auction.AuctionId = "111";
+                auction.Name = "國寶";
+                auction.Size = "1*1";
+                auction.BidderNumber = "100";
+                auction.StockState = "home";
+                auction.Seller = "金城";
+                m_internet.Insert(auction);
+            }
+            //m_internet.Update();
+            LoadCollectionToDataGridView();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -61,44 +76,27 @@ namespace Accounting
 
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            m_internet.Connect();
-            //m_internet.Update();
-            LoadCollectionToDataGridView();
+
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-
+            Console.WriteLine(e.ToString());
         }
 
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-
+            Console.WriteLine(e.ToString());
         }
 
         private void dataGridView1_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-
-        }
-
-        private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-
-        }
-
-        private void dataGridView1_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
-        {
-
+            Console.WriteLine(e.ToString());
         }
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            MessageBox.Show("Error happened " + e.Context.ToString());
+            //MessageBox.Show("Error happened " + e.Context.ToString());
 
             if (e.Context == DataGridViewDataErrorContexts.Commit)
             {
@@ -218,12 +216,16 @@ namespace Accounting
                 {
                     SetComboBoxCol(i, typeof(PayWay));
                 }
+                else
+                {
+                    col.ReadOnly = true;
+                }
             }
 
             List<AuctionEntity> auctionEntities = null;
             try
             {
-                auctionEntities = m_internet.Collection.FindAll().ToList<AuctionEntity>();
+                auctionEntities = m_internet.GetCollectionList();
             }
             catch (MongoDB.Driver.MongoException e)
             {
@@ -243,7 +245,7 @@ namespace Accounting
                                         auction.ReservePrice, auction.SellerAccountPayable);
             }
 
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.ColumnHeader);
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
         }
 
         private void DataGridViewToCsv(DataGridView dgv, string filename)
