@@ -16,7 +16,6 @@ BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel"
 BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel" ]
 
 # 連線port
-DB_CFG_IP		= "1.34.233.143"
 DB_CFG_PORT	= 27017
 
 # 無效牌號
@@ -79,7 +78,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"UNSAVED_MODS_QUESTION":		"你目前還有修改中的未儲存資料，請問你接下來要....",
 							"UNSAVED_MODS_QUIT":				u"不修改了，直接關閉",
 							"UNSAVED_MODS_RESUME":			"繼續編輯資料",
-							"PLZ_ENTER_AUCTION_IP":			"請輸入拍賣中心的IP位址",
+							"PLZ_ENTER_AUCTION_IP":			"請輸入資料庫的IP位址",
 							"READY_TO_CONNECT":					"準備開始連線",
 							"DEFAULT_IP":								"127.0.0.1",
 							"CONNECT_FAILED":						"無法連線到[%s]",
@@ -121,13 +120,12 @@ class MyBackground( model.Background ):
 		com.ButtonDelBidder.label					= Const[ "BUTTONTEXTDELBIDDER" ]
 		
 		# 嘗試連上資料庫
-		try:
-			self.__mongo_client = pymongo.MongoClient( DB_CFG_IP, DB_CFG_PORT )
-		except:
-			self.__add_msg( Const[ "ERRMSG_DB_CNCT_FAIL" ] % ( DB_CFG_IP, DB_CFG_PORT ), True )
-			sys.exit( 0 )
+		while True:
+			connect_ip = self.__connection_process()
+			if connect_ip:
+				break
 			
-		self.__add_msg( Const[ "ERRMSG_DB_CNCT_OK" ] % ( DB_CFG_IP, DB_CFG_PORT ), True )
+		self.__add_msg( Const[ "ERRMSG_DB_CNCT_OK" ] % ( connect_ip, DB_CFG_PORT ), True )
 		 
 		# 取得資料庫相關資料表
 		self.__mongo_db = self.__mongo_client.bidding_data
@@ -135,6 +133,49 @@ class MyBackground( model.Background ):
 		
 		# 直接顯示所有買家
 		self.__gen_list_ui_by_bidder_data()
+		
+	# 讀取暫存的IP
+	def __load_cached_ip( self ):
+		try:
+			file_ob = open( CACHED_IP_PATH, "r" )
+			
+		except:
+			return "127.0.0.1"
+		
+		line = file_ob.readline()
+		if line[ -1 ] == "\n":
+			line = line[ : -1 ]
+		
+		file_ob.close()
+		return line
+		
+	# 儲存暫存的IP
+	def __save_cached_ip( self, connect_ip ):
+		try:
+			file_ob = open( CACHED_IP_PATH, "w" )
+			
+		except:
+			return
+		
+		file_ob.write( connect_ip )
+		file_ob.close()
+	
+	# 嘗試連上資料庫
+	def __connection_process( self ):
+		result = dialog.textEntryDialog( self, Const[ "PLZ_ENTER_AUCTION_IP" ], Const[ "READY_TO_CONNECT" ], self.__load_cached_ip() )
+		if not result.accepted:
+			return False
+		
+		connect_ip = result.text
+		self.__save_cached_ip( connect_ip )
+		
+		try:
+			self.__mongo_client = pymongo.MongoClient( connect_ip, DB_CFG_PORT )
+		except:
+			self.__add_msg( Const[ "ERRMSG_DB_CNCT_FAIL" ] % ( connect_ip, DB_CFG_PORT ), True )
+			return False
+			
+		return connect_ip
 		
 	# 嘗試新增使用者
 	def __add_buyer( self, bidder_data ):

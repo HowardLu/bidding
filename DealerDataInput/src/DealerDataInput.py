@@ -35,8 +35,8 @@ ITEM_KEY		= ATTR_MAP[ "Item" ][ "KEY_ATTR" ]
 ITEM_COM_DATA = { "PackImg": "BitmapCanvasPack", "BuildImg": "BitmapCanvasBuild" }
 
 # 連線port
-DB_CFG_IP		= "1.34.233.143"
-DB_CFG_PORT	= 27017
+CACHED_IP_PATH	= "cached_ip.ini"
+DB_CFG_PORT			= 27017
 
 # 無效Key
 INVALID_KEY = ""
@@ -201,13 +201,12 @@ class MyBackground( model.Background ):
 		com.BitmapCanvasBuild.visible = False
 		
 		# 嘗試連上資料庫
-		try:
-			self.__mongo_client = pymongo.MongoClient( DB_CFG_IP, DB_CFG_PORT )
-		except:
-			self.__add_msg( Const[ "ERRMSG_DB_CNCT_FAIL" ] % ( DB_CFG_IP, DB_CFG_PORT ), True )
-			sys.exit( 0 )
+		while True:
+			connect_ip = self.__connection_process()
+			if connect_ip:
+				break
 			
-		self.__add_msg( Const[ "ERRMSG_DB_CNCT_OK" ] % ( DB_CFG_IP, DB_CFG_PORT ), True )
+		self.__add_msg( Const[ "ERRMSG_DB_CNCT_OK" ] % ( connect_ip, DB_CFG_PORT ), True )
 		 
 		# 取得資料庫相關資料表
 		self.__mongo_db = self.__mongo_client.bidding_data
@@ -217,6 +216,48 @@ class MyBackground( model.Background ):
 		# 直接顯示所有賣家
 		self.__gen_list_ui_by_data()
 		
+	# 讀取暫存的IP
+	def __load_cached_ip( self ):
+		try:
+			file_ob = open( CACHED_IP_PATH, "r" )
+			
+		except:
+			return "127.0.0.1"
+		
+		line = file_ob.readline()
+		if line[ -1 ] == "\n":
+			line = line[ : -1 ]
+		
+		file_ob.close()
+		return line
+		
+	# 儲存暫存的IP
+	def __save_cached_ip( self, connect_ip ):
+		try:
+			file_ob = open( CACHED_IP_PATH, "w" )
+			
+		except:
+			return
+		
+		file_ob.write( connect_ip )
+		file_ob.close()
+	
+	# 嘗試連上資料庫
+	def __connection_process( self ):
+		result = dialog.textEntryDialog( self, Const[ "PLZ_ENTER_AUCTION_IP" ], Const[ "READY_TO_CONNECT" ], self.__load_cached_ip() )
+		if not result.accepted:
+			return False
+		
+		connect_ip = result.text
+		self.__save_cached_ip( connect_ip )
+		
+		try:
+			self.__mongo_client = pymongo.MongoClient( connect_ip, DB_CFG_PORT )
+		except:
+			self.__add_msg( Const[ "ERRMSG_DB_CNCT_FAIL" ] % ( connect_ip, DB_CFG_PORT ), True )
+			return False
+			
+		return connect_ip
 	# 嘗試新增使用者
 	def __add_dict( self, dict_data ):
 		try:
