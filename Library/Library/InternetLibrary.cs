@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Builders;
@@ -75,7 +76,7 @@ namespace InternetLibrary
         public int 付款方式 { get; set; }
         public int 賣家服務及保險費 { get; set; }
         public int 保留價 { get; set; }
-        public int 應負賣家金額 { get; set; }
+        public int 應付賣家金額 { get; set; }
     }
 
     public class Internet<TEntity>
@@ -125,20 +126,77 @@ namespace InternetLibrary
             m_collection = database.GetCollection<TEntity>(m_collectionName);
         }
 
-        public void UpdateName(string auctionId, string name)
+        public void UpdateStringField(string auctionId, AuctionColumnHeader columnType, string value)
         {
             IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
             AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
-            IMongoUpdate update = Update<AuctionEntity>.Set(e => e.Name, name);
-            m_collection.Update(query, update);
+            Expression<Func<AuctionEntity, string>> expression = e => e.Name;
+            switch (columnType)
+            {
+                case AuctionColumnHeader.拍品名稱:
+                    expression = e => e.Name;
+                    break;
+                case AuctionColumnHeader.庫存狀態:
+                    expression = e => e.StockState;
+                    break;
+                default:
+                    break;
+            }
+            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
+            WriteConcernResult wcr = m_collection.Update(query, update);
+            // TODO
         }
 
-        public void UpdateStockState(string auctionId, string stockState)
+        public void UpdateIntField(string auctionId, AuctionColumnHeader columnType, int value)
         {
             IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
             AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
-            IMongoUpdate update = Update<AuctionEntity>.Set(e => e.StockState, stockState);
-            m_collection.Update(query, update);
+            Expression<Func<AuctionEntity, int>> expression = e => e.ReturnState;
+            switch (columnType)
+            {
+                case AuctionColumnHeader.歸還狀態:
+                    expression = e => e.ReturnState;
+                    break;
+                case AuctionColumnHeader.買家適用服務費:
+                    expression = e => e.BuyerServiceCharge;
+                    break;
+                case AuctionColumnHeader.保證金繳納:
+                    expression = e => e.PayGuaranteeState;
+                    break;
+                case AuctionColumnHeader.保證金繳納金額:
+                    expression = e => e.PayGuaranteeNumber;
+                    break;
+                case AuctionColumnHeader.保證金退還:
+                    expression = e => e.ReturnGuaranteeState;
+                    break;
+                case AuctionColumnHeader.保證金退還金額:
+                    expression = e => e.ReturnGuaranteeNumber;
+                    break;
+                case AuctionColumnHeader.付款方式:
+                    expression = e => e.PayWayState;
+                    break;
+                default:
+                    break;
+            }
+            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
+            WriteConcernResult wcr = m_collection.Update(query, update);
+        }
+
+        public void UpdateFloatField(string auctionId, AuctionColumnHeader columnType, float value)
+        {
+            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
+            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
+            Expression<Func<AuctionEntity, float>> expression = e => e.ReturnState;
+            switch (columnType)
+            {
+                case AuctionColumnHeader.歸還狀態:
+                    expression = e => e.ReturnState;
+                    break;
+                default:
+                    break;
+            }
+            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
+            WriteConcernResult wcr = m_collection.Update(query, update);
         }
 
         public void Insert(TEntity entity)

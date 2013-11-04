@@ -14,6 +14,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.IO;
 using System.Data.OleDb;
 using InternetLibrary;
+using UtilityLibrary;
 using Bidding;
 
 namespace Accounting
@@ -57,6 +58,10 @@ namespace Accounting
                 auction.BidderNumber = "100";
                 auction.StockState = "home";
                 auction.Seller = "金城";
+                auction.ReturnState = 1;
+                auction.PayGuaranteeState = 2;
+                auction.ReturnGuaranteeState = 2;
+                auction.PayWayState = 3;
                 m_internet.Insert(auction);
             }
             //m_internet.Update();
@@ -81,17 +86,23 @@ namespace Accounting
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            Console.WriteLine(e.ToString());
+            Console.WriteLine("dataGridView1_CellValueChanged " + e.RowIndex.ToString() + " " + e.ColumnIndex.ToString());
+            if (e.RowIndex == -1 || e.ColumnIndex == -1)
+                return;
+            if (e.ColumnIndex == (int)AuctionColumnHeader.庫存狀態)
+            {
+                m_internet.UpdateStringField(this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString(), AuctionColumnHeader.庫存狀態, this.dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString());
+            }
         }
 
         private void dataGridView1_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            Console.WriteLine(e.ToString());
+            Console.WriteLine("dataGridView1_CellValidating " + e.RowIndex.ToString() + " " + e.ColumnIndex.ToString() + " " + e.FormattedValue.ToString());
         }
 
         private void dataGridView1_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-            Console.WriteLine(e.ToString());
+            Console.WriteLine("dataGridView1_CellValidated " + e.RowIndex.ToString() + " " + e.ColumnIndex.ToString());
         }
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -123,6 +134,11 @@ namespace Accounting
 
                 e.ThrowException = false;
             }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
         }
         #endregion
 
@@ -218,7 +234,7 @@ namespace Accounting
                 }
                 else
                 {
-                    col.ReadOnly = true;
+                    //col.ReadOnly = true;
                 }
             }
 
@@ -237,15 +253,15 @@ namespace Accounting
             foreach (AuctionEntity auction in auctionEntities)
             {
                 dataGridView1.Rows.Add(auction.AuctionId, auction.Name, auction.Size, auction.BidderNumber, auction.StockState,
-                                        auction.Seller, auction.ReturnState, auction.HammerPrice,
-                                        auction.BuyerServiceCharge, auction.FinalPrice,
-                                        auction.PayGuaranteeState, auction.PayGuaranteeNumber,
-                                        auction.ReturnGuaranteeState, auction.ReturnGuaranteeNumber,
-                                        auction.PayWayState, auction.SellerServiceCharge,
-                                        auction.ReservePrice, auction.SellerAccountPayable);
+                    auction.Seller, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
+                    auction.BuyerServiceCharge, auction.FinalPrice,
+                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayGuaranteeState), auction.PayGuaranteeNumber,
+                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
+                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
+                    auction.ReservePrice, auction.SellerAccountPayable);
             }
 
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
 
         private void DataGridViewToCsv(DataGridView dgv, string filename)

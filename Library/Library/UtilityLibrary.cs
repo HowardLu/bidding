@@ -194,6 +194,15 @@ namespace UtilityLibrary
         {
             return filePath.Remove(0, filePath.LastIndexOf(@".") + 1);
         }
+
+        public static string GetEnumString(Type enumType, int index)
+        {
+            string[] names = Enum.GetNames(enumType);
+            if (index < names.Length)
+                return names[index];
+            else
+                return "";
+        }
     }
 
     public static class Settings
