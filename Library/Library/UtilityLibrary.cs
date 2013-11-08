@@ -203,6 +203,12 @@ namespace UtilityLibrary
             else
                 return "";
         }
+
+        public static int ToEnumInt<TEnum>(string stringToParse) where TEnum : struct
+        {
+            TEnum e = (TEnum)Enum.Parse(typeof(TEnum), stringToParse);
+            return Convert.ToInt32(Enum.Format(typeof(TEnum), e, "d"));
+        }
     }
 
     public static class Settings

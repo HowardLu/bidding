@@ -89,9 +89,57 @@ namespace Accounting
             Console.WriteLine("dataGridView1_CellValueChanged " + e.RowIndex.ToString() + " " + e.ColumnIndex.ToString());
             if (e.RowIndex == -1 || e.ColumnIndex == -1)
                 return;
-            if (e.ColumnIndex == (int)AuctionColumnHeader.庫存狀態)
+
+            string auctionId = this.dataGridView1.Rows[e.RowIndex].Cells[(int)AuctionColumnHeader.拍品編號].Value.ToString();
+            switch ((AuctionColumnHeader)e.ColumnIndex)
             {
-                m_internet.UpdateStringField(this.dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString(), AuctionColumnHeader.庫存狀態, this.dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString());
+                case AuctionColumnHeader.庫存狀態:
+                    m_internet.UpdateStringField(auctionId, AuctionColumnHeader.庫存狀態, this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                    break;
+                case AuctionColumnHeader.歸還狀態:
+                    {
+                        DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
+                        m_internet.UpdateIntField(auctionId, AuctionColumnHeader.歸還狀態, Utility.ToEnumInt<ReturnState>(cell.Value.ToString()));
+                    }
+                    break;
+                case AuctionColumnHeader.買家適用服務費:
+                    {
+                        DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
+                        m_internet.UpdateIntField(auctionId, AuctionColumnHeader.買家適用服務費, Utility.IsNumber(cell.Value.ToString()));
+                    }
+                    break;
+                case AuctionColumnHeader.保證金繳納:
+                    {
+                        DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
+                        m_internet.UpdateIntField(auctionId, AuctionColumnHeader.保證金繳納, Utility.ToEnumInt<PayGuarantee>(cell.Value.ToString()));
+                    }
+                    break;
+                case AuctionColumnHeader.保證金繳納金額:
+                    {
+                        DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
+                        m_internet.UpdateIntField(auctionId, AuctionColumnHeader.保證金繳納金額, Utility.IsNumber(cell.Value.ToString()));
+                    }
+                    break;
+                case AuctionColumnHeader.保證金退還:
+                    {
+                        DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
+                        m_internet.UpdateIntField(auctionId, AuctionColumnHeader.保證金退還, Utility.ToEnumInt<ReturnGuarantee>(cell.Value.ToString()));
+                    }
+                    break;
+                case AuctionColumnHeader.保證金退還金額:
+                    {
+                        DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
+                        m_internet.UpdateIntField(auctionId, AuctionColumnHeader.保證金退還金額, Utility.IsNumber(cell.Value.ToString()));
+                    }
+                    break;
+                case AuctionColumnHeader.付款方式:
+                    {
+                        DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
+                        m_internet.UpdateIntField(auctionId, AuctionColumnHeader.付款方式, Utility.ToEnumInt<PayWay>(cell.Value.ToString()));
+                    }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -216,25 +264,26 @@ namespace Accounting
             {
                 DataGridViewColumn col = dataGridView1.Columns[i];
                 col.HeaderText = Enum.GetName(typeof(AuctionColumnHeader), i);
-                if (col.HeaderText == "歸還狀態")
+                if (col.HeaderText == AuctionColumnHeader.歸還狀態.ToString())
                 {
                     SetComboBoxCol(i, typeof(ReturnState));
                 }
-                else if (col.HeaderText == "保證金繳納")
+                else if (col.HeaderText == AuctionColumnHeader.保證金繳納.ToString())
                 {
                     SetComboBoxCol(i, typeof(PayGuarantee));
                 }
-                else if (col.HeaderText == "保證金退還")
+                else if (col.HeaderText == AuctionColumnHeader.保證金退還.ToString())
                 {
                     SetComboBoxCol(i, typeof(ReturnGuarantee));
                 }
-                else if (col.HeaderText == "付款方式")
+                else if (col.HeaderText == AuctionColumnHeader.付款方式.ToString())
                 {
                     SetComboBoxCol(i, typeof(PayWay));
                 }
                 else
                 {
-                    //col.ReadOnly = true;
+                    if (col.HeaderText != AuctionColumnHeader.庫存狀態.ToString())
+                        col.ReadOnly = true;
                 }
             }
 
