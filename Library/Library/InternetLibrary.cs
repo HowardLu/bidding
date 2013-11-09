@@ -209,6 +209,12 @@ namespace InternetLibrary
             }
         }
 
+        public void Remove(string auctionId)
+        {
+            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
+            m_collection.Remove(query);
+        }
+
         public List<TEntity> GetCollectionList()
         {
             if(m_collectionList == null)

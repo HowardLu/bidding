@@ -247,10 +247,12 @@ namespace Accounting
             DataGridViewComboBoxColumn cbcol = new DataGridViewComboBoxColumn();
             cbcol.Name = col.Name;
             cbcol.HeaderText = col.HeaderText;
+            cbcol.DefaultCellStyle.BackColor = col.DefaultCellStyle.BackColor;
             foreach (string rs in Enum.GetNames(enumType))
             {
                 cbcol.Items.Add(rs);
             }
+            cbcol.SortMode = DataGridViewColumnSortMode.Automatic;
             this.dataGridView1.Columns.RemoveAt(index);
             this.dataGridView1.Columns.Insert(index, cbcol);
         }
@@ -264,6 +266,7 @@ namespace Accounting
             {
                 DataGridViewColumn col = dataGridView1.Columns[i];
                 col.HeaderText = Enum.GetName(typeof(AuctionColumnHeader), i);
+                col.DefaultCellStyle.BackColor = Color.LightCyan;
                 if (col.HeaderText == AuctionColumnHeader.歸還狀態.ToString())
                 {
                     SetComboBoxCol(i, typeof(ReturnState));
@@ -282,8 +285,13 @@ namespace Accounting
                 }
                 else
                 {
-                    if (col.HeaderText != AuctionColumnHeader.庫存狀態.ToString())
+                    if (col.HeaderText != AuctionColumnHeader.庫存狀態.ToString() ||
+                        col.HeaderText != AuctionColumnHeader.保證金繳納金額.ToString() ||
+                        col.HeaderText != AuctionColumnHeader.保證金退還金額.ToString())
+                    {
                         col.ReadOnly = true;
+                        col.DefaultCellStyle.BackColor = Color.White;
+                    }
                 }
             }
 
