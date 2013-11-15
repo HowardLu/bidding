@@ -55,6 +55,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Library">
+      <HintPath>..\..\Library\Library\bin\Release\Library.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -78,7 +81,6 @@
     <Compile Include="SetAuctionForm.Designer.cs">
       <DependentUpon>SetAuctionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utility.cs" />
     <Compile Include="DisplayForm.cs">
       <SubType>Form</SubType>
     </Compile>

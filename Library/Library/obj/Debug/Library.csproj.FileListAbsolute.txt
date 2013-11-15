@@ -10,3 +10,17 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Lib
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\obj\Debug\Library.csproj.ResolveComReference.cache
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\obj\Debug\Library.dll
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Library\Library\obj\Debug\Library.pdb
+\\tsclient\D\bidding\Library\Library\bin\Debug\Library.dll
+\\tsclient\D\bidding\Library\Library\bin\Debug\Library.pdb
+\\tsclient\D\bidding\Library\Library\bin\Debug\MongoDB.Bson.pdb
+\\tsclient\D\bidding\Library\Library\bin\Debug\MongoDB.Bson.xml
+\\tsclient\D\bidding\Library\Library\bin\Debug\MongoDB.Driver.pdb
+\\tsclient\D\bidding\Library\Library\bin\Debug\MongoDB.Driver.xml
+\\tsclient\D\bidding\Library\Library\obj\Debug\ResolveAssemblyReference.cache
+\\tsclient\D\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Core.dll
+\\tsclient\D\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Interop.Excel.dll
+\\tsclient\D\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Interop.Word.dll
+\\tsclient\D\bidding\Library\Library\obj\Debug\Interop.VBIDE.dll
+\\tsclient\D\bidding\Library\Library\obj\Debug\Library.csproj.ResolveComReference.cache
+\\tsclient\D\bidding\Library\Library\obj\Debug\Library.dll
+\\tsclient\D\bidding\Library\Library\obj\Debug\Library.pdb

@@ -66,6 +66,7 @@
     <Reference Include="Microsoft.Office.Tools.Excel.v4.0.Utilities">
       <HintPath>..\..\..\..\..\..\..\..\Microsoft.Office.Tools.Excel.v4.0.Utilities\X86\10.0.30319.1\Microsoft.Office.Tools.Excel.v4.0.Utilities.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MongoDB.Bson">
       <HintPath>..\..\..\..\..\..\..\..\Program Files\MongoDB\CSharpDriver 1.8.2\MongoDB.Bson.dll</HintPath>
     </Reference>
@@ -141,6 +142,17 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>4</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

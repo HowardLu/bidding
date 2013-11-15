@@ -29,7 +29,7 @@ namespace Accounting
 
         #region Member Variables
         //private String m_connectionStr = "mongodb://1.34.233.143:27017";
-        private Internet<AuctionEntity> m_internet = new Internet<AuctionEntity>("mongodb://localhost:27017", "test", "entities");
+        private Internet<AuctionEntity> m_internet;
         //private Internet<AuctionEntityTW> m_internet = new Internet<AuctionEntityTW>("mongodb://localhost:27017", "bidding_data", "auction_table");
         #endregion
 
@@ -46,26 +46,12 @@ namespace Accounting
         #region Windows Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
+            ConnectToServer();
             // LoadExcelTemplate();
-            m_internet.Connect();
-            List<AuctionEntity> auctions = m_internet.GetCollectionList();
-            if (auctions.Count == 0)
+            if (m_internet.IsConnected)
             {
-                AuctionEntity auction = new AuctionEntity();
-                auction.AuctionId = "111";
-                auction.Name = "國寶";
-                auction.Size = "1*1";
-                auction.BidderNumber = "100";
-                auction.StockState = "home";
-                auction.Seller = "金城";
-                auction.ReturnState = 1;
-                auction.PayGuaranteeState = 2;
-                auction.ReturnGuaranteeState = 2;
-                auction.PayWayState = 3;
-                m_internet.Insert(auction);
+                LoadCollectionToDataGridView();
             }
-            //m_internet.Update();
-            LoadCollectionToDataGridView();
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -81,7 +67,23 @@ namespace Accounting
 
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", m_internet.IP, -1, -1);
+            if (ip.Length == 0)
+                return;
 
+            if (m_internet.Connect())
+            {
+                toolStripStatusLabel1.Text = "連線成功!";
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = "連線失敗!";
+            }
+
+            if (m_internet.IsConnected)
+            {
+                LoadCollectionToDataGridView();
+            }
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -241,6 +243,23 @@ namespace Accounting
             }
         }*/
 
+        private void ConnectToServer()
+        {
+            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
+            if (ip.Length == 0)
+                return;
+            m_internet = new Internet<AuctionEntity>(ip, "test", "entities");
+
+            if (m_internet.Connect())
+            {
+                toolStripStatusLabel1.Text = "連線成功!";
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = "連線失敗!";
+            }
+        }
+
         private void SetComboBoxCol(int index, Type enumType)
         {
             DataGridViewColumn col = this.dataGridView1.Columns[index];
@@ -259,6 +278,23 @@ namespace Accounting
 
         private void LoadCollectionToDataGridView()
         {
+            List<AuctionEntity> auctions = m_internet.GetCollectionList();
+            if (auctions.Count == 0)
+            {
+                AuctionEntity auction = new AuctionEntity();
+                auction.AuctionId = "111";
+                auction.Name = "國寶";
+                auction.Size = "1*1";
+                auction.BidderNumber = "100";
+                auction.StockState = "home";
+                auction.Seller = "金城";
+                auction.ReturnState = 1;
+                auction.PayGuaranteeState = 2;
+                auction.ReturnGuaranteeState = 2;
+                auction.PayWayState = 3;
+                m_internet.Insert(auction);
+            }
+
             dataGridView1.ReadOnly = false;
 
             dataGridView1.ColumnCount = (int)AuctionColumnHeader.Count;
@@ -285,8 +321,8 @@ namespace Accounting
                 }
                 else
                 {
-                    if (col.HeaderText != AuctionColumnHeader.庫存狀態.ToString() ||
-                        col.HeaderText != AuctionColumnHeader.保證金繳納金額.ToString() ||
+                    if (col.HeaderText != AuctionColumnHeader.庫存狀態.ToString() &&
+                        col.HeaderText != AuctionColumnHeader.保證金繳納金額.ToString() &&
                         col.HeaderText != AuctionColumnHeader.保證金退還金額.ToString())
                     {
                         col.ReadOnly = true;

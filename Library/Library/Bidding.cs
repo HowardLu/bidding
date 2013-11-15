@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using Microsoft.Office.Interop.Word;
 using UtilityLibrary;
+using InternetLibrary;
 
 namespace Bidding
 {
@@ -55,6 +56,20 @@ namespace Bidding
                 this.initialPrice = this.nowPrice = price * Settings.unit;
             else
                 return false;
+            return true;
+        }
+
+        public bool GetInfoFromDictionary(ref Dictionary<string, AuctionEntity> auctions, string filePath)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(filePath);
+            if (!auctions.ContainsKey(fileName))
+                return false;
+            AuctionEntity ae = auctions[fileName];
+            this.lot = ae.AuctionId;
+            this.artist = ae.Artist;
+            this.artwork = ae.Artwork;
+            this.initialPrice = ae.InitialPrice;
+            this.nowPrice = ae.NowPrice;
             return true;
         }
 

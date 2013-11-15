@@ -50,3 +50,22 @@ C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bi
 C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
 C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe
 C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.pdb
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.pdb
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.pdb
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Library.dll
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.dll
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.dll
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Library.pdb
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.pdb
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.xml
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.pdb
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.xml
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\ResolveAssemblyReference.cache
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.ControlForm.resources
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetAuctionForm.resources
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog

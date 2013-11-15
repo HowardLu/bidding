@@ -4,6 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Linq;
+using Bidding;
+using UtilityLibrary;
 
 namespace SJ_Bidding_System
 {
@@ -17,19 +19,20 @@ namespace SJ_Bidding_System
         private ImageList m_smallImgList = new ImageList();
         private string m_addImgFP;
 
-        public SetAuctionForm()
+        public SetAuctionForm(Dictionary<string, Auction> auctions)
         {
             InitializeComponent();
             m_listViewSize = this.auctionsListView.Size;
             m_lvColWidths = new int[auctionsListView.Columns.Count];
             for (int i = 0; i < auctionsListView.Columns.Count; i++)
                 m_lvColWidths[i] = auctionsListView.Columns[i].Width;
+            m_auctions = auctions;
         }
 
         #region Windows Form event handler
         private void SetAuctionForm_Load(object sender, EventArgs e)
         {
-            LoadAuctions();
+            LoadAuctionPhotos();
         }
 
         private void SetAuctionForm_Resize(object sender, EventArgs e)
@@ -299,35 +302,22 @@ namespace SJ_Bidding_System
         #endregion
 
         #region Methods
-        private void LoadAuctions()
+        private void LoadAuctionPhotos()
         {
-            m_auctions = new Dictionary<string, Auction>();
             string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
             m_largeImgList.ImageSize = new Size(100, 100);
             m_smallImgList.ImageSize = new Size(10, 10);
 
             auctionsListView.Items.Clear();
             auctionsListView.BeginUpdate();
-            for (int i = 0; i < filePaths.Length; i++)
+            foreach (Auction auction in m_auctions.Values)
             {
-                Auction auction = new Auction();
-                if (auction.GetInfoFromFileName(filePaths[i]))
-                {
-                    auction.photofilePath = filePaths[i];
-                    m_largeImgList.Images.Add(Utility.OpenBitmap(filePaths[i]).GetThumbnailImage(100, 100, null, new IntPtr()));
-                    m_smallImgList.Images.Add(Utility.OpenBitmap(filePaths[i]).GetThumbnailImage(50, 50, null, new IntPtr()));
-                    if (!m_auctions.ContainsKey(auction.lot))
-                    {
-                        m_auctions.Add(auction.lot, auction);
-                    }
-                    else
-                    {
-                        MessageBox.Show("重複Lot: " + auction.photofilePath + " 請檢查Auctions!");
-                        this.Close();
-                    }
-                    AddItemToListView(m_auctions.Count - 1, auction.lot, auction.artist, auction.artwork,
-                        auction.initialPrice.ToString("n0"));
-                }
+                //m_largeImgList.Images.Add(Utility.OpenBitmap(auction.photofilePath).GetThumbnailImage(100, 100, null, new IntPtr()));
+                //m_smallImgList.Images.Add(Utility.OpenBitmap(auction.photofilePath).GetThumbnailImage(50, 50, null, new IntPtr()));
+                m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
+                m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
+                AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
+                    auction.initialPrice.ToString("n0"));
             }
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;

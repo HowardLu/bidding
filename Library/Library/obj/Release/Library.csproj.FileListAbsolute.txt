@@ -40,3 +40,9 @@ E:\bidding\Library\Library\obj\Release\Interop.VBIDE.dll
 E:\bidding\Library\Library\obj\Release\Library.csproj.ResolveComReference.cache
 E:\bidding\Library\Library\obj\Release\Library.dll
 E:\bidding\Library\Library\obj\Release\Library.pdb
+D:\bidding\Library\Library\obj\Release\ResolveAssemblyReference.cache
+D:\bidding\Library\Library\obj\Release\Interop.Microsoft.Office.Core.dll
+D:\bidding\Library\Library\obj\Release\Interop.VBIDE.dll
+D:\bidding\Library\Library\obj\Release\Library.csproj.ResolveComReference.cache
+D:\bidding\Library\Library\obj\Release\Library.dll
+D:\bidding\Library\Library\obj\Release\Library.pdb

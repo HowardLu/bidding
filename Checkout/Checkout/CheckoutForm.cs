@@ -3,20 +3,30 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using UtilityLibrary;
+using Bidding;
+using InternetLibrary;
 
 namespace Checkout
 {
     public partial class CheckoutForm : Form
     {
+        #region Events
+        #endregion
+
+        #region Enums, Structs, and Classes
+        #endregion
+
+        #region Member Variables
         private Microsoft.Office.Interop.Word._Application m_wordApp;
         private string m_paymentTemplateFN = "拍賣成交單-空白.dot";
         private Object m_tmpDocFN;
         private Bidder m_bidder;
-        private SocketClient2 m_client;
-        //private Thread receiveThread;
+        private Internet<AuctionEntity> m_auctionInternet;
+        private Internet<BidderEntity> m_bidderInternet;
         private Object m_oMissing = System.Reflection.Missing.Value;
         private string m_serverIp = @"127.0.0.1";
-        private int m_serverPort = 5566;
+        private int m_serverPort = 27017;
         private Size m_listViewSize;
         private int[] m_colWidths;
         private int m_sortColumnId = -1;
@@ -25,7 +35,12 @@ namespace Checkout
         private string m_noStr = "否";
         private Microsoft.Office.Interop.Word._Document m_totalPaymentDoc;
         private string m_totalPaymentDocName;
+        #endregion
 
+        #region Properties
+        #endregion
+
+        #region Constructors and Finalizers
         public CheckoutForm()
         {
             InitializeComponent();
@@ -34,14 +49,25 @@ namespace Checkout
             for (int i = 0; i < auctionsListView.Columns.Count; i++)
                 m_colWidths[i] = auctionsListView.Columns[i].Width;
         }
+        #endregion
 
-        #region windows form event handler
+        #region Windows Form Events
         private void CheckoutForm_Load(object sender, EventArgs e)
         {
             string settingsFP = Path.Combine(Application.StartupPath, m_settingsFN);
-            if (Utility.IsFileExist(settingsFP, m_settingsFN))
+            if (Utility.IsFileExist(settingsFP))
                 LoadSettings(settingsFP);
-            m_client = new SocketClient2(m_serverIp, m_serverPort);
+            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
+            if (ip.Length == 0)
+                return;
+            m_auctionInternet = new Internet<AuctionEntity>(ip, "test", "entities");
+            m_auctionInternet.Connect();
+            m_bidderInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
+            m_bidderInternet.Connect();
+            if (m_auctionInternet.IsConnected && m_bidderInternet.IsConnected)
+            {
+                SetButtonsEnable(true);
+            }
         }
 
         private void CheckoutForm_Resize(object sender, System.EventArgs e)
@@ -56,51 +82,54 @@ namespace Checkout
         private void CheckoutForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             CloseDocAndWord();
-            m_client.Close();
+            //m_client.Close();
             SaveSettings();
         }
 
-        private void previewButton_Click(object sender, EventArgs e)
+        private void searchButton_Click(object sender, EventArgs e)
         {
-            if (!m_client.IsConnected)
-                ResetButtons();
+            if (!m_auctionInternet.IsConnected)
+                SetButtonsEnable(false);
 
             int bidderNo = 0;
             if (Int32.TryParse(bidderNoTextBox.Text, out bidderNo))
             {
-                if (!m_client.Send(bidderNo.ToString()))
-                {
-                    ResetButtons();
-                    return;
-                }
-                //receiveThread = new Thread(m_client.Receive);
-                //receiveThread.Start();
-
-                //while (!receiveThread.IsAlive) ;
-                m_client.Receive();
-                if (ParseAndSetBidder(m_client.m_responseString))
-                {
-                    UpdateListView();
-                    saveButton.Enabled = true;
-                    printButton.Enabled = true;
-                    isUseCardButton.Enabled = true;
-                }
-                else
+                List<AuctionEntity> auctions = m_auctionInternet.SearchAuctions(bidderNo);
+                BidderEntity bidder = m_bidderInternet.GetBidderData(bidderNo);
+                if (auctions.Count == 0 || bidder == null)
                 {
                     MessageBox.Show("查詢不到此買家");
+                    SetButtonsEnable(false);
+                    return;
                 }
+
+                SetBidder(bidder, auctions);
+                UpdateListView();
+                saveButton.Enabled = true;
+                printButton.Enabled = true;
+                isUseCardButton.Enabled = true;
             }
         }
 
-        private void ResetButtons()
+        private void SetButtonsEnable(bool isConnected)
         {
-            connectButton.Enabled = true;
-            bidderNoTextBox.Enabled = false;
-            previewButton.Enabled = false;
-            saveButton.Enabled = false;
-            printButton.Enabled = false;
-            isUseCardButton.Enabled = false;
-            toolStripStatusLabel1.Text = "連線中斷!請重新連線!";
+            if (isConnected)
+            {
+                bidderNoTextBox.Enabled = true;
+                searchButton.Enabled = true;
+                connectButton.Enabled = false;
+                toolStripStatusLabel1.Text = "連線成功!請開始查詢。";
+            }
+            else
+            {
+                connectButton.Enabled = true;
+                bidderNoTextBox.Enabled = false;
+                searchButton.Enabled = false;
+                saveButton.Enabled = false;
+                printButton.Enabled = false;
+                isUseCardButton.Enabled = false;
+                toolStripStatusLabel1.Text = "連線失敗!請重新連線!";
+            }
         }
 
         private void saveButton_Click(object sender, EventArgs e)
@@ -191,13 +220,14 @@ namespace Checkout
 
         private void connectButton_Click(object sender, EventArgs e)
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", m_client.IP.ToString(), -1, -1);
+            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
             if (ip.Length == 0)
                 return;
-            if (m_client.Connect(ip))
+            m_auctionInternet.IP = ip;
+            if (m_auctionInternet.Connect())
             {
                 bidderNoTextBox.Enabled = true;
-                previewButton.Enabled = true;
+                searchButton.Enabled = true;
                 connectButton.Enabled = false;
                 toolStripStatusLabel1.Text = "連線成功!請開始查詢。";
             }
@@ -227,7 +257,13 @@ namespace Checkout
         }
         #endregion
 
-        #region Methods
+        #region Public Methods
+        #endregion
+
+        #region Protected Methods
+        #endregion
+
+        #region Private Methods
         private void SetDataInDoc()
         {
             m_wordApp = new Microsoft.Office.Interop.Word.Application();
@@ -346,31 +382,23 @@ namespace Checkout
             auctionsListView.EndUpdate();
         }
 
-        private bool ParseAndSetBidder(string receive)
+        private bool SetBidder(BidderEntity bidder, List<AuctionEntity> auctions)
         {
-            string[] str = receive.Split('\t');
-            if (str.Length < 10)    //買家欄位:7+一個拍品欄位:3
-                return false;
-
             m_bidder = new Bidder();
-            m_bidder.name = str[1];   //ignore first string of id.
-            int no = 0;
-            if (!int.TryParse(str[2], out no))
-                return false;
-            m_bidder.no = no;
-            m_bidder.phone = str[3];
-            m_bidder.fax = str[4];
-            m_bidder.email = str[5];
-            m_bidder.addr = str[6];
+            m_bidder.name = bidder.Name;   //ignore first string of id.
+            m_bidder.no = bidder.BidderID_int;
+            m_bidder.phone = bidder.Tel;
+            m_bidder.fax = bidder.Fax;
+            m_bidder.email = bidder.EMail;
+            m_bidder.addr = bidder.EMail;
             m_bidder.auctions = new Dictionary<string, Auction>();
-            for (int i = 7; i < str.Length; i += 3)
+            for (int i = 0; i < auctions.Count; i++)
             {
-                if (i + 2 >= str.Length)
-                    break;
+                AuctionEntity ae = auctions[i];
                 Auction auction = new Auction();
-                auction.lot = str[i];
-                auction.name = str[i + 1];
-                int.TryParse(str[i + 2], out auction.hammerPrice);
+                auction.lot = ae.AuctionId;
+                auction.name = ae.Name;
+                auction.hammerPrice = ae.HammerPrice;
                 auction.ComputeChargeAndTotal();
                 m_bidder.auctions[auction.lot] = auction;
             }
@@ -403,7 +431,7 @@ namespace Checkout
             string fp = Path.Combine(Application.StartupPath, m_settingsFN);
             using (StreamWriter sw = new StreamWriter(fp))
             {
-                sw.WriteLine(m_client.IP + " " + m_serverPort);
+                sw.WriteLine(m_auctionInternet.IP + " " + m_serverPort);
             }
         }
 

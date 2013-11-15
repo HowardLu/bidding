@@ -31,6 +31,70 @@ namespace InternetLibrary
         public int ReservePrice { get; set; }
         public int SellerAccountPayable { get; set; }
         public string PhotoUrl { get; set; }
+        public string Artist { get; set; }
+        public string Artwork { get; set; }
+        public int InitialPrice { get; set; }
+        public int NowPrice { get; set; }
+    }
+
+    public class BidderEntity
+    {
+        public int _id { get; set; }
+        public string BankContact { get; set; }
+        public string Fax { get; set; }
+        public int BidderID_int { get; set; }
+        public string Tel { get; set; }
+        public string Name { get; set; }
+        public string Company { get; set; }
+        public string BankAcc { get; set; }
+        public string CareerTitle { get; set; }
+        public string IDNumber { get; set; }
+        public string BankContactTel { get; set; }
+        public string Address { get; set; }
+        public string BidderID { get; set; }
+        public string CreditCardID { get; set; }
+        public string CreditCardType { get; set; }
+        public string EMail { get; set; }
+        public string Bank { get; set; }
+    }
+
+    public class SellerEntity
+    {
+        public string _id { get; set; }
+        public string IfDealedInsuranceFee { get; set; }
+        public string FrameFee { get; set; }
+        public string Fax { get; set; }
+        public string FireFee { get; set; }
+        public string Tel { get; set; }
+        public string Name { get; set; }
+        public string BankName { get; set; }
+        public string IdentifyFee { get; set; }
+        public string Country { get; set; }
+        public string Address { get; set; }
+        public string IfDealedPictureFee { get; set; }
+        public string BankAcc { get; set; }
+        public string IfNDealedPictureFee { get; set; }
+        public string IfNDealedInsuranceFee { get; set; }
+        public string CardID { get; set; }
+        public string IfDealedServiceFee { get; set; }
+        public string PostID { get; set; }
+        public string IfNDealedServiceFee { get; set; }
+        public string ContractID { get; set; }
+    }
+
+    public class BiddingResultEntity
+    {
+        public ObjectId Id { get; set; }
+        public string BidderId { get; set; }
+        public string AuctionId { get; set; }
+        public int HammerPrice { get; set; }
+
+        public BiddingResultEntity(string bidderId, string auctionId, int hammerPrice)
+        {
+            this.BidderId = bidderId;
+            this.AuctionId = auctionId;
+            this.HammerPrice = hammerPrice;
+        }
     }
 
     public enum AuctionColumnHeader
@@ -89,6 +153,8 @@ namespace InternetLibrary
 
         #region Member Variables
         private MongoClient m_client;
+        private String m_ip;
+        private String m_port = "27017";
         private String m_connectionStr = "mongodb://localhost:27017";
         private String m_dbName = "test";
         private String m_collectionName = "Auctions";
@@ -97,18 +163,25 @@ namespace InternetLibrary
         #endregion
 
         #region Properties
+        public String IP { get { return m_ip; } set { CombineConnString(value); } }
         public String ConnectionString { get { return m_connectionStr; } set { m_connectionStr = value; } }
+        public bool IsConnected { get { return (m_client.GetServer().State == MongoServerState.Connected); } }
         public String DbName { get { return m_dbName; } set { m_dbName = value; } }
         public String CollectionName { get { return m_collectionName; } set { m_collectionName = value; } }
         public MongoCollection<TEntity> Collection { get { return m_collection; } }
         #endregion
 
         #region Constructors
-        public Internet(string connectionString, string dbName, string collectionName)
+        public Internet(string ip, string dbName, string collectionName)
         {
-            m_connectionStr = connectionString;
+            m_ip = ip;
+            CombineConnString(ip);
             m_dbName = dbName;
             m_collectionName = collectionName;
+            m_client = new MongoClient(m_connectionStr);
+            MongoServer server = m_client.GetServer();
+            MongoDatabase database = server.GetDatabase(m_dbName);
+            m_collection = database.GetCollection<TEntity>(m_collectionName);
         }
         #endregion
 
@@ -116,14 +189,18 @@ namespace InternetLibrary
         #endregion
 
         #region Public Methods
-        public void Connect()
+        public bool Connect()
         {
-            m_client = new MongoClient(m_connectionStr);
-            MongoServer server = m_client.GetServer();
-            /*if (server.State == MongoServerState.Disconnected)
-                return;*/
-            MongoDatabase database = server.GetDatabase(m_dbName);
-            m_collection = database.GetCollection<TEntity>(m_collectionName);
+            try
+            {
+                m_collection.FindOne();
+            }
+            catch (MongoConnectionException e)
+            {
+                Console.WriteLine(m_client.GetServer().State.ToString());
+                return false;
+            }
+            return true;
         }
 
         public void UpdateStringField(string auctionId, AuctionColumnHeader columnType, string value)
@@ -202,10 +279,17 @@ namespace InternetLibrary
         public void Insert(TEntity entity)
         {
             m_collection.Insert(entity);
-            WriteConcernResult wcr = m_collection.Save(entity);
-            if (!wcr.Ok)
+            try
             {
-                Console.WriteLine("[Mongo] Insert error!");
+                WriteConcernResult wcr = m_collection.Save(entity);
+                if (!wcr.Ok)
+                {
+                    Console.WriteLine("[Internet] Insert error!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[Internet] Insert error!" + e.ToString());
             }
         }
 
@@ -217,10 +301,24 @@ namespace InternetLibrary
 
         public List<TEntity> GetCollectionList()
         {
-            if(m_collectionList == null)
+            if (m_collectionList == null)
                 m_collectionList = m_collection.FindAll().ToList<TEntity>();
 
             return m_collectionList;
+        }
+
+        public List<TEntity> SearchAuctions(int bidderId)
+        {
+            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.BidderNumber, bidderId.ToString());
+            List<TEntity> auctions = m_collection.Find(query).ToList<TEntity>();
+            return auctions;
+        }
+
+        public TEntity GetBidderData(int bidderId)
+        {
+            IMongoQuery query = Query<BidderEntity>.EQ(e => e.BidderID, bidderId.ToString());
+            TEntity bidder = m_collection.FindOne(query);
+            return bidder;
         }
         #endregion
 
@@ -228,6 +326,10 @@ namespace InternetLibrary
         #endregion
 
         #region Private Methods
+        private void CombineConnString(string ip)
+        {
+            m_connectionStr = "mongodb://" + ip + ":" + m_port;
+        }
         #endregion
     }
 }

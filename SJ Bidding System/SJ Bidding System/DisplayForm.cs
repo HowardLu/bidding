@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Bidding;
+using UtilityLibrary;
 
 namespace SJ_Bidding_System
 {

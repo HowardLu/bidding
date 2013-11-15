@@ -8,14 +8,14 @@
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Checkout.exe.manifest" size="3052">
+    <dependentAssembly dependencyType="install" codebase="Checkout.exe.manifest" size="4990">
       <assemblyIdentity name="Checkout.exe" version="1.0.0.2" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>5/Z/0e4FqRFPv2OQxyx3l7IoeO4=</dsig:DigestValue>
+        <dsig:DigestValue>a6nNwmBoCveY0lq7LDLLTFHuzFI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

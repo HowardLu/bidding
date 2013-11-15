@@ -7,11 +7,21 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.Linq;
+using Bidding;
+using UtilityLibrary;
+using InternetLibrary;
 
 namespace SJ_Bidding_System
 {
     public partial class ControlForm : Form
     {
+        #region Events
+        #endregion
+
+        #region Enums, Structs, and Classes
+        #endregion
+
+        #region Member Variables
         private DisplayForm m_displayForm;
         private SetAuctionForm m_setAllAuctionForm;
         private List<Auction> m_auctions;
@@ -20,7 +30,14 @@ namespace SJ_Bidding_System
         private string m_inputNumbers = "";
         //private Thread m_loadPhotoThread;
         private Process m_server;
+        private Internet<AuctionEntity> m_aeInternet;
+        private Internet<BiddingResultEntity> m_breInternet;
+        #endregion
 
+        #region Properties
+        #endregion
+
+        #region Constructors and Finalizers
         public ControlForm()
         {
             InitializeComponent();
@@ -29,9 +46,12 @@ namespace SJ_Bidding_System
             ci.NumberFormat.CurrencyDecimalDigits = 0;
             ci.NumberFormat.CurrencySymbol = "";
             Thread.CurrentThread.CurrentCulture = ci;
+            m_aeInternet = new Internet<AuctionEntity>("127.0.0.1", "test", "entities");
+            m_breInternet = new Internet<BiddingResultEntity>("127.0.0.1", "test", "bidding_result");
         }
+        #endregion
 
-        #region Windows Form event handler
+        #region Windows Form Events
         /// <summary>
         /// Event when Form first load.
         /// </summary>
@@ -196,9 +216,7 @@ namespace SJ_Bidding_System
         {
             SavePrices(Path.Combine(Application.StartupPath, Settings.saveFolder, Settings.pricesFN));
             ExchangeRate.Save(Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN));
-            DoSaveBiddingResult(Settings.biddingResultFP);
-            //if (m_loadPhotoThread.IsAlive)
-            //    m_loadPhotoThread.Abort();
+            //DoSaveBiddingResult(Settings.biddingResultFP);
             if (!m_server.HasExited)
                 m_server.CloseMainWindow();
         }
@@ -384,7 +402,7 @@ namespace SJ_Bidding_System
 
         private void setAllAuctionButton_Click(object sender, EventArgs e)
         {
-            m_setAllAuctionForm = new SetAuctionForm();
+            m_setAllAuctionForm = new SetAuctionForm(m_auctions.ToDictionary<Auction, string>(ae => ae.lot));
             m_setAllAuctionForm.ShowDialog();
         }
 
@@ -425,7 +443,13 @@ namespace SJ_Bidding_System
         }
         #endregion
 
-        #region Methods
+        #region Public Methods
+        #endregion
+
+        #region Protected Methods
+        #endregion
+
+        #region Private Methods
         /// <summary>
         /// Initialize display form in second monitor.
         /// </summary>
@@ -462,6 +486,7 @@ namespace SJ_Bidding_System
         /// </summary>
         private void LoadAuctions()
         {
+            Dictionary<string, AuctionEntity> aeDic = m_aeInternet.GetCollectionList().ToDictionary<AuctionEntity, string>(ae => ae.AuctionId);
             m_auctions = new List<Auction>();
             List<string> illegalFiles = new List<string>();
             string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
@@ -469,7 +494,7 @@ namespace SJ_Bidding_System
             {
                 Auction auction = new Auction();
                 string fp = filePaths[i];
-                if (auction.GetInfoFromFileName(fp))
+                if (auction.GetInfoFromDictionary(ref aeDic, fp))
                 {
                     auction.photofilePath = fp;
                     if (m_auctions.Count < 10)
@@ -524,7 +549,7 @@ namespace SJ_Bidding_System
                 }
                 else
                 {
-                    if (auction.photo != null)
+                    if (i != auctionIdNow && auction.photo != null)
                     {
                         auction.photo.Dispose();
                         auction.photo = null;
@@ -742,6 +767,8 @@ namespace SJ_Bidding_System
                     if (auction.winBidderNo != 0)
                     {
                         sw.WriteLine("{0}\t{1}\t{2}\t{3}", auction.lot, auction.artwork, auction.winBidderNo, auction.nowPrice);
+                        BiddingResultEntity bre = new BiddingResultEntity(auction.winBidderNo.ToString(), auction.lot, auction.nowPrice);
+                        m_breInternet.Insert(bre);
                     }
                 }
             }

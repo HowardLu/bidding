@@ -32,7 +32,7 @@
             this.bidderNoLabel = new System.Windows.Forms.Label();
             this.bidderNoTextBox = new System.Windows.Forms.TextBox();
             this.saveButton = new System.Windows.Forms.Button();
-            this.previewButton = new System.Windows.Forms.Button();
+            this.searchButton = new System.Windows.Forms.Button();
             this.printButton = new System.Windows.Forms.Button();
             this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
@@ -82,17 +82,17 @@
             this.saveButton.UseVisualStyleBackColor = true;
             this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
-            // previewButton
+            // searchButton
             // 
-            this.previewButton.Enabled = false;
-            this.previewButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.previewButton.Location = new System.Drawing.Point(185, 5);
-            this.previewButton.Name = "previewButton";
-            this.previewButton.Size = new System.Drawing.Size(72, 23);
-            this.previewButton.TabIndex = 3;
-            this.previewButton.Text = "確定";
-            this.previewButton.UseVisualStyleBackColor = true;
-            this.previewButton.Click += new System.EventHandler(this.previewButton_Click);
+            this.searchButton.Enabled = false;
+            this.searchButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.searchButton.Location = new System.Drawing.Point(185, 5);
+            this.searchButton.Name = "searchButton";
+            this.searchButton.Size = new System.Drawing.Size(72, 23);
+            this.searchButton.TabIndex = 3;
+            this.searchButton.Text = "查詢";
+            this.searchButton.UseVisualStyleBackColor = true;
+            this.searchButton.Click += new System.EventHandler(this.searchButton_Click);
             // 
             // printButton
             // 
@@ -194,6 +194,7 @@
             this.isUseCardButton.TabIndex = 8;
             this.isUseCardButton.Text = "是/否刷卡";
             this.isUseCardButton.UseVisualStyleBackColor = true;
+            this.isUseCardButton.Visible = false;
             this.isUseCardButton.Click += new System.EventHandler(this.isUseCardButton_Click);
             // 
             // statusStrip1
@@ -233,7 +234,7 @@
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.auctionsListView);
             this.Controls.Add(this.printButton);
-            this.Controls.Add(this.previewButton);
+            this.Controls.Add(this.searchButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.bidderNoTextBox);
             this.Controls.Add(this.bidderNoLabel);
@@ -254,7 +255,7 @@
         private System.Windows.Forms.Label bidderNoLabel;
         private System.Windows.Forms.TextBox bidderNoTextBox;
         private System.Windows.Forms.Button saveButton;
-        private System.Windows.Forms.Button previewButton;
+        private System.Windows.Forms.Button searchButton;
         private System.Windows.Forms.Button printButton;
         private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;

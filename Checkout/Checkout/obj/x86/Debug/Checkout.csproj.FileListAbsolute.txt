@@ -38,3 +38,27 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Ch
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\bin\Debug\Checkout.application
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.exe.manifest
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Checkout\obj\x86\Debug\Checkout.application
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Core.dll
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Interop.Word.dll
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.csproj.ResolveComReference.cache
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.exe
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.pdb
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\Checkout.exe.manifest
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\Checkout.application
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\Checkout.exe
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\Checkout.pdb
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\ResolveAssemblyReference.cache
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.CheckoutForm.resources
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.Properties.Resources.resources
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\GenerateResource.read.1.tlog
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.exe.manifest
+\\tsclient\D\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.application
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\Library.dll
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Bson.dll
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Driver.dll
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\Library.pdb
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Bson.pdb
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Bson.xml
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Driver.pdb
+\\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Driver.xml

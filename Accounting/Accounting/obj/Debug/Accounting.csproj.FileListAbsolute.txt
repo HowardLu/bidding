@@ -28,10 +28,6 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Acc
 \\tsclient\D\bidding\Accounting\Accounting\bin\Debug\Accounting.pdb
 \\tsclient\D\bidding\Accounting\Accounting\bin\Debug\Library.dll
 \\tsclient\D\bidding\Accounting\Accounting\bin\Debug\Library.pdb
-\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.pdb
-\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.xml
-\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.pdb
-\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.xml
 E:\bidding\Accounting\Accounting\obj\Debug\Accounting.exe
 E:\bidding\Accounting\Accounting\obj\Debug\Accounting.pdb
 E:\bidding\Accounting\Accounting\bin\Debug\Accounting.exe
@@ -50,3 +46,16 @@ E:\bidding\Accounting\Accounting\obj\Debug\Accounting.Form1.resources
 E:\bidding\Accounting\Accounting\obj\Debug\Accounting.Properties.Resources.resources
 E:\bidding\Accounting\Accounting\obj\Debug\GenerateResource.read.1.tlog
 E:\bidding\Accounting\Accounting\obj\Debug\GenerateResource.write.1.tlog
+D:\bidding\Accounting\Accounting\obj\Debug\Accounting.exe
+D:\bidding\Accounting\Accounting\obj\Debug\Accounting.pdb
+D:\bidding\Accounting\Accounting\bin\Debug\Accounting.exe
+D:\bidding\Accounting\Accounting\bin\Debug\Accounting.pdb
+D:\bidding\Accounting\Accounting\bin\Debug\Library.dll
+D:\bidding\Accounting\Accounting\bin\Debug\Library.pdb
+D:\bidding\Accounting\Accounting\obj\Debug\ResolveAssemblyReference.cache
+D:\bidding\Accounting\Accounting\obj\Debug\Accounting.Form1.resources
+D:\bidding\Accounting\Accounting\obj\Debug\Accounting.Properties.Resources.resources
+D:\bidding\Accounting\Accounting\obj\Debug\GenerateResource.read.1.tlog
+D:\bidding\Accounting\Accounting\obj\Debug\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Interop.Microsoft.Office.Core.dll
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Accounting.csproj.ResolveComReference.cache
