@@ -30,7 +30,6 @@ namespace Accounting
         #region Member Variables
         //private String m_connectionStr = "mongodb://1.34.233.143:27017";
         private Internet<AuctionEntity> m_internet;
-        //private Internet<AuctionEntityTW> m_internet = new Internet<AuctionEntityTW>("mongodb://localhost:27017", "bidding_data", "auction_table");
         #endregion
 
         #region Properties
@@ -248,7 +247,7 @@ namespace Accounting
             string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
             if (ip.Length == 0)
                 return;
-            m_internet = new Internet<AuctionEntity>(ip, "test", "entities");
+            m_internet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
 
             if (m_internet.Connect())
             {
