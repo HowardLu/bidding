@@ -203,6 +203,15 @@ namespace InternetLibrary
             return true;
         }
 
+        public void UpdateStringField(string auctionId, Expression<Func<AuctionEntity, string>> expression, string value)
+        {
+            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
+            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
+            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
+            WriteConcernResult wcr = m_collection.Update(query, update);
+            // TODO
+        }
+
         public void UpdateStringField(string auctionId, AuctionColumnHeader columnType, string value)
         {
             IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
@@ -219,6 +228,15 @@ namespace InternetLibrary
                 default:
                     break;
             }
+            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
+            WriteConcernResult wcr = m_collection.Update(query, update);
+            // TODO
+        }
+
+        public void UpdateIntField(string auctionId, Expression<Func<AuctionEntity, int>> expression, int value)
+        {
+            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
+            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
             IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
             WriteConcernResult wcr = m_collection.Update(query, update);
             // TODO

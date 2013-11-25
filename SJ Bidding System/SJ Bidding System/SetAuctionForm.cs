@@ -6,11 +6,19 @@ using System.Windows.Forms;
 using System.Linq;
 using Bidding;
 using UtilityLibrary;
+using InternetLibrary;
 
 namespace SJ_Bidding_System
 {
     public partial class SetAuctionForm : Form
     {
+        #region Events
+        #endregion
+
+        #region Enums, Structs, and Classes
+        #endregion
+
+        #region Member Variables
         private Dictionary<string, Auction> m_auctions;
         private Size m_listViewSize;
         private int[] m_lvColWidths;
@@ -18,8 +26,14 @@ namespace SJ_Bidding_System
         private ImageList m_largeImgList = new ImageList();
         private ImageList m_smallImgList = new ImageList();
         private string m_addImgFP;
+        private Internet<AuctionEntity> m_aeInternet;
+        #endregion
 
-        public SetAuctionForm(Dictionary<string, Auction> auctions)
+        #region Properties
+        #endregion
+
+        #region Constructors and Finalizers
+        public SetAuctionForm(Dictionary<string, Auction> auctions, ref Internet<AuctionEntity> aeInternet)
         {
             InitializeComponent();
             m_listViewSize = this.auctionsListView.Size;
@@ -27,9 +41,11 @@ namespace SJ_Bidding_System
             for (int i = 0; i < auctionsListView.Columns.Count; i++)
                 m_lvColWidths[i] = auctionsListView.Columns[i].Width;
             m_auctions = auctions;
+            m_aeInternet = aeInternet;
         }
+        #endregion
 
-        #region Windows Form event handler
+        #region Windows Form Events
         private void SetAuctionForm_Load(object sender, EventArgs e)
         {
             LoadAuctionPhotos();
@@ -94,7 +110,7 @@ namespace SJ_Bidding_System
             if (lotTextBox.Text.Length == 0)
                 return;
 
-            if (!Utility.IsValidFileName(lotTextBox.Text) || Utility.IsNumber(lotTextBox.Text) == -1)
+            if (!Utility.IsValidFileName(lotTextBox.Text))
             {
                 lotTextBox.Text = "";
             }
@@ -160,23 +176,14 @@ namespace SJ_Bidding_System
             auction.artist = artistTextBox.Text;
             auction.artwork = artworkTextBox.Text;
             auction.initialPrice = int.Parse(initialPriceTextBox.Text);
-            string newFileName = auction.CreateFileName(Path.GetExtension(photoTextBox.Text));
-            auction.photofilePath = Path.Combine(Settings.auctionFolder, newFileName);
-            if (File.Exists(m_addImgFP))
-            {
-                File.Copy(m_addImgFP, Path.Combine(Application.StartupPath, auction.photofilePath), true);
-            }
-            else
-            {
-                photoTextBox.Text = "";
-                MessageBox.Show(m_addImgFP + "圖片來源不存在! ");
-                return;
-            }
-            m_auctions.Add(auction.lot, auction);
-
+            CopyPhotoToAuctionsFolder(ref auction);
             string fp = Path.Combine(Application.StartupPath, auction.photofilePath);
-            m_largeImgList.Images.Add(Utility.OpenBitmap(fp).GetThumbnailImage(100, 100, null, new IntPtr()));
-            m_smallImgList.Images.Add(Utility.OpenBitmap(fp).GetThumbnailImage(50, 50, null, new IntPtr()));
+            auction.photo = Utility.OpenBitmap(fp);
+            m_auctions.Add(auction.lot, auction);
+            m_aeInternet.Insert(auction.ToAuctionEntity());
+
+            m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
+            m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
             auctionsListView.BeginUpdate();
             AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
                int.Parse(initialPriceTextBox.Text, System.Globalization.NumberStyles.Currency).ToString("c"));
@@ -216,27 +223,12 @@ namespace SJ_Bidding_System
             auc.artist = artistTextBox.Text;
             auc.artwork = artworkTextBox.Text;
             auc.initialPrice = int.Parse(initialPriceTextBox.Text);
-            string newFileName = Path.Combine(Path.GetDirectoryName(auc.photofilePath),
-                auc.CreateFileName(Path.GetExtension(auc.photofilePath)));
-            if (m_addImgFP == Path.Combine(Application.StartupPath, newFileName))   // didn't change anything, just press save.
-                return;
-
-            try
-            {
-                if (File.Exists(m_addImgFP))
-                {
-                    File.Copy(m_addImgFP, Path.Combine(Application.StartupPath, newFileName), true);
-                    File.Delete(m_addImgFP);
-                    auc.photofilePath = newFileName;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine(ex.StackTrace);
-            }
+            CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
+            m_aeInternet.UpdateStringField(auc.lot, (ae => ae.Artist), auc.artist);
+            m_aeInternet.UpdateStringField(auc.lot, (ae => ae.Artwork), auc.artwork);
+            m_aeInternet.UpdateIntField(auc.lot, (ae => ae.InitialPrice), auc.initialPrice);
 
             int id = auctionsListView.SelectedIndices[0];
             auctionsListView.Items[id].Text = lotTextBox.Text;
@@ -252,9 +244,11 @@ namespace SJ_Bidding_System
         {
             foreach (ListViewItem lvi in auctionsListView.SelectedItems)
             {
-                if (File.Exists(m_auctions[lvi.Text].photofilePath))
-                    File.Delete(m_auctions[lvi.Text].photofilePath);
-                m_auctions.Remove(lvi.Text);
+                string lot = lvi.Text;
+                if (File.Exists(m_auctions[lot].photofilePath))
+                    File.Delete(m_auctions[lot].photofilePath);
+                m_auctions.Remove(lot);
+                m_aeInternet.Remove(lot);
                 auctionsListView.Items.Remove(lvi);
             }
         }
@@ -301,7 +295,13 @@ namespace SJ_Bidding_System
         }
         #endregion
 
-        #region Methods
+        #region Public Methods
+        #endregion
+
+        #region Protected Methods
+        #endregion
+
+        #region Private Methods
         private void LoadAuctionPhotos()
         {
             string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
@@ -314,6 +314,10 @@ namespace SJ_Bidding_System
             {
                 //m_largeImgList.Images.Add(Utility.OpenBitmap(auction.photofilePath).GetThumbnailImage(100, 100, null, new IntPtr()));
                 //m_smallImgList.Images.Add(Utility.OpenBitmap(auction.photofilePath).GetThumbnailImage(50, 50, null, new IntPtr()));
+                if (auction.photo == null)
+                {
+                    auction.photo = Utility.OpenBitmap(auction.photofilePath);
+                }
                 m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
                 m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
@@ -339,6 +343,26 @@ namespace SJ_Bidding_System
         {
             lotTextBox.Text = artistTextBox.Text = artworkTextBox.Text = initialPriceTextBox.Text =
                 photoTextBox.Text = "";
+        }
+
+        private void CopyPhotoToAuctionsFolder(ref Auction auction)
+        {
+            //string newFileName = auction.CreateFileName(Path.GetExtension(photoTextBox.Text));
+            string newFileName = auction.lot + Path.GetExtension(photoTextBox.Text);
+            auction.photofilePath = Path.Combine(Settings.auctionFolder, newFileName);
+            string newFilePath = Path.Combine(Application.StartupPath, auction.photofilePath);
+            if (File.Exists(newFilePath))
+                return;
+
+            if (File.Exists(m_addImgFP))
+            {
+                File.Copy(m_addImgFP, newFilePath, true);
+            }
+            else
+            {
+                photoTextBox.Text = "";
+                MessageBox.Show(m_addImgFP + "圖片來源不存在! ");
+            }
         }
         #endregion
     }

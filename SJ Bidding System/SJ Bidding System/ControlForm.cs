@@ -402,7 +402,7 @@ namespace SJ_Bidding_System
 
         private void setAllAuctionButton_Click(object sender, EventArgs e)
         {
-            m_setAllAuctionForm = new SetAuctionForm(m_auctions.ToDictionary<Auction, string>(ae => ae.lot));
+            m_setAllAuctionForm = new SetAuctionForm(m_auctions.ToDictionary<Auction, string>(ae => ae.lot), ref m_aeInternet);
             m_setAllAuctionForm.ShowDialog();
         }
 

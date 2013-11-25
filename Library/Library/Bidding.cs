@@ -107,6 +107,17 @@ namespace Bidding
                 total = hammerPrice + serviceCharge;
             }
         }
+
+        public AuctionEntity ToAuctionEntity()
+        {
+            AuctionEntity ae = new AuctionEntity();
+            ae.AuctionId = this.lot;
+            ae.Artist = this.artist;
+            ae.Artwork = this.artwork;
+            ae.InitialPrice = this.initialPrice;
+            ae.NowPrice = this.nowPrice;
+            return ae;
+        }
     }
 
     /// <summary>
