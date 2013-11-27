@@ -144,7 +144,7 @@ namespace SJ_Bidding_System
                 return;
 
             if (!Utility.IsValidFileName(initialPriceTextBox.Text) ||
-                Utility.IsNumber(initialPriceTextBox.Text) == -1)
+                Utility.ParseToInt(initialPriceTextBox.Text) == -1)
             {
                 initialPriceTextBox.Text = "";
             }
@@ -226,9 +226,9 @@ namespace SJ_Bidding_System
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
-            m_aeInternet.UpdateStringField(auc.lot, (ae => ae.Artist), auc.artist);
-            m_aeInternet.UpdateStringField(auc.lot, (ae => ae.Artwork), auc.artwork);
-            m_aeInternet.UpdateIntField(auc.lot, (ae => ae.InitialPrice), auc.initialPrice);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artist, auc.artist);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artwork, auc.artwork);
+            m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auc.lot, ae => ae.InitialPrice, auc.initialPrice);
 
             int id = auctionsListView.SelectedIndices[0];
             auctionsListView.Items[id].Text = lotTextBox.Text;
@@ -248,7 +248,7 @@ namespace SJ_Bidding_System
                 if (File.Exists(m_auctions[lot].photofilePath))
                     File.Delete(m_auctions[lot].photofilePath);
                 m_auctions.Remove(lot);
-                m_aeInternet.Remove(lot);
+                m_aeInternet.Remove<string>(ae => ae.AuctionId, lot);
                 auctionsListView.Items.Remove(lvi);
             }
         }

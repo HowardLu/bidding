@@ -150,7 +150,7 @@ namespace UtilityLibrary
             }
         }
 
-        public static int IsNumber(string input)
+        public static int ParseToInt(string input)
         {
             int number = 0;
             if (int.TryParse(input, out number))

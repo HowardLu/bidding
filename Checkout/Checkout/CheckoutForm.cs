@@ -94,8 +94,8 @@ namespace Checkout
             int bidderNo = 0;
             if (Int32.TryParse(bidderNoTextBox.Text, out bidderNo))
             {
-                List<AuctionEntity> auctions = m_auctionInternet.SearchAuctions(bidderNo);
-                BidderEntity bidder = m_bidderInternet.GetBidderData(bidderNo);
+                List<AuctionEntity> auctions = m_auctionInternet.Find<string>(ae => ae.BidderNumber, bidderNo.ToString());
+                BidderEntity bidder = m_bidderInternet.FineOne<int>(b => b.BidderID_int, bidderNo);
                 if (auctions.Count == 0 || bidder == null)
                 {
                     MessageBox.Show("查詢不到此買家");
@@ -184,7 +184,7 @@ namespace Checkout
             if (bidderNoTextBox.Text.Length == 0)
                 return;
 
-            if (Utility.IsNumber(bidderNoTextBox.Text) == -1)
+            if (Utility.ParseToInt(bidderNoTextBox.Text) == -1)
             {
                 bidderNoTextBox.Text = "";
             }

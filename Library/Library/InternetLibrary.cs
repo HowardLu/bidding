@@ -14,10 +14,8 @@ namespace InternetLibrary
         public ObjectId Id { get; set; }
         public string AuctionId { get; set; }
         public string Name { get; set; }
-        public string Size { get; set; }
         public string BidderNumber { get; set; }
         public string StockState { get; set; }
-        public string Seller { get; set; }
         public int ReturnState { get; set; }
         public int HammerPrice { get; set; }
         public int BuyerServiceCharge { get; set; }
@@ -28,7 +26,6 @@ namespace InternetLibrary
         public int ReturnGuaranteeNumber { get; set; }
         public int PayWayState { get; set; }
         public int SellerServiceCharge { get; set; }
-        public int ReservePrice { get; set; }
         public int SellerAccountPayable { get; set; }
         public string PhotoUrl { get; set; }
         public string Artist { get; set; }
@@ -97,6 +94,27 @@ namespace InternetLibrary
         }
     }
 
+    public class DealerItemEntity
+    {
+        public string _id { get; set; }
+        public string ReservePrice { get; set; }
+        public string BuildImg { get; set; }
+        public string SrcDealer { get; set; }
+        public string ItemPS { get; set; }
+        public string Remain { get; set; }
+        public string ItemNum { get; set; }
+        public string LotNO { get; set; }
+        public string PackImg { get; set; }
+        public string ItemName { get; set; }
+        public string Spec { get; set; }
+    }
+
+    public class MemberEntity
+    {
+        public ObjectId _id { get; set; }
+        public string Account { get; set; }
+    }
+
     public enum AuctionColumnHeader
     {
         拍品編號 = 0,
@@ -116,7 +134,7 @@ namespace InternetLibrary
         付款方式,
         賣家服務及保險費,
         保留價,
-        應負賣家金額,
+        應付賣家金額,
         Count
     }
 
@@ -203,94 +221,11 @@ namespace InternetLibrary
             return true;
         }
 
-        public void UpdateStringField(string auctionId, Expression<Func<AuctionEntity, string>> expression, string value)
+        public void UpdateField<TKey, TValue>(Expression<Func<TEntity, TKey>> keyExpression, TKey key,
+            Expression<Func<TEntity, TValue>> valueExpression, TValue value)
         {
-            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
-            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
-            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
-            WriteConcernResult wcr = m_collection.Update(query, update);
-            // TODO
-        }
-
-        public void UpdateStringField(string auctionId, AuctionColumnHeader columnType, string value)
-        {
-            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
-            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
-            Expression<Func<AuctionEntity, string>> expression = e => e.Name;
-            switch (columnType)
-            {
-                case AuctionColumnHeader.拍品名稱:
-                    expression = e => e.Name;
-                    break;
-                case AuctionColumnHeader.庫存狀態:
-                    expression = e => e.StockState;
-                    break;
-                default:
-                    break;
-            }
-            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
-            WriteConcernResult wcr = m_collection.Update(query, update);
-            // TODO
-        }
-
-        public void UpdateIntField(string auctionId, Expression<Func<AuctionEntity, int>> expression, int value)
-        {
-            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
-            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
-            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
-            WriteConcernResult wcr = m_collection.Update(query, update);
-            // TODO
-        }
-
-        public void UpdateIntField(string auctionId, AuctionColumnHeader columnType, int value)
-        {
-            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
-            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
-            Expression<Func<AuctionEntity, int>> expression = e => e.ReturnState;
-            switch (columnType)
-            {
-                case AuctionColumnHeader.歸還狀態:
-                    expression = e => e.ReturnState;
-                    break;
-                case AuctionColumnHeader.買家適用服務費:
-                    expression = e => e.BuyerServiceCharge;
-                    break;
-                case AuctionColumnHeader.保證金繳納:
-                    expression = e => e.PayGuaranteeState;
-                    break;
-                case AuctionColumnHeader.保證金繳納金額:
-                    expression = e => e.PayGuaranteeNumber;
-                    break;
-                case AuctionColumnHeader.保證金退還:
-                    expression = e => e.ReturnGuaranteeState;
-                    break;
-                case AuctionColumnHeader.保證金退還金額:
-                    expression = e => e.ReturnGuaranteeNumber;
-                    break;
-                case AuctionColumnHeader.付款方式:
-                    expression = e => e.PayWayState;
-                    break;
-                default:
-                    break;
-            }
-            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
-            WriteConcernResult wcr = m_collection.Update(query, update);
-        }
-
-        public void UpdateFloatField(string auctionId, AuctionColumnHeader columnType, float value)
-        {
-            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
-            AuctionEntity entity = m_collection.FindOne(query) as AuctionEntity;
-            Expression<Func<AuctionEntity, float>> expression = e => e.ReturnState;
-            switch (columnType)
-            {
-                case AuctionColumnHeader.歸還狀態:
-                    expression = e => e.ReturnState;
-                    break;
-                default:
-                    break;
-            }
-            IMongoUpdate update = Update<AuctionEntity>.Set(expression, value);
+            IMongoQuery query = Query<TEntity>.EQ(keyExpression, key);
+            IMongoUpdate update = Update<TEntity>.Set(valueExpression, value);
             WriteConcernResult wcr = m_collection.Update(query, update);
         }
 
@@ -311,9 +246,9 @@ namespace InternetLibrary
             }
         }
 
-        public void Remove(string auctionId)
+        public void Remove<TKey>(Expression<Func<TEntity, TKey>> keyExpression, TKey key)
         {
-            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.AuctionId, auctionId);
+            IMongoQuery query = Query<TEntity>.EQ(keyExpression, key);
             m_collection.Remove(query);
         }
 
@@ -325,18 +260,18 @@ namespace InternetLibrary
             return m_collectionList;
         }
 
-        public List<TEntity> SearchAuctions(int bidderId)
+        public List<TEntity> Find<TKey>(Expression<Func<TEntity, TKey>> keyExpression, TKey key)
         {
-            IMongoQuery query = Query<AuctionEntity>.EQ(e => e.BidderNumber, bidderId.ToString());
-            List<TEntity> auctions = m_collection.Find(query).ToList<TEntity>();
-            return auctions;
+            IMongoQuery query = Query<TEntity>.EQ(keyExpression, key);
+            List<TEntity> entities = m_collection.Find(query).ToList<TEntity>();
+            return entities;
         }
 
-        public TEntity GetBidderData(int bidderId)
+        public TEntity FineOne<TKey>(Expression<Func<TEntity, TKey>> expression, TKey value)
         {
-            IMongoQuery query = Query<BidderEntity>.EQ(e => e.BidderID, bidderId.ToString());
-            TEntity bidder = m_collection.FindOne(query);
-            return bidder;
+            IMongoQuery query = Query<TEntity>.EQ(expression, value);
+            TEntity entity = m_collection.FindOne(query);
+            return entity;
         }
         #endregion
 
