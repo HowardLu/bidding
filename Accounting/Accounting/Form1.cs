@@ -32,7 +32,7 @@ namespace Accounting
         private Internet<AuctionEntity> m_auctionsInternet;
         private Internet<DealerItemEntity> m_dealerItemInternet;
         private Internet<MemberEntity> m_memberInternet;
-        private bool m_isLogined = false;
+        private bool m_isSuperUser = false;
         #endregion
 
         #region Properties
@@ -94,49 +94,58 @@ namespace Accounting
             if (e.RowIndex == -1 || e.ColumnIndex == -1)
                 return;
 
-            string auctionId = this.dataGridView1.Rows[e.RowIndex].Cells[(int)AuctionColumnHeader.拍品編號].Value.ToString();
-            switch ((AuctionColumnHeader)e.ColumnIndex)
+            string auctionId = this.dataGridView1.Rows[e.RowIndex].Cells[AuctionColumnHeader.拍品編號.ToString()].Value.ToString();
+            string colName = this.dataGridView1.Columns[e.ColumnIndex].Name;
+            switch (colName)
             {
-                case AuctionColumnHeader.庫存狀態:
+                case "庫存狀態":
                     m_auctionsInternet.UpdateField<string, string>(ae => ae.AuctionId, auctionId, ae => ae.StockState, this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
                     break;
-                case AuctionColumnHeader.歸還狀態:
+                case "歸還狀態":
                     {
                         DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnState, Utility.ToEnumInt<ReturnState>(cell.Value.ToString()));
                     }
                     break;
-                case AuctionColumnHeader.買家適用服務費:
+                case "買家適用服務費":
                     {
-                        DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
-                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.BuyerServiceCharge, Utility.ParseToInt(cell.Value.ToString()));
+                        DataGridViewCell hpCell = this.dataGridView1.Rows[e.RowIndex].Cells[AuctionColumnHeader.落槌價.ToString()] as DataGridViewCell;
+                        DataGridViewCell bscCell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
+                        DataGridViewCell fpCell = this.dataGridView1.Rows[e.RowIndex].Cells[AuctionColumnHeader.成交價.ToString()] as DataGridViewCell;
+
+                        int hammerPrice = Utility.ParseToInt(hpCell.Value.ToString());
+                        int newBuyerServiceCharge = Utility.ParseToInt(bscCell.Value.ToString());
+                        int finalPrice = GetFinalPrice(hammerPrice, newBuyerServiceCharge);
+                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.BuyerServiceCharge, newBuyerServiceCharge);
+                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.FinalPrice, finalPrice);
+                        fpCell.Value = finalPrice;
                     }
                     break;
-                case AuctionColumnHeader.保證金繳納:
+                case "保證金繳納":
                     {
                         DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.PayGuaranteeState, Utility.ToEnumInt<PayGuarantee>(cell.Value.ToString()));
                     }
                     break;
-                case AuctionColumnHeader.保證金繳納金額:
+                case "保證金繳納金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.PayGuaranteeNumber, Utility.ParseToInt(cell.Value.ToString()));
                     }
                     break;
-                case AuctionColumnHeader.保證金退還:
+                case "保證金退還":
                     {
                         DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnGuaranteeState, Utility.ToEnumInt<ReturnGuarantee>(cell.Value.ToString()));
                     }
                     break;
-                case AuctionColumnHeader.保證金退還金額:
+                case "保證金退還金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnGuaranteeNumber, Utility.ParseToInt(cell.Value.ToString()));
                     }
                     break;
-                case AuctionColumnHeader.付款方式:
+                case "付款方式":
                     {
                         DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.PayWayState, Utility.ToEnumInt<PayWay>(cell.Value.ToString()));
@@ -253,7 +262,7 @@ namespace Accounting
 
             MemberEntity me = m_memberInternet.FineOne<string>(m => m.Account, account);
             if (me != null)
-                m_isLogined = true;
+                m_isSuperUser = true;
         }
 
         private void ConnectToServer()
@@ -279,19 +288,18 @@ namespace Accounting
         private void AddCol(string headerText, Color color, bool readOnly)
         {
             DataGridViewColumn col = new DataGridViewColumn();
-            col.Name = "";
-            col.HeaderText = headerText;
+            col.Name = col.HeaderText = headerText;
             col.DefaultCellStyle.BackColor = color;
             col.ReadOnly = readOnly;
             col.CellTemplate = new DataGridViewTextBoxCell();
+            col.SortMode = DataGridViewColumnSortMode.Automatic;
             this.dataGridView1.Columns.Add(col);
         }
 
         private void AddComboBoxCol(Type enumType, string headerText, Color color)
         {
             DataGridViewComboBoxColumn cbcol = new DataGridViewComboBoxColumn();
-            cbcol.Name = "";
-            cbcol.HeaderText = headerText;
+            cbcol.Name = cbcol.HeaderText = headerText;
             cbcol.DefaultCellStyle.BackColor = color;
             foreach (string rs in Enum.GetNames(enumType))
             {
@@ -344,15 +352,14 @@ namespace Accounting
                 }
                 else
                 {
-                    if (headerText == AuctionColumnHeader.庫存狀態.ToString() ||
-                        headerText == AuctionColumnHeader.保證金繳納金額.ToString() ||
-                        headerText == AuctionColumnHeader.保證金退還金額.ToString())
+                    if (headerText == AuctionColumnHeader.庫存狀態.ToString() || headerText == AuctionColumnHeader.買家適用服務費.ToString() ||
+                        headerText == AuctionColumnHeader.保證金繳納金額.ToString() || headerText == AuctionColumnHeader.保證金退還金額.ToString())
                     {
                         AddCol(headerText, Color.LightCyan, false);
                     }
                     else
                     {
-                        if (!m_isLogined)
+                        if (!m_isSuperUser)
                         {
                             if (headerText == AuctionColumnHeader.賣家.ToString() ||
                                headerText == AuctionColumnHeader.賣家服務及保險費.ToString() ||
@@ -367,6 +374,7 @@ namespace Accounting
                     }
                 }
             }
+            AddColumnsToCheckedListBox();
 
             List<AuctionEntity> auctionEntities = null;
             try
@@ -385,10 +393,11 @@ namespace Accounting
                 DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
                 if (dealerItem == null)
                 {
-                    MessageBox.Show("找不到此拍品在dealer_item_table");
+                    MessageBox.Show("找不到拍品 " + auction.AuctionId + "在dealer_item_table");
                     continue;
                 }
-                if (m_isLogined)
+
+                if (m_isSuperUser)
                 {
                     dataGridView1.Rows.Add(auction.AuctionId, auction.Name, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
                         dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
@@ -397,6 +406,11 @@ namespace Accounting
                         Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
                         Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
                         dealerItem.ReservePrice, auction.SellerAccountPayable);
+
+                    if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice))
+                    {
+                        dataGridView1.Rows[dataGridView1.Rows.Count - 1].ErrorText = "落槌價低於保留價!!!";
+                    }
                 }
                 else
                 {
@@ -437,6 +451,21 @@ namespace Accounting
             bw.Flush();
             bw.Close();
             fs.Close();
+        }
+
+        private int GetFinalPrice(int hammerPrice, int newBuyerServiceCharge)
+        {
+            int finalPrice = (int)(hammerPrice * (1.0f + newBuyerServiceCharge * 0.01d));
+            return finalPrice;
+        }
+
+        private void AddColumnsToCheckedListBox()
+        {
+            DataGridViewColumnCollection cols = this.dataGridView1.Columns;
+            for (int i = 0; i < cols.Count; i++)
+            {
+                this.checkedListBox1.Items.Add(cols[i].Name, true);
+            }
         }
         #endregion
     }
