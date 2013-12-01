@@ -11,6 +11,18 @@
 
          'components': [
 
+{'type':'TextField', 
+    'name':'TextFieldAuctioneer', 
+    'position':(270, 67), 
+    },
+
+{'type':'StaticText', 
+    'name':'StaticTextAuctioneer', 
+    'position':(224, 70), 
+    'size':(42, -1), 
+    'text':'StaticTextAuctioneer', 
+    },
+
 {'type':'Button', 
     'name':'ButtonDelBidder', 
     'position':(287, 277), 

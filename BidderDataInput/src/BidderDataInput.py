@@ -10,10 +10,10 @@ import pymongo, sys, re
 
 # 買家所有屬性
 BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel", "Fax", "Address", "EMail", "Bank", "BankAcc",
-									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType"
+									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType", "Auctioneer"
 								]
 
-BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel" ]
+BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel", "Auctioneer" ]
 
 # 連線port
 DB_CFG_PORT	= 27017
@@ -37,6 +37,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"STATICTEXTEMAIL":					"E-Mail",
 							"STATICTEXTBANK":						"往來銀行/分行",
 							"STATICTEXTBANKACC":				"帳號",
+							"STATICTEXTAUCTIONEER":			"拍賣商",
 							"STATICTEXTBANKCONTACT":		"銀行連絡人",
 							"STATICTEXTBANKCONTACTTEL":	"連絡電話",
 							"STATICTEXTCREDITCARDID":		"信用卡號碼",
@@ -113,6 +114,7 @@ class MyBackground( model.Background ):
 		com.StaticTextCreditCardID.text		= Const[ "STATICTEXTCREDITCARDID" ]
 		com.StaticTextCreditCardType.text	= Const[ "STATICTEXTCREDITCARDTYPE" ]
 		com.StaticTextBidderID.text				= Const[ "STATICTEXTBIDDERID" ]
+		com.StaticTextAuctioneer.text			= Const[ "STATICTEXTAUCTIONEER" ]
 		
 		# 按鈕
 		com.ButtonAddBidder.label					= Const[ "BUTTONTEXTADDBIDDER" ]
@@ -268,7 +270,8 @@ class MyBackground( model.Background ):
 	def on_ListBidders_select( self, event = None ):
 		index, bidder_id = self.get_bidder_id_by_selection()
 		if bidder_id not in self.__chched_data:
-			self.__add_msg( Const[ "NO_BIDDER_DATA" ] % bidder_id )
+			if bidder_id > 0:
+				self.__add_msg( Const[ "NO_BIDDER_DATA" ] % bidder_id )
 			return
 		
 		index, bidder_data = self.__chched_data[ bidder_id ]
