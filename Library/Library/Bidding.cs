@@ -28,6 +28,7 @@ namespace Bidding
         public string docName = "";
         public _Document paymentDoc;
         public bool isUseCreditCard;
+        public string company;
 
         public Auction()
         {
@@ -70,6 +71,7 @@ namespace Bidding
             this.artwork = ae.Artwork;
             this.initialPrice = ae.InitialPrice;
             this.nowPrice = ae.NowPrice;
+            this.company = ae.Company;
             return true;
         }
 
@@ -116,6 +118,7 @@ namespace Bidding
             ae.Artwork = this.artwork;
             ae.InitialPrice = this.initialPrice;
             ae.NowPrice = this.nowPrice;
+            ae.Company = this.company;
             return ae;
         }
     }

@@ -103,6 +103,7 @@ namespace SJ_Bidding_System
             initialPriceTextBox.Text = int.Parse(lvi.SubItems[3].Text, System.Globalization.NumberStyles.Currency).ToString();
             m_addImgFP = Path.Combine(Application.StartupPath, m_auctions[auctionsListView.SelectedItems[0].Text].photofilePath);
             photoTextBox.Text = Path.GetFileName(m_addImgFP);
+            companyTextBox.Text = lvi.SubItems[4].Text;
         }
 
         private void lotTextBox_TextChanged(object sender, EventArgs e)
@@ -176,6 +177,7 @@ namespace SJ_Bidding_System
             auction.artist = artistTextBox.Text;
             auction.artwork = artworkTextBox.Text;
             auction.initialPrice = int.Parse(initialPriceTextBox.Text);
+            auction.company = companyTextBox.Text;
             CopyPhotoToAuctionsFolder(ref auction);
             string fp = Path.Combine(Application.StartupPath, auction.photofilePath);
             auction.photo = Utility.OpenBitmap(fp);
@@ -186,7 +188,7 @@ namespace SJ_Bidding_System
             m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
             auctionsListView.BeginUpdate();
             AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
-               int.Parse(initialPriceTextBox.Text, System.Globalization.NumberStyles.Currency).ToString("c"));
+               int.Parse(initialPriceTextBox.Text, System.Globalization.NumberStyles.Currency).ToString("c"), companyTextBox.Text);
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
@@ -219,23 +221,22 @@ namespace SJ_Bidding_System
             }
 
             Auction auc = m_auctions[lot];
-            auc.lot = lotTextBox.Text;
-            auc.artist = artistTextBox.Text;
-            auc.artwork = artworkTextBox.Text;
+            int id = auctionsListView.SelectedIndices[0];
+            auctionsListView.Items[id].Text = auc.lot = lotTextBox.Text;
+            auctionsListView.Items[id].SubItems[1].Text = auc.artist = artistTextBox.Text;
+            auctionsListView.Items[id].SubItems[2].Text = auc.artwork = artworkTextBox.Text;
             auc.initialPrice = int.Parse(initialPriceTextBox.Text);
+            auctionsListView.Items[id].SubItems[3].Text = int.Parse(initialPriceTextBox.Text,
+                System.Globalization.NumberStyles.Currency).ToString("c");
+            auctionsListView.Items[id].SubItems[4].Text = auc.company = companyTextBox.Text;
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artist, auc.artist);
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artwork, auc.artwork);
             m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auc.lot, ae => ae.InitialPrice, auc.initialPrice);
-
-            int id = auctionsListView.SelectedIndices[0];
-            auctionsListView.Items[id].Text = lotTextBox.Text;
-            auctionsListView.Items[id].SubItems[1].Text = artistTextBox.Text;
-            auctionsListView.Items[id].SubItems[2].Text = artworkTextBox.Text;
-            auctionsListView.Items[id].SubItems[3].Text = int.Parse(initialPriceTextBox.Text,
-                System.Globalization.NumberStyles.Currency).ToString("c");
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Company, auc.company);
+            
             photoTextBox.Text = Path.GetFileName(auc.photofilePath);
             ClearAllTextBox();
         }
@@ -293,6 +294,15 @@ namespace SJ_Bidding_System
         {
             auctionsListView.View = View.Tile;
         }
+
+        private void companyTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (companyTextBox.Text != "S" && companyTextBox.Text != "A" && companyTextBox.Text != "M")
+            {
+                MessageBox.Show("請輸入有效公司簡稱：\n 台灣世家：S 安德昇：A 沐春堂：M");
+                companyTextBox.Text = "";
+            }
+        }
         #endregion
 
         #region Public Methods
@@ -321,14 +331,14 @@ namespace SJ_Bidding_System
                 m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
                 m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
-                    auction.initialPrice.ToString("n0"));
+                    auction.initialPrice.ToString("n0"), auction.company);
             }
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
         }
 
-        private void AddItemToListView(int imgId, string text, string subItem1, string subItem2, string subItem3)
+        private void AddItemToListView(int imgId, string text, string subItem1, string subItem2, string subItem3, string subItem4)
         {
             ListViewItem newLvi = new ListViewItem();
             newLvi.ImageIndex = imgId;
@@ -336,13 +346,14 @@ namespace SJ_Bidding_System
             newLvi.SubItems.Add(subItem1);
             newLvi.SubItems.Add(subItem2);
             newLvi.SubItems.Add(subItem3);
+            newLvi.SubItems.Add(subItem4);
             auctionsListView.Items.Add(newLvi);
         }
 
         private void ClearAllTextBox()
         {
             lotTextBox.Text = artistTextBox.Text = artworkTextBox.Text = initialPriceTextBox.Text =
-                photoTextBox.Text = "";
+                photoTextBox.Text = companyTextBox.Text = "";
         }
 
         private void CopyPhotoToAuctionsFolder(ref Auction auction)

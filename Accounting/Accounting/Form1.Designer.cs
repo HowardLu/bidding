@@ -37,6 +37,7 @@
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.checkAllCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -126,12 +127,28 @@
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(120, 412);
             this.checkedListBox1.TabIndex = 5;
+            this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
+            // 
+            // checkAllCheckBox
+            // 
+            this.checkAllCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
+            this.checkAllCheckBox.Checked = true;
+            this.checkAllCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkAllCheckBox.Location = new System.Drawing.Point(1265, 445);
+            this.checkAllCheckBox.Name = "checkAllCheckBox";
+            this.checkAllCheckBox.Size = new System.Drawing.Size(120, 22);
+            this.checkAllCheckBox.TabIndex = 6;
+            this.checkAllCheckBox.Text = "All";
+            this.checkAllCheckBox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkAllCheckBox.UseVisualStyleBackColor = true;
+            this.checkAllCheckBox.CheckedChanged += new System.EventHandler(this.checkAllCheckBox_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1392, 662);
+            this.Controls.Add(this.checkAllCheckBox);
             this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -162,6 +179,7 @@
         private System.Windows.Forms.ToolStripMenuItem connectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckBox checkAllCheckBox;
 
 
     }

@@ -62,3 +62,8 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\Checkout\Ch
 \\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Bson.xml
 \\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Driver.pdb
 \\tsclient\D\bidding\Checkout\Checkout\bin\Debug\MongoDB.Driver.xml
+E:\bidding\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Core.dll
+E:\bidding\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Interop.Word.dll
+E:\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.csproj.ResolveComReference.cache
+E:\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.exe
+E:\bidding\Checkout\Checkout\obj\x86\Debug\Checkout.pdb

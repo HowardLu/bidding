@@ -55,6 +55,9 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.companyTextBox = new System.Windows.Forms.TextBox();
+            this.companyLabel = new System.Windows.Forms.Label();
+            this.companyColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.viewsGroupBox.SuspendLayout();
             this.setAuctionGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -68,12 +71,13 @@
             this.lotColumnHeader,
             this.artistColumnHeader,
             this.artworkColumnHeader,
-            this.initialPriceColumnHeader});
+            this.initialPriceColumnHeader,
+            this.companyColumnHeader});
             this.auctionsListView.FullRowSelect = true;
             this.auctionsListView.GridLines = true;
             this.auctionsListView.Location = new System.Drawing.Point(10, 10);
             this.auctionsListView.Name = "auctionsListView";
-            this.auctionsListView.Size = new System.Drawing.Size(560, 545);
+            this.auctionsListView.Size = new System.Drawing.Size(619, 545);
             this.auctionsListView.TabIndex = 0;
             this.auctionsListView.UseCompatibleStateImageBehavior = false;
             this.auctionsListView.View = System.Windows.Forms.View.Details;
@@ -82,24 +86,20 @@
             // 
             // lotColumnHeader
             // 
-            this.lotColumnHeader.DisplayIndex = 0;
             this.lotColumnHeader.Text = "Lot";
             // 
             // artistColumnHeader
             // 
-            this.artistColumnHeader.DisplayIndex = 1;
             this.artistColumnHeader.Text = "作者";
             this.artistColumnHeader.Width = 160;
             // 
             // artworkColumnHeader
             // 
-            this.artworkColumnHeader.DisplayIndex = 2;
             this.artworkColumnHeader.Text = "拍品名稱";
             this.artworkColumnHeader.Width = 230;
             // 
             // initialPriceColumnHeader
             // 
-            this.initialPriceColumnHeader.DisplayIndex = 3;
             this.initialPriceColumnHeader.Text = "起拍價";
             this.initialPriceColumnHeader.Width = 105;
             // 
@@ -111,7 +111,7 @@
             this.viewsGroupBox.Controls.Add(this.smallIconRadioButton);
             this.viewsGroupBox.Controls.Add(this.detailsRadioButton);
             this.viewsGroupBox.Controls.Add(this.largeIconRadioButton);
-            this.viewsGroupBox.Location = new System.Drawing.Point(576, 325);
+            this.viewsGroupBox.Location = new System.Drawing.Point(635, 325);
             this.viewsGroupBox.Name = "viewsGroupBox";
             this.viewsGroupBox.Size = new System.Drawing.Size(114, 137);
             this.viewsGroupBox.TabIndex = 3;
@@ -178,6 +178,8 @@
             // setAuctionGroupBox
             // 
             this.setAuctionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setAuctionGroupBox.Controls.Add(this.companyTextBox);
+            this.setAuctionGroupBox.Controls.Add(this.companyLabel);
             this.setAuctionGroupBox.Controls.Add(this.openPhotoButton);
             this.setAuctionGroupBox.Controls.Add(this.photoTextBox);
             this.setAuctionGroupBox.Controls.Add(this.auctionPhotoLabel);
@@ -192,7 +194,7 @@
             this.setAuctionGroupBox.Controls.Add(this.deleteButton);
             this.setAuctionGroupBox.Controls.Add(this.saveButton);
             this.setAuctionGroupBox.Controls.Add(this.addButton);
-            this.setAuctionGroupBox.Location = new System.Drawing.Point(576, 10);
+            this.setAuctionGroupBox.Location = new System.Drawing.Point(635, 10);
             this.setAuctionGroupBox.Name = "setAuctionGroupBox";
             this.setAuctionGroupBox.Size = new System.Drawing.Size(214, 262);
             this.setAuctionGroupBox.TabIndex = 4;
@@ -299,7 +301,7 @@
             // 
             // deleteButton
             // 
-            this.deleteButton.Location = new System.Drawing.Point(159, 220);
+            this.deleteButton.Location = new System.Drawing.Point(159, 232);
             this.deleteButton.Name = "deleteButton";
             this.deleteButton.Size = new System.Drawing.Size(50, 20);
             this.deleteButton.TabIndex = 2;
@@ -309,7 +311,7 @@
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(65, 220);
+            this.saveButton.Location = new System.Drawing.Point(65, 232);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(50, 20);
             this.saveButton.TabIndex = 1;
@@ -319,7 +321,7 @@
             // 
             // addButton
             // 
-            this.addButton.Location = new System.Drawing.Point(6, 220);
+            this.addButton.Location = new System.Drawing.Point(6, 232);
             this.addButton.Name = "addButton";
             this.addButton.Size = new System.Drawing.Size(50, 20);
             this.addButton.TabIndex = 0;
@@ -331,11 +333,32 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // companyTextBox
+            // 
+            this.companyTextBox.Location = new System.Drawing.Point(70, 196);
+            this.companyTextBox.Name = "companyTextBox";
+            this.companyTextBox.Size = new System.Drawing.Size(59, 22);
+            this.companyTextBox.TabIndex = 15;
+            this.companyTextBox.TextChanged += new System.EventHandler(this.companyTextBox_TextChanged);
+            // 
+            // companyLabel
+            // 
+            this.companyLabel.AutoSize = true;
+            this.companyLabel.Location = new System.Drawing.Point(9, 199);
+            this.companyLabel.Name = "companyLabel";
+            this.companyLabel.Size = new System.Drawing.Size(29, 12);
+            this.companyLabel.TabIndex = 14;
+            this.companyLabel.Text = "公司";
+            // 
+            // companyColumnHeader
+            // 
+            this.companyColumnHeader.Text = "公司";
+            // 
             // SetAuctionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(792, 562);
+            this.ClientSize = new System.Drawing.Size(851, 562);
             this.Controls.Add(this.setAuctionGroupBox);
             this.Controls.Add(this.viewsGroupBox);
             this.Controls.Add(this.auctionsListView);
@@ -382,5 +405,8 @@
         private System.Windows.Forms.Button openPhotoButton;
         private System.Windows.Forms.TextBox photoTextBox;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TextBox companyTextBox;
+        private System.Windows.Forms.Label companyLabel;
+        private System.Windows.Forms.ColumnHeader companyColumnHeader;
     }
 }

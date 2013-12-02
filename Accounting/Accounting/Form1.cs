@@ -201,6 +201,21 @@ namespace Accounting
         {
 
         }
+
+        private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            string colName = this.checkedListBox1.GetItemText(this.checkedListBox1.Items[e.Index]);
+            this.dataGridView1.Columns[colName].Visible = (e.NewValue == CheckState.Checked) ? true : false;
+        }
+
+        private void checkAllCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            for (int i = 0; i < this.checkedListBox1.Items.Count; i++)
+            {
+                this.checkedListBox1.SetItemChecked(i, cb.Checked);
+            }
+        }
         #endregion
 
         #region Public Methods
