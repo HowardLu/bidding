@@ -69,3 +69,22 @@ C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bi
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetAuctionForm.resources
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.pdb
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.pdb
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Library.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Library.pdb
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.pdb
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.xml
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.pdb
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.xml
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\ResolveAssemblyReference.cache
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.ControlForm.resources
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetAuctionForm.resources
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog

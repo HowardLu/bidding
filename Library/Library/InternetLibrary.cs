@@ -32,6 +32,7 @@ namespace InternetLibrary
         public string Artwork { get; set; }
         public int InitialPrice { get; set; }
         public int NowPrice { get; set; }
+        public string Company { get; set; }
     }
 
     public class BidderEntity
@@ -77,21 +78,6 @@ namespace InternetLibrary
         public string PostID { get; set; }
         public string IfNDealedServiceFee { get; set; }
         public string ContractID { get; set; }
-    }
-
-    public class BiddingResultEntity
-    {
-        public ObjectId Id { get; set; }
-        public string BidderId { get; set; }
-        public string AuctionId { get; set; }
-        public int HammerPrice { get; set; }
-
-        public BiddingResultEntity(string bidderId, string auctionId, int hammerPrice)
-        {
-            this.BidderId = bidderId;
-            this.AuctionId = auctionId;
-            this.HammerPrice = hammerPrice;
-        }
     }
 
     public class DealerItemEntity

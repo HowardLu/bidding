@@ -59,3 +59,5 @@ D:\bidding\Accounting\Accounting\obj\Debug\GenerateResource.read.1.tlog
 D:\bidding\Accounting\Accounting\obj\Debug\GenerateResource.write.1.tlog
 \\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Interop.Microsoft.Office.Core.dll
 \\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Accounting.csproj.ResolveComReference.cache
+E:\bidding\Accounting\Accounting\obj\Debug\Interop.Microsoft.Office.Core.dll
+E:\bidding\Accounting\Accounting\obj\Debug\Accounting.csproj.ResolveComReference.cache

@@ -31,7 +31,6 @@ namespace SJ_Bidding_System
         //private Thread m_loadPhotoThread;
         private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
-        private Internet<BiddingResultEntity> m_breInternet;
         #endregion
 
         #region Properties
@@ -46,8 +45,7 @@ namespace SJ_Bidding_System
             ci.NumberFormat.CurrencyDecimalDigits = 0;
             ci.NumberFormat.CurrencySymbol = "";
             Thread.CurrentThread.CurrentCulture = ci;
-            m_aeInternet = new Internet<AuctionEntity>("127.0.0.1", "test", "entities");
-            m_breInternet = new Internet<BiddingResultEntity>("127.0.0.1", "test", "bidding_result");
+            m_aeInternet = new Internet<AuctionEntity>("127.0.0.1", "bidding_data", "auctions_table");
         }
         #endregion
 
@@ -62,13 +60,13 @@ namespace SJ_Bidding_System
             string settingsFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.settingsFN);
             Settings.Load(settingsFP);
 
-            ProcessStartInfo pStartInfo = new ProcessStartInfo();
+            /*ProcessStartInfo pStartInfo = new ProcessStartInfo();
             pStartInfo.WorkingDirectory = Path.Combine(Application.StartupPath, Path.GetDirectoryName(Settings.biddingResultFP));
             pStartInfo.FileName = "cmd.exe";
             pStartInfo.Arguments = @"/k" + Settings.serverFN;
             string serverExePath = Path.Combine(pStartInfo.WorkingDirectory, Settings.serverFN);
             if (Utility.IsFileExist(serverExePath))
-                m_server = System.Diagnostics.Process.Start(pStartInfo);
+                m_server = System.Diagnostics.Process.Start(pStartInfo);*/
 
             InitDisplayForm();
 
@@ -217,8 +215,8 @@ namespace SJ_Bidding_System
             SavePrices(Path.Combine(Application.StartupPath, Settings.saveFolder, Settings.pricesFN));
             ExchangeRate.Save(Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN));
             //DoSaveBiddingResult(Settings.biddingResultFP);
-            if (!m_server.HasExited)
-                m_server.CloseMainWindow();
+            /*if (!m_server.HasExited)
+                m_server.CloseMainWindow();*/
         }
 
         /// <summary>
@@ -767,8 +765,8 @@ namespace SJ_Bidding_System
                     if (auction.winBidderNo != 0)
                     {
                         sw.WriteLine("{0}\t{1}\t{2}\t{3}", auction.lot, auction.artwork, auction.winBidderNo, auction.nowPrice);
-                        BiddingResultEntity bre = new BiddingResultEntity(auction.winBidderNo.ToString(), auction.lot, auction.nowPrice);
-                        m_breInternet.Insert(bre);
+                        m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auction.lot, ae => ae.BidderNumber, auction.winBidderNo.ToString());
+                        m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auction.lot, ae => ae.HammerPrice, auction.nowPrice);
                     }
                 }
             }
