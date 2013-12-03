@@ -12,6 +12,13 @@
          'components': [
 
 {'type':'StaticText', 
+    'name':'StaticTextSerial', 
+    'position':(570, 229), 
+    'size':(69, -1), 
+    'text':'StaticTextSerial', 
+    },
+
+{'type':'StaticText', 
     'name':'StaticTextPackImgState', 
     'position':(410, 312), 
     'size':(80, -1), 

@@ -6,7 +6,7 @@ __date__ = "$Date: 2004/04/14 02:38:47 $"
 """
 
 from PythonCard import dialog, model, EXIF, graphic
-import pymongo, sys
+import pymongo, sys, time
 
 ATTR_MAP = {	# 賣家屬性
 							"Dealer":
@@ -70,6 +70,7 @@ Const			= {	"STATICTEXTNAME":												"委託方",
 							"BUTTONTEXTDEL":												"刪除",
 							"BUTTONTEXTSET":												"設定",
 							"STATICTEXTPERCENT":										"%",
+							"STATICTEXTSERIAL":											u"序號:%s",
 							"STATICTEXTNTDPERITEM":									"NTD/件",
 							"STATICTEXTITEMNAME":										"拍賣標的名稱",
 							"STATICTEXTBUILDIMG":										"建檔圖片",
@@ -183,8 +184,10 @@ class MyBackground( model.Background ):
 		com.StaticTextItemPS.text										= Const[ "STATICTEXTITEMPS" ]
 		com.StaticTextLotNO.text										= Const[ "STATICTEXTLOTNO" ]
 		
-		com.StaticTextPackImgState.text						= Const[ "STATICTEXTNOTSET" ]
+		com.StaticTextPackImgState.text							= Const[ "STATICTEXTNOTSET" ]
 		com.StaticTextBuildImgState.text						= Const[ "STATICTEXTNOTSET" ]
+		
+		com.StaticTextSerial.text										= ""
 		
 		# 按鈕
 		com.ButtonAddDealer.label										= Const[ "BUTTONTEXTADD" ]
@@ -210,8 +213,9 @@ class MyBackground( model.Background ):
 		 
 		# 取得資料庫相關資料表
 		self.__mongo_db = self.__mongo_client.bidding_data
-		self.__dbtable_main = self.__mongo_db.dealer_table
-		self.__dbtable_item = self.__mongo_db.dealer_item_table
+		self.__dbtable_main					= self.__mongo_db.dealer_table
+		self.__dbtable_item					= self.__mongo_db.dealer_item_table
+		self.__dbtable_item_serial	= self.__mongo_db.dealer_item_serail
 		
 		# 直接顯示所有賣家
 		self.__gen_list_ui_by_data()
@@ -290,6 +294,10 @@ class MyBackground( model.Background ):
 		index, dict_data = self.__get_cache_data( "Dealer", "Main" )[ dealer_name ]
 		self.components.ListDealer.selection = index
 		
+	# 顯示序號
+	def __show_serail( self, dict_data ):
+		self.components.StaticTextSerial.text = "" if "_id" not in dict_data else Const[ "STATICTEXTSERIAL" ] % dict_data[ "_id" ]
+	
 	# 按下 新增道具 按鈕
 	def on_ButtonAddItem_mouseClick( self, event ):
 		# 沒有選取的項目
@@ -312,6 +320,7 @@ class MyBackground( model.Background ):
 		
 		item_name = dict_data[ ITEM_KEY ]
 		index, dict_data = self.__get_cache_data( "Item", "Main" )[ item_name ]
+		self.__show_serail( dict_data )
 		self.components.ListItem.selection = index
 		
 	# 按下 編輯買家資料 按鈕
@@ -475,13 +484,17 @@ class MyBackground( model.Background ):
 			index, dict_data = cache_data[ key ]
 		
 		# 文字部分
+		com = self.components
 		attr_list = ATTR_MAP[ "Item" ][ "ALL_ATTR" ]
 		for attr in attr_list:
-			getattr( self.components, "TextField" + attr ).text = dict_data[ attr ] if attr in dict_data else ""
+			getattr( com, "TextField" + attr ).text = dict_data[ attr ] if attr in dict_data else ""
 			
 		# 圖片部分
 		for pic_attr in ITEM_COM_DATA.iterkeys():
 			self.__set_image( pic_attr, dict_data[ pic_attr ] if pic_attr in dict_data else "", 0 )
+			
+		# 序號
+		self.__show_serail( dict_data )
 		
 	# 利用索引值取得牌號ID
 	def __get_key_by_index( self, index, type ):
@@ -587,8 +600,25 @@ class MyBackground( model.Background ):
 			canvas = getattr( com, com_name )
 			dict_data[ attr ] = canvas.path if hasattr( canvas, "path" ) else ""
 			
-		# 建立PK
-		dict_data[ "_id" ] = dict_data[ "ItemName" ]
+		# 建立PK 從表找出序號
+		year_now = time.localtime( time.time() )[ 0 ] - 1911
+		serial = 0
+		for collection in self.__dbtable_item_serial.find():
+			year = collection[ "year" ]
+			serial = collection[ "serial" ]
+		
+		# 如果是空的 插入一筆資料 否則更新之
+		table = self.__dbtable_item_serial
+		if serial == 0:
+			serial += 1
+			table.insert( { "year": year_now, "serial": serial } )
+		else:
+			if year_now != year:
+				serial = 0
+			serial += 1
+			table.update( { "year": year }, { "year": year_now, "serial": serial } )
+		
+		dict_data[ "_id" ] = "%d-%04d" % ( year_now, serial )
 		
 		return dict_data
 		
