@@ -42,7 +42,6 @@
             this.hammerPriceColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.serviceChargeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.totalColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.isUseCardColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.connectButton = new System.Windows.Forms.Button();
             this.isUseCardButton = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -126,8 +125,7 @@
             this.nameColumnHeader,
             this.hammerPriceColumnHeader,
             this.serviceChargeColumnHeader,
-            this.totalColumnHeader,
-            this.isUseCardColumnHeader});
+            this.totalColumnHeader});
             this.auctionsListView.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.auctionsListView.FullRowSelect = true;
             this.auctionsListView.GridLines = true;
@@ -166,11 +164,7 @@
             // 
             this.totalColumnHeader.Text = "成交價(NTD)";
             this.totalColumnHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.totalColumnHeader.Width = 110;
-            // 
-            // isUseCardColumnHeader
-            // 
-            this.isUseCardColumnHeader.Text = "信用卡";
+            this.totalColumnHeader.Width = 170;
             // 
             // connectButton
             // 
@@ -216,6 +210,7 @@
             // isPrintOneByOneCheckBox
             // 
             this.isPrintOneByOneCheckBox.AutoSize = true;
+            this.isPrintOneByOneCheckBox.Enabled = false;
             this.isPrintOneByOneCheckBox.Location = new System.Drawing.Point(512, 8);
             this.isPrintOneByOneCheckBox.Name = "isPrintOneByOneCheckBox";
             this.isPrintOneByOneCheckBox.Size = new System.Drawing.Size(72, 16);
@@ -267,7 +262,6 @@
         private System.Windows.Forms.ColumnHeader totalColumnHeader;
         private System.Windows.Forms.Button connectButton;
         private System.Windows.Forms.Button isUseCardButton;
-        private System.Windows.Forms.ColumnHeader isUseCardColumnHeader;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.CheckBox isPrintOneByOneCheckBox;

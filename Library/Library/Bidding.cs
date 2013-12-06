@@ -133,6 +133,12 @@ namespace Bidding
         public System.Collections.Generic.List<int> increments;
     }
 
+    public class PaymentDoc
+    {
+        public string name;
+        public _Document doc;
+    }
+
     public class Bidder
     {
         public string name;
@@ -146,6 +152,9 @@ namespace Bidding
         public int tax;
         public int amountDue;
         public Dictionary<string, Auction> auctions;
+        public Dictionary<string, List<string>> auctionMappings;
+        public Dictionary<string, PaymentDoc> paymentDocs;
+        public _Document cashFlowDoc;
     }
 
     public enum ReturnState
@@ -187,5 +196,13 @@ namespace Bidding
         轉帳北京人民幣,
         轉帳北京美金,
         保證金抵付
+    };
+
+    public enum Company
+    {
+        S = 0,
+        A,
+        M,
+        Count
     };
 }
