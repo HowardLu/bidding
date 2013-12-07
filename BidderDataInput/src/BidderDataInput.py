@@ -10,7 +10,7 @@ import pymongo, sys, re
 
 # 買家所有屬性
 BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel", "Fax", "Address", "EMail", "Bank", "BankAcc",
-									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType", "Auctioneer"
+									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType", "Auctioneer", "GuaranteeCost"
 								]
 
 BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel", "Auctioneer" ]
@@ -43,6 +43,8 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"STATICTEXTCREDITCARDID":		"信用卡號碼",
 							"STATICTEXTCREDITCARDTYPE":	"信用卡類別",
 							"STATICTEXTBIDDERID":				"牌號",
+							"STATICTEXTGUARANTEETYPE":	"保證金繳納",
+							"STATICTEXTGUARANTEECOST":	"金額",
 							"BUTTONTEXTNEWFILE":				"新建檔案",
 							"BUTTONTEXTOPEN":						"匯入檔案",
 							"BUTTONTEXTCONNECT":				"建立連線",
@@ -51,6 +53,8 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"BUTTONTEXTADDBIDDER":			"新增買家",
 							"BUTTONTEXTFIXBIDDER":			"修正資料",
 							"BUTTONTEXTDELBIDDER":			"刪除買家",
+							"COMBOBOXGUARANTEETYPE":		u"支付方式",
+							"COMBOBOXGUARANTEE_LIST":		[ u"台幣現鈔", u"人民幣現鈔", u"美金現鈔", u"信用卡", u"銀聯卡", u"VIP" ],
 							"NEW_FILE_TITLE":						"請建立一個資料檔",
 							"FILE_RULE":								"買家資料檔(*.txt)|*.txt",
 							"NEW_FILE_FAILED":					"你取消了資料檔的建立",
@@ -115,11 +119,19 @@ class MyBackground( model.Background ):
 		com.StaticTextCreditCardType.text	= Const[ "STATICTEXTCREDITCARDTYPE" ]
 		com.StaticTextBidderID.text				= Const[ "STATICTEXTBIDDERID" ]
 		com.StaticTextAuctioneer.text			= Const[ "STATICTEXTAUCTIONEER" ]
+		com.StaticTextGuaranteeType.text	= Const[ "STATICTEXTGUARANTEETYPE" ]
+		com.StaticTextGuaranteeCost.text	= Const[ "STATICTEXTGUARANTEECOST" ]
 		
 		# 按鈕
 		com.ButtonAddBidder.label					= Const[ "BUTTONTEXTADDBIDDER" ]
 		com.ButtonFixBidder.label					= Const[ "BUTTONTEXTFIXBIDDER" ]
 		com.ButtonDelBidder.label					= Const[ "BUTTONTEXTDELBIDDER" ]
+		
+		# 選單
+		com.ComboBoxGuaranteeType.text		= Const[ "COMBOBOXGUARANTEETYPE" ]
+		for type in Const[ "COMBOBOXGUARANTEE_LIST" ]:
+			com.ComboBoxGuaranteeType.append( type )
+		com.ComboBoxGuaranteeType.SetEditable( False )
 		
 		# 嘗試連上資料庫
 		while True:
@@ -275,8 +287,11 @@ class MyBackground( model.Background ):
 			return
 		
 		index, bidder_data = self.__chched_data[ bidder_id ]
+		com = self.components
 		for attr in BIDDER_ATTRS:
-			getattr( self.components, "TextField" + attr ).text = bidder_data[ attr ]
+			getattr( com, "TextField" + attr ).text = bidder_data[ attr ]
+			
+		com.ComboBoxGuaranteeType.text = bidder_data[ "GuaranteeType" ]
 	
 	# 利用索引值取得牌號ID
 	def get_bidder_id_by_index( self, index ):
@@ -307,6 +322,8 @@ class MyBackground( model.Background ):
 				return None
 			
 			bidder_data[ attr ] = chk_text
+			
+		bidder_data[ "GuaranteeType" ] = com.ComboBoxGuaranteeType.text
 		
 		# 牌號過濾規則(不可有4, 7)
 		re_ob = re.compile( "[47]+" )

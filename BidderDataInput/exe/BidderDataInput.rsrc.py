@@ -11,6 +11,32 @@
 
          'components': [
 
+{'type':'StaticText', 
+    'name':'StaticTextGuaranteeCost', 
+    'position':(167, 195), 
+    'size':(25, -1), 
+    'text':'StaticTextGuaranteeCost', 
+    },
+
+{'type':'ComboBox', 
+    'name':'ComboBoxGuaranteeType', 
+    'position':(81, 192), 
+    'size':(81, -1), 
+    'items':[], 
+    },
+
+{'type':'TextField', 
+    'name':'TextFieldGuaranteeCost', 
+    'position':(194, 192), 
+    },
+
+{'type':'StaticText', 
+    'name':'StaticTextGuaranteeType', 
+    'position':(19, 195), 
+    'size':(54, -1), 
+    'text':'StaticTextGuaranteeType', 
+    },
+
 {'type':'TextField', 
     'name':'TextFieldAuctioneer', 
     'position':(270, 67), 
@@ -128,12 +154,12 @@
 
 {'type':'TextField', 
     'name':'TextFieldBankAcc', 
-    'position':(50, 192), 
+    'position':(239, 167), 
     },
 
 {'type':'StaticText', 
     'name':'StaticTextBankAcc', 
-    'position':(20, 195), 
+    'position':(209, 170), 
     'size':(24, -1), 
     'text':'StaticTextBankAcc', 
     },
