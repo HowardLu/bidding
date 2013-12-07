@@ -28,7 +28,7 @@ namespace Bidding
         public string docName = "";
         public _Document paymentDoc;
         public bool isUseCreditCard;
-        public string company;
+        public string auctioneer;
 
         public Auction()
         {
@@ -71,7 +71,7 @@ namespace Bidding
             this.artwork = ae.Artwork;
             this.initialPrice = ae.InitialPrice;
             this.nowPrice = ae.NowPrice;
-            this.company = ae.Company;
+            this.auctioneer = ae.Auctioneer;
             return true;
         }
 
@@ -118,7 +118,7 @@ namespace Bidding
             ae.Artwork = this.artwork;
             ae.InitialPrice = this.initialPrice;
             ae.NowPrice = this.nowPrice;
-            ae.Company = this.company;
+            ae.Auctioneer = this.auctioneer;
             return ae;
         }
     }
@@ -151,10 +151,77 @@ namespace Bidding
         public int creditCardFee;
         public int tax;
         public int amountDue;
+        public Auctioneer auctioneer;
         public Dictionary<string, Auction> auctions;
         public Dictionary<string, List<string>> auctionMappings;
         public Dictionary<string, PaymentDoc> paymentDocs;
+        public string cashFlowDocName;
         public _Document cashFlowDoc;
+
+        public void SetBidder(BidderEntity bidder, ref List<AuctionEntity> auctions)
+        {
+            this.name = bidder.Name;   //ignore first string of id.
+            this.no = bidder.BidderID_int;
+            this.phone = bidder.Tel;
+            this.fax = bidder.Fax;
+            this.email = bidder.EMail;
+            this.addr = bidder.EMail;
+            this.auctioneer = Utility.ToEnum<Auctioneer>(bidder.Auctioneer);
+            this.auctions = new Dictionary<string, Auction>();
+            for (int i = 0; i < auctions.Count; i++)
+            {
+                AuctionEntity ae = auctions[i];
+                Auction auction = new Auction();
+                auction.lot = ae.AuctionId;
+                auction.name = ae.Name;
+                auction.hammerPrice = ae.HammerPrice;
+                auction.ComputeChargeAndTotal();
+                auction.auctioneer = ae.Auctioneer;
+                this.auctions[auction.lot] = auction;
+            }
+            MappingAuctions();
+
+            this.paymentDocs = new Dictionary<string, PaymentDoc>();
+            for (int i = 0; i < (int)Auctioneer.Count; i++)
+            {
+                string auctioneer = Utility.GetEnumString(typeof(Auctioneer), i);
+                this.paymentDocs[auctioneer] = new PaymentDoc();
+            }
+        }
+
+        private void MappingAuctions()
+        {
+            if (auctionMappings == null)
+            {
+                auctionMappings = new Dictionary<string, List<string>>();
+            }
+
+            foreach (Auction auc in auctions.Values)
+            {
+                string auctioneer = auc.auctioneer == "" ? Auctioneer.S.ToString() : auc.auctioneer;
+                if (!auctionMappings.ContainsKey(auctioneer))
+                {
+                    auctionMappings[auctioneer] = new List<string>();
+                }
+                auctionMappings[auctioneer].Add(auc.lot);
+            }
+        }
+
+        public List<Auction> GetAuctions(string auctioneer)
+        {
+            if (!auctionMappings.ContainsKey(auctioneer))
+                return null;
+
+            List<Auction> auctionsOfActioneer = new List<Auction>();
+            foreach (string lot in auctionMappings[auctioneer])
+            {
+                if (auctions.ContainsKey(lot))
+                {
+                    auctionsOfActioneer.Add(auctions[lot]);
+                }
+            }
+            return auctionsOfActioneer;
+        }
     }
 
     public enum ReturnState
@@ -198,11 +265,19 @@ namespace Bidding
         保證金抵付
     };
 
-    public enum Company
+    public enum Auctioneer
     {
         S = 0,
         A,
         M,
         Count
     };
+
+    public enum AuctioneerName
+    {
+        世家 = 0,
+        安德昇,
+        沐春堂,
+        Count
+    }
 }

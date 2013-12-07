@@ -32,7 +32,7 @@ namespace InternetLibrary
         public string Artwork { get; set; }
         public int InitialPrice { get; set; }
         public int NowPrice { get; set; }
-        public string Company { get; set; }
+        public string Auctioneer { get; set; }
     }
 
     public class BidderEntity
@@ -51,6 +51,7 @@ namespace InternetLibrary
         public string Address { get; set; }
         public string BidderID { get; set; }
         public string CreditCardID { get; set; }
+        public string Auctioneer { get; set; }
         public string CreditCardType { get; set; }
         public string EMail { get; set; }
         public string Bank { get; set; }

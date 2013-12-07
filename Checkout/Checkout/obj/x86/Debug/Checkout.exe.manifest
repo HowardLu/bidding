@@ -42,26 +42,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Checkout.exe" size="40448">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Checkout.exe" size="43008">
       <assemblyIdentity name="Checkout" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>EQ7ocTwe0fVuukd72cjnyGn1vT0=</dsig:DigestValue>
+        <dsig:DigestValue>+EeIe6GWuUIsvBI6NZXQMwkPj/A=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Library.dll" size="31744">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Library.dll" size="33792">
       <assemblyIdentity name="Library" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>vXgBm6X2qrsCfvC5zipSUZIvbUg=</dsig:DigestValue>
+        <dsig:DigestValue>iPAcIXaE5aRevq5dODsENigSmK8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

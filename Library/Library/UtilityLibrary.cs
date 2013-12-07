@@ -204,10 +204,22 @@ namespace UtilityLibrary
                 return "";
         }
 
-        public static int ToEnumInt<TEnum>(string stringToParse) where TEnum : struct
+        public static int ToEnumInt<TEnum>(string stringToParse) where TEnum : struct, IConvertible
         {
             TEnum e = (TEnum)Enum.Parse(typeof(TEnum), stringToParse);
             return Convert.ToInt32(Enum.Format(typeof(TEnum), e, "d"));
+        }
+
+        public static TEnum ToEnum<TEnum>(string stringToParse) where TEnum : struct, IConvertible
+        {
+            if (!typeof(TEnum).IsEnum)
+            {
+                throw new ArgumentException("TEnum must be an enumerated type");
+            }
+
+            TEnum e = default(TEnum);
+            Enum.TryParse<TEnum>(stringToParse, true, out e);
+            return e;
         }
     }
 

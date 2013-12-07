@@ -33,7 +33,7 @@ namespace Checkout
         private string m_settingsFN = "settings.txt";
         private string m_yesStr = "是";
         private string m_noStr = "否";
-        private int m_printCountIfBuyed;
+        private string m_cashFlowTemplateFN = "金流單.dot";
         #endregion
 
         #region Properties
@@ -95,14 +95,20 @@ namespace Checkout
             {
                 List<AuctionEntity> auctions = m_auctionInternet.Find<string>(ae => ae.BidderNumber, bidderNo.ToString());
                 BidderEntity bidder = m_bidderInternet.FineOne<int>(b => b.BidderID_int, bidderNo);
-                if (auctions.Count == 0 || bidder == null)
+                if (bidder == null)
                 {
                     MessageBox.Show("查詢不到此買家");
-                    SetButtonsEnable(false);
                     return;
                 }
 
-                SetBidder(bidder, auctions);
+                if (auctions.Count == 0)
+                {
+                    MessageBox.Show("此買家尚未有得標品");
+                    return;
+                }
+
+                m_bidder = new Bidder();
+                m_bidder.SetBidder(bidder, ref auctions);
                 UpdateListView();
                 saveButton.Enabled = true;
                 printButton.Enabled = true;
@@ -133,13 +139,13 @@ namespace Checkout
 
         private void saveButton_Click(object sender, EventArgs e)
         {
-            SavePaymentDoc();
+            SaveAllDoc();
             CloseDocAndWord();
         }
 
         private void printButton_Click(object sender, EventArgs e)
         {
-            SavePaymentDoc();
+            SaveAllDoc();
 
             if (isPrintOneByOneCheckBox.Checked)
             {
@@ -150,18 +156,20 @@ namespace Checkout
             }
             else
             {
-                foreach (KeyValuePair<string, PaymentDoc> doc in m_bidder.paymentDocs)
+                foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
-                    if (m_bidder.auctionMappings[doc.Key].Count > 0)
+                    if (m_bidder.auctionMappings[paymentDoc.Key].Count > 0)
                     {
-                        PrintDoc(doc.Value.doc, 3);
+                        PrintDoc(paymentDoc.Value.doc, 3);
                     }
                     else
                     {
-                        PrintDoc(doc.Value.doc, 1);
+                        PrintDoc(paymentDoc.Value.doc, 1);
                     }
                 }
             }
+
+            PrintDoc(m_bidder.cashFlowDoc, 1);
 
             CloseDocAndWord();
         }
@@ -258,10 +266,10 @@ namespace Checkout
         private void SetDataInDoc()
         {
             m_wordApp = new Microsoft.Office.Interop.Word.Application();
-
+            List<int> totalSums = new List<int>();
             if (isPrintOneByOneCheckBox.Checked)
             {
-                Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + Company.S.ToString() + ".dot";
+                Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + Auctioneer.S.ToString() + ".dot";
                 foreach (Auction auc in m_bidder.auctions.Values)
                 {
                     auc.docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + auc.lot.ToString() + ".doc";
@@ -301,38 +309,40 @@ namespace Checkout
             }
             else
             {
-                for (int i = 0; i < (int)Company.Count; i++)
+                for (int i = 0; i < (int)Auctioneer.Count; i++)
                 {
-                    string company = Utility.GetEnumString(typeof(Company), i);
-                    Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + company + ".dot";
-                    string docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + company + ".doc";
+                    string auctioneer = Utility.GetEnumString(typeof(Auctioneer), i);
+                    Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + auctioneer + ".dot";
+                    string docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + auctioneer + ".doc";
 
-                    m_bidder.paymentDocs[company].doc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing, ref m_oMissing, ref m_oMissing);
-
-                    Microsoft.Office.Interop.Word.Table bidderDataTable = m_bidder.paymentDocs[company].doc.Tables[1];
+                    Microsoft.Office.Interop.Word._Document doc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing,
+                                                                                            ref m_oMissing, ref m_oMissing);
+                    Microsoft.Office.Interop.Word.Table bidderDataTable = doc.Tables[1];
                     FillBidderTable(bidderDataTable);
 
-                    Microsoft.Office.Interop.Word.Table auctionTable = m_bidder.paymentDocs[company].doc.Tables[2];
+                    Microsoft.Office.Interop.Word.Table auctionTable = doc.Tables[2];
                     int hammerSum = 0;
                     int serviceSum = 0;
                     int totalSum = 0;
-                    int aucId = 0;
-                    foreach (Auction auc in m_bidder.auctions.Values)
+                    int aucCount = 0;
+                    List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer);
+                    if (auctionsOfAuctioneer != null)
                     {
-                        auctionTable.Rows.Add(auctionTable.Rows[2 + aucId]);
-                        FillAuctionRow(auctionTable, 2 + aucId, auc.lot.ToString(), auc.name, auc.hammerPrice.ToString("n0"),
-                            auc.serviceCharge.ToString("n0"), auc.total.ToString("n0"));
-                        aucId += 1;
-                        hammerSum += auc.hammerPrice;
-                        serviceSum += auc.serviceCharge;
-                        totalSum += auc.total;
+                        foreach (Auction auc in auctionsOfAuctioneer)
+                        {
+                            auctionTable.Rows.Add(auctionTable.Rows[2 + aucCount]);
+                            FillAuctionRow(auctionTable, 2 + aucCount, auc.lot.ToString(), auc.name, auc.hammerPrice.ToString("n0"),
+                                auc.serviceCharge.ToString("n0"), auc.total.ToString("n0"));
+                            aucCount += 1;
+                            hammerSum += auc.hammerPrice;
+                            serviceSum += auc.serviceCharge;
+                            totalSum += auc.total;
+                        }
                     }
 
-                    int creditCardFee = Convert.ToInt32(totalSum * 0.035f);
+                    //int creditCardFee = Convert.ToInt32(totalSum * 0.035f);
                     //int tax = Convert.ToInt32(totalSum * 0.05f);
-                    int amountDue = totalSum + creditCardFee;
-                    int aucCount = m_bidder.auctions.Values.Count;
-
+                    int amountDue = totalSum /*+ creditCardFee*/;
                     auctionTable.Cell(aucCount + 3, 2).Range.Text = hammerSum.ToString("n0");
                     auctionTable.Cell(aucCount + 3, 3).Range.Text = serviceSum.ToString("n0");
                     auctionTable.Cell(aucCount + 3, 4).Range.Text = totalSum.ToString("n0");
@@ -340,7 +350,13 @@ namespace Checkout
                     //auctionTable.Cell(6, 2).Range.Text = "NTD " + tax.ToString("n0");
                     //auctionTable.Cell(7, 2).Range.Text = "NTD " + amountDue.ToString("n0");
                     auctionTable.Cell(aucCount + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
+
+                    m_bidder.paymentDocs[auctioneer].name = docName;
+                    m_bidder.paymentDocs[auctioneer].doc = doc;
+                    totalSums.Add(amountDue);
                 }
+
+                SetCashFlowDoc(ref totalSums);
             }
         }
 
@@ -353,6 +369,7 @@ namespace Checkout
             bidderDataTable.Cell(3, 2).Range.Text = m_bidder.fax;
             bidderDataTable.Cell(3, 4).Range.Text = m_bidder.email;
             bidderDataTable.Cell(4, 2).Range.Text = m_bidder.addr;
+            bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
         }
 
         private void FillAuctionRow(Microsoft.Office.Interop.Word.Table auctionTable, int rowId, string lot, string name, string hammerPrice,
@@ -363,6 +380,34 @@ namespace Checkout
             auctionTable.Cell(rowId, 3).Range.Text = hammerPrice;
             auctionTable.Cell(rowId, 4).Range.Text = serviceCharge;
             auctionTable.Cell(rowId, 5).Range.Text = total;
+        }
+
+        private void SetCashFlowDoc(ref List<int> totalSum)
+        {
+            Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_cashFlowTemplateFN;
+            m_bidder.cashFlowDocName = m_bidder.no.ToString() + "_" + m_bidder.name + "_金流單.doc";
+            m_bidder.cashFlowDoc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing, ref m_oMissing, ref m_oMissing);
+            object oBookMark = "Today";
+            m_bidder.cashFlowDoc.Bookmarks.get_Item(ref oBookMark).Range.Text = " " + DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
+            Microsoft.Office.Interop.Word.Table bidderDataTable = m_bidder.cashFlowDoc.Tables[1];
+            bidderDataTable.Cell(1, 2).Range.Text = m_bidder.name;
+            bidderDataTable.Cell(2, 2).Range.Text = m_bidder.phone;
+            bidderDataTable.Cell(2, 4).Range.Text = m_bidder.no.ToString();
+            bidderDataTable.Cell(3, 2).Range.Text = m_bidder.fax;
+            bidderDataTable.Cell(3, 4).Range.Text = m_bidder.email;
+            bidderDataTable.Cell(4, 2).Range.Text = m_bidder.addr;
+            bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
+
+            Microsoft.Office.Interop.Word.Table depositReceiveTable = m_bidder.cashFlowDoc.Tables[2];
+            depositReceiveTable.Cell(0, 2).Range.Text = Utility.GetEnumString(typeof(AuctioneerName), (int)m_bidder.auctioneer);
+
+            Microsoft.Office.Interop.Word.Table totalDataTable = m_bidder.cashFlowDoc.Tables[3];
+            totalDataTable.Cell(2, 2).Range.Text = totalSum[(int)Auctioneer.A].ToString();
+            totalDataTable.Cell(3, 2).Range.Text = totalSum[(int)Auctioneer.M].ToString();
+            totalDataTable.Cell(4, 2).Range.Text = totalSum[(int)Auctioneer.S].ToString();
+
+            Microsoft.Office.Interop.Word.Table depositReturnTable = m_bidder.cashFlowDoc.Tables[4];
+            depositReturnTable.Cell(0, 2).Range.Text = Utility.GetEnumString(typeof(AuctioneerName), (int)m_bidder.auctioneer);
         }
 
         private void UpdateListView()
@@ -381,29 +426,6 @@ namespace Checkout
                 auctionsListView.Items.Add(lvi);
             }
             auctionsListView.EndUpdate();
-        }
-
-        private bool SetBidder(BidderEntity bidder, List<AuctionEntity> auctions)
-        {
-            m_bidder = new Bidder();
-            m_bidder.name = bidder.Name;   //ignore first string of id.
-            m_bidder.no = bidder.BidderID_int;
-            m_bidder.phone = bidder.Tel;
-            m_bidder.fax = bidder.Fax;
-            m_bidder.email = bidder.EMail;
-            m_bidder.addr = bidder.EMail;
-            m_bidder.auctions = new Dictionary<string, Auction>();
-            for (int i = 0; i < auctions.Count; i++)
-            {
-                AuctionEntity ae = auctions[i];
-                Auction auction = new Auction();
-                auction.lot = ae.AuctionId;
-                auction.name = ae.Name;
-                auction.hammerPrice = ae.HammerPrice;
-                auction.ComputeChargeAndTotal();
-                m_bidder.auctions[auction.lot] = auction;
-            }
-            return true;
         }
 
         private void LoadSettings(string fp)
@@ -436,7 +458,7 @@ namespace Checkout
             }
         }
 
-        private void SavePaymentDoc()
+        private void SaveAllDoc()
         {
             SetDataInDoc();
 
@@ -463,6 +485,9 @@ namespace Checkout
                         paymentDoc.Value.doc.SaveAs(Path.Combine(System.Windows.Forms.Application.StartupPath, paymentDoc.Value.name));
                 }
             }
+
+            if (!m_bidder.cashFlowDoc.Saved)
+                m_bidder.cashFlowDoc.SaveAs(Path.Combine(System.Windows.Forms.Application.StartupPath, m_bidder.cashFlowDocName));
         }
 
         private void CloseDocAndWord()
@@ -478,13 +503,21 @@ namespace Checkout
                 }
             }
 
-            foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
+            if (m_bidder.paymentDocs != null)
             {
-                if (paymentDoc.Value.doc != null)
+                foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
-                    CloseDoc(ref paymentDoc.Value.doc);
-                    paymentDoc.Value.name = "";
+                    if (paymentDoc.Value.doc != null)
+                    {
+                        CloseDoc(ref paymentDoc.Value.doc);
+                        paymentDoc.Value.name = "";
+                    }
                 }
+            }
+
+            if (m_bidder.cashFlowDoc != null)
+            {
+                CloseDoc(ref m_bidder.cashFlowDoc);
             }
 
             if (m_wordApp != null)

@@ -177,7 +177,7 @@ namespace SJ_Bidding_System
             auction.artist = artistTextBox.Text;
             auction.artwork = artworkTextBox.Text;
             auction.initialPrice = int.Parse(initialPriceTextBox.Text);
-            auction.company = companyTextBox.Text;
+            auction.auctioneer = companyTextBox.Text;
             CopyPhotoToAuctionsFolder(ref auction);
             string fp = Path.Combine(Application.StartupPath, auction.photofilePath);
             auction.photo = Utility.OpenBitmap(fp);
@@ -228,14 +228,14 @@ namespace SJ_Bidding_System
             auc.initialPrice = int.Parse(initialPriceTextBox.Text);
             auctionsListView.Items[id].SubItems[3].Text = int.Parse(initialPriceTextBox.Text,
                 System.Globalization.NumberStyles.Currency).ToString("c");
-            auctionsListView.Items[id].SubItems[4].Text = auc.company = companyTextBox.Text;
+            auctionsListView.Items[id].SubItems[4].Text = auc.auctioneer = companyTextBox.Text;
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artist, auc.artist);
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artwork, auc.artwork);
             m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auc.lot, ae => ae.InitialPrice, auc.initialPrice);
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Company, auc.company);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Auctioneer, auc.auctioneer);
             
             photoTextBox.Text = Path.GetFileName(auc.photofilePath);
             ClearAllTextBox();
@@ -331,7 +331,7 @@ namespace SJ_Bidding_System
                 m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
                 m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
-                    auction.initialPrice.ToString("n0"), auction.company);
+                    auction.initialPrice.ToString("n0"), auction.auctioneer);
             }
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;
