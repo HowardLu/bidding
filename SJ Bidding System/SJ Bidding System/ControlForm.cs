@@ -202,7 +202,8 @@ namespace SJ_Bidding_System
             if (m_auctions.Count == 0)
                 return;
 
-            SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
+            if (MessageBox.Show("是否重置此拍品?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
         }
 
         /// <summary>
@@ -360,10 +361,12 @@ namespace SJ_Bidding_System
         {
             if (m_auctions.Count == 0)
                 return;
-
-            for (int i = 0; i < m_auctions.Count; i++)
-                m_auctions[i].nowPrice = m_auctions[i].initialPrice;
-            SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
+            if (MessageBox.Show("是否重置全部?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+            {
+                for (int i = 0; i < m_auctions.Count; i++)
+                    m_auctions[i].nowPrice = m_auctions[i].initialPrice;
+                SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
+            }
         }
 
         /// <summary>
