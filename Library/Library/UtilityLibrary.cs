@@ -159,7 +159,7 @@ namespace UtilityLibrary
             }
             else
             {
-                MessageBox.Show("請輸入有效數字");
+                MessageBox.Show("請輸入有效數字" + input);
                 return -1;
             }
         }

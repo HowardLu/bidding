@@ -21,7 +21,7 @@ namespace Bidding
         public Bitmap photo;
         public string photofilePath;
         public int winBidderNo;
-        public string name;
+        //public string name;
         public int hammerPrice;
         public int serviceCharge;
         public int total;
@@ -33,7 +33,7 @@ namespace Bidding
         public Auction()
         {
             hammerPrice = serviceCharge = total = 0;
-            lot = name = "";
+            lot = "";
             paymentDoc = null;
             isUseCreditCard = false;
         }
@@ -68,7 +68,7 @@ namespace Bidding
             AuctionEntity ae = auctions[fileName];
             this.lot = ae.AuctionId;
             this.artist = ae.Artist;
-            this.artwork = ae.Artwork;
+            this.artwork = ae.Name;
             this.initialPrice = ae.InitialPrice;
             this.nowPrice = ae.NowPrice;
             this.auctioneer = ae.Auctioneer;
@@ -157,6 +157,8 @@ namespace Bidding
         public Dictionary<string, PaymentDoc> paymentDocs;
         public string cashFlowDocName;
         public _Document cashFlowDoc;
+        public PayGuarantee payGuaranteeState;
+        public int payGuaranteeNum;
 
         public void SetBidder(BidderEntity bidder, ref List<AuctionEntity> auctions)
         {
@@ -168,12 +170,14 @@ namespace Bidding
             this.addr = bidder.EMail;
             this.auctioneer = Utility.ToEnum<Auctioneer>(bidder.Auctioneer);
             this.auctions = new Dictionary<string, Auction>();
+            this.payGuaranteeState = Utility.ToEnum<PayGuarantee>(bidder.GuaranteeType);
+            this.payGuaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost);
             for (int i = 0; i < auctions.Count; i++)
             {
                 AuctionEntity ae = auctions[i];
                 Auction auction = new Auction();
                 auction.lot = ae.AuctionId;
-                auction.name = ae.Name;
+                auction.artwork = ae.Artwork;
                 auction.hammerPrice = ae.HammerPrice;
                 auction.ComputeChargeAndTotal();
                 auction.auctioneer = ae.Auctioneer;

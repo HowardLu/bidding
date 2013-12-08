@@ -20,8 +20,6 @@ namespace InternetLibrary
         public int HammerPrice { get; set; }
         public int BuyerServiceCharge { get; set; }
         public int FinalPrice { get; set; }
-        public int PayGuaranteeState { get; set; }
-        public int PayGuaranteeNumber { get; set; }
         public int ReturnGuaranteeState { get; set; }
         public int ReturnGuaranteeNumber { get; set; }
         public int PayWayState { get; set; }
@@ -43,7 +41,9 @@ namespace InternetLibrary
         public int BidderID_int { get; set; }
         public string Tel { get; set; }
         public string Name { get; set; }
+        public string GuaranteeCost { get; set; }
         public string Company { get; set; }
+        public string GuaranteeType { get; set; }
         public string BankAcc { get; set; }
         public string CareerTitle { get; set; }
         public string IDNumber { get; set; }
@@ -202,7 +202,7 @@ namespace InternetLibrary
             }
             catch (MongoConnectionException e)
             {
-                Console.WriteLine(m_client.GetServer().State.ToString());
+                Console.WriteLine(m_client.GetServer().State.ToString() + "\n" + e.ToString());
                 return false;
             }
             return true;
