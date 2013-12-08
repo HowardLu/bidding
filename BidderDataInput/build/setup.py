@@ -22,7 +22,7 @@ SYS_ARG = sys.argv[ 1 ]
 def main():
 	# includes for py2exe
 	# 是視窗程式就用win 不然就用pure
-	comp_list = [ "button", "image", "staticbox", "statictext", "textarea", "textfield", "passwordfield", "choice", "list" ]
+	comp_list = [ "button", "image", "staticbox", "statictext", "textarea", "textfield", "passwordfield", "choice", "list", "combobox" ]
 	includes = []
 	for comp in comp_list:
 		includes += [ "PythonCard.components." + comp ]
