@@ -11,6 +11,28 @@
 
          'components': [
 
+{'type':'TextField', 
+    'name':'TextFieldSearch', 
+    'position':(398, 8), 
+    'size':(90, -1), 
+    },
+
+{'type':'Button', 
+    'name':'ButtonSearch', 
+    'position':(492, 6), 
+    'size':(85, -1), 
+    'backgroundColor':(128, 128, 128, 255), 
+    'label':'ButtonSearch', 
+    },
+
+{'type':'Button', 
+    'name':'ButtonClear', 
+    'position':(19, 277), 
+    'size':(85, -1), 
+    'backgroundColor':(128, 128, 255, 255), 
+    'label':'ButtonClear', 
+    },
+
 {'type':'StaticText', 
     'name':'StaticTextGuaranteeCost', 
     'position':(167, 195), 
@@ -51,24 +73,24 @@
 
 {'type':'Button', 
     'name':'ButtonDelBidder', 
-    'position':(287, 277), 
-    'size':(100, -1), 
+    'position':(304, 277), 
+    'size':(85, -1), 
     'backgroundColor':(255, 128, 128, 255), 
     'label':'ButtonDelBidder', 
     },
 
 {'type':'Button', 
     'name':'ButtonFixBidder', 
-    'position':(153, 277), 
-    'size':(100, -1), 
+    'position':(211, 277), 
+    'size':(85, -1), 
     'backgroundColor':(255, 255, 128, 255), 
     'label':'ButtonFixBidder', 
     },
 
 {'type':'Button', 
     'name':'ButtonAddBidder', 
-    'position':(19, 277), 
-    'size':(100, -1), 
+    'position':(115, 277), 
+    'size':(85, -1), 
     'backgroundColor':(128, 255, 128, 255), 
     'label':'ButtonAddBidder', 
     },
@@ -82,8 +104,8 @@
 
 {'type':'List', 
     'name':'ListBidders', 
-    'position':(398, 9), 
-    'size':(179, 297), 
+    'position':(398, 34), 
+    'size':(179, 272), 
     'items':[], 
     },
 

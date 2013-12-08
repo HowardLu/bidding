@@ -18,6 +18,12 @@ BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel", "Auctioneer" ]
 # 連線port
 DB_CFG_PORT	= 27017
 
+# 預設支付方式索引
+GUARANTEE_INIT	= 0
+
+# 寫死的login account
+DB_LOGIN_ACC = { "showmethemoney": None, "superjunior": "S", "moomoomoo": "M", "mranderson": "A" }
+
 # 無效牌號
 INVALID_ID	= -1
 
@@ -53,6 +59,8 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"BUTTONTEXTADDBIDDER":			"新增買家",
 							"BUTTONTEXTFIXBIDDER":			"修正資料",
 							"BUTTONTEXTDELBIDDER":			"刪除買家",
+							"BUTTONTEXTCLEAR":					"清空欄位",
+							"BUTTONTEXTSEARCH":					"搜尋/刷新",
 							"COMBOBOXGUARANTEETYPE":		u"支付方式",
 							"COMBOBOXGUARANTEE_LIST":		[ u"台幣現鈔", u"人民幣現鈔", u"美金現鈔", u"信用卡", u"銀聯卡", u"VIP" ],
 							"NEW_FILE_TITLE":						"請建立一個資料檔",
@@ -68,6 +76,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"BIDDER_ID_LEN_EXCEEDED":		"牌號位數過大，請修正",
 							"BIDDER_ID_HAS_FOUR":				"牌號不可含有""4""或是""7""",
 							"BIDDER_ID_NOT_DIGIT":			"牌號必須是數字，請修正",
+							"GUARANTEECOST_NOT_DIGIT":	"保證繳納金額必須是數字，請修正",
 							"WARNING":									"警告",
 							"BIDDER_ID_REPEAT":					u"牌號已和[%s]重複",
 							"ADD_BIDDER_SUCCESS":				u"成功新增了買家[%s]",
@@ -84,7 +93,9 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"UNSAVED_MODS_QUIT":				u"不修改了，直接關閉",
 							"UNSAVED_MODS_RESUME":			"繼續編輯資料",
 							"PLZ_ENTER_AUCTION_IP":			"請輸入資料庫的IP位址",
+							"PLZ_ENTER_LOGIN_CODE":			"請輸入登入密碼",
 							"READY_TO_CONNECT":					"準備開始連線",
+							"READY_TO_LOGIN":					"登入中",
 							"DEFAULT_IP":								"127.0.0.1",
 							"CONNECT_FAILED":						"無法連線到[%s]",
 							"CONNECT_SUCCESS":					"成功連線到[%s]",
@@ -126,13 +137,26 @@ class MyBackground( model.Background ):
 		com.ButtonAddBidder.label					= Const[ "BUTTONTEXTADDBIDDER" ]
 		com.ButtonFixBidder.label					= Const[ "BUTTONTEXTFIXBIDDER" ]
 		com.ButtonDelBidder.label					= Const[ "BUTTONTEXTDELBIDDER" ]
+		com.ButtonClear.label							= Const[ "BUTTONTEXTCLEAR" ]
+		com.ButtonSearch.label						= Const[ "BUTTONTEXTSEARCH" ]
 		
 		# 選單
-		com.ComboBoxGuaranteeType.text		= Const[ "COMBOBOXGUARANTEETYPE" ]
+		com.ComboBoxGuaranteeType.text		= Const[ "COMBOBOXGUARANTEE_LIST" ][ GUARANTEE_INIT ]
 		for type in Const[ "COMBOBOXGUARANTEE_LIST" ]:
 			com.ComboBoxGuaranteeType.append( type )
 		com.ComboBoxGuaranteeType.SetEditable( False )
 		
+		# 嘗試登入
+		while True:
+			login_result, self.__login_key = self.__login_process()
+			if login_result:
+				break
+		
+		if self.__login_key:
+			com.TextFieldAuctioneer.text = self.__login_key
+			com.TextFieldAuctioneer.SetEditable( False )
+			com.TextFieldAuctioneer.enabled = False
+			
 		# 嘗試連上資料庫
 		while True:
 			connect_ip = self.__connection_process()
@@ -140,7 +164,7 @@ class MyBackground( model.Background ):
 				break
 			
 		self.__add_msg( Const[ "ERRMSG_DB_CNCT_OK" ] % ( connect_ip, DB_CFG_PORT ), True )
-		 
+		
 		# 取得資料庫相關資料表
 		self.__mongo_db = self.__mongo_client.bidding_data
 		self.__dbtable_buyer = self.__mongo_db.buyer_table
@@ -173,7 +197,20 @@ class MyBackground( model.Background ):
 		
 		file_ob.write( connect_ip )
 		file_ob.close()
-	
+		
+	# 嘗試登入
+	def __login_process( self ):
+		result = dialog.textEntryDialog( self, Const[ "PLZ_ENTER_LOGIN_CODE" ], Const[ "READY_TO_LOGIN" ] )
+		if not result.accepted:
+			return False
+		
+		code = result.text
+		
+		if code not in DB_LOGIN_ACC:
+			return False, False
+		
+		return True, DB_LOGIN_ACC[ code ]
+		
 	# 嘗試連上資料庫
 	def __connection_process( self ):
 		result = dialog.textEntryDialog( self, Const[ "PLZ_ENTER_AUCTION_IP" ], Const[ "READY_TO_CONNECT" ], self.__load_cached_ip() )
@@ -277,6 +314,27 @@ class MyBackground( model.Background ):
 			index = index_the_last
 		
 		self.components.ListBidders.selection = index
+		self.__display_bidder_data( {} )
+		
+	# 按下 清空資料 按鈕
+	def on_ButtonClear_mouseClick( self, event ):
+		self.__display_bidder_data( {} )
+		
+	# 按下 搜尋 按鈕
+	def on_ButtonSearch_mouseClick( self, event ):
+		search_text = self.components.TextFieldSearch.text
+		search_text = None if search_text == "" else search_text
+		self.__gen_list_ui_by_bidder_data( search_text )
+		
+	# 顯示買家資料
+	def __display_bidder_data( self, bidder_data ):
+		com = self.components
+		for attr in BIDDER_ATTRS:
+			getattr( com, "TextField" + attr ).text = bidder_data[ attr ] if attr in bidder_data else ""
+			
+		com.ComboBoxGuaranteeType.text = bidder_data[ "GuaranteeType" ] if "GuaranteeType" in bidder_data else ""
+		if self.__login_key:
+			com.TextFieldAuctioneer.text = self.__login_key
 		
 	# 按下買家列表資料
 	def on_ListBidders_select( self, event = None ):
@@ -287,11 +345,7 @@ class MyBackground( model.Background ):
 			return
 		
 		index, bidder_data = self.__chched_data[ bidder_id ]
-		com = self.components
-		for attr in BIDDER_ATTRS:
-			getattr( com, "TextField" + attr ).text = bidder_data[ attr ]
-			
-		com.ComboBoxGuaranteeType.text = bidder_data[ "GuaranteeType" ]
+		self.__display_bidder_data( bidder_data )
 	
 	# 利用索引值取得牌號ID
 	def get_bidder_id_by_index( self, index ):
@@ -337,6 +391,15 @@ class MyBackground( model.Background ):
 			self.__add_msg( Const[ "BIDDER_ID_NOT_DIGIT" ] )
 			return None
 		
+		# 保證金繳納必須是純數字
+		if bidder_data[ "GuaranteeCost" ] == "":
+			com.TextFieldGuaranteeCost.text = "0"
+			bidder_data[ "GuaranteeCost" ] = "0"
+		
+		if not bidder_data[ "GuaranteeCost" ].isdigit():
+			self.__add_msg( Const[ "GUARANTEECOST_NOT_DIGIT" ] )
+			return None
+		
 		# ID是整數
 		bidder_data[ "BidderID_int" ] = int( bidder_data[ "BidderID" ] )
 		
@@ -345,7 +408,7 @@ class MyBackground( model.Background ):
 		return bidder_data
 		
 	# 依買家資料產生界面顯示
-	def __gen_list_ui_by_bidder_data( self ):
+	def __gen_list_ui_by_bidder_data( self, search_text = None ):
 		com = self.components
 		
 		com.ListBidders.clear()
@@ -353,7 +416,25 @@ class MyBackground( model.Background ):
 		self.__chched_data = {}
 		self.__chched_index = {}
 		index = -1
-		for index, collection in enumerate( self.__dbtable_buyer.find().sort( "BidderID_int", 1 ) ):
+		
+		search_key = {}
+		if self.__login_key:
+			search_key.update( { "Auctioneer": self.__login_key } )
+		
+		if search_text:
+			if search_text.isdigit():
+				extra_key = "BidderID"
+			else:
+				extra_key = "Name"
+				
+			search_key.update( { extra_key: re.compile( search_text ) } )
+			
+		if len( search_key ):
+			find_result = self.__dbtable_buyer.find( search_key )
+		else:
+			find_result = self.__dbtable_buyer.find()
+		
+		for index, collection in enumerate( find_result.sort( "BidderID_int", 1 ) ):
 			id = collection[ "BidderID_int" ]
 			
 			self.__chched_data[ id ] = index, collection
