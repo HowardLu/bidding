@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,7 +12,6 @@ namespace InternetLibrary
     {
         public ObjectId Id { get; set; }
         public string AuctionId { get; set; }
-        public string Name { get; set; }
         public string BidderNumber { get; set; }
         public string StockState { get; set; }
         public int ReturnState { get; set; }

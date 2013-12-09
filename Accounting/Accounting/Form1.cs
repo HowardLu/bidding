@@ -32,6 +32,7 @@ namespace Accounting
         private Internet<AuctionEntity> m_auctionsInternet;
         private Internet<DealerItemEntity> m_dealerItemInternet;
         private Internet<MemberEntity> m_memberInternet;
+        private Internet<BidderEntity> m_beInternet;
         private bool m_isSuperUser = false;
         #endregion
 
@@ -95,6 +96,7 @@ namespace Accounting
                 return;
 
             string auctionId = this.dataGridView1.Rows[e.RowIndex].Cells[AuctionColumnHeader.拍品編號.ToString()].Value.ToString();
+            string bidderId = this.dataGridView1.Rows[e.RowIndex].Cells[AuctionColumnHeader.得標牌號.ToString()].Value.ToString();
             string colName = this.dataGridView1.Columns[e.ColumnIndex].Name;
             switch (colName)
             {
@@ -113,8 +115,8 @@ namespace Accounting
                         DataGridViewCell bscCell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
                         DataGridViewCell fpCell = this.dataGridView1.Rows[e.RowIndex].Cells[AuctionColumnHeader.成交價.ToString()] as DataGridViewCell;
 
-                        int hammerPrice = Utility.ParseToInt(hpCell.Value.ToString());
-                        int newBuyerServiceCharge = Utility.ParseToInt(bscCell.Value.ToString());
+                        int hammerPrice = Utility.ParseToInt(hpCell.Value.ToString(), true);
+                        int newBuyerServiceCharge = Utility.ParseToInt(bscCell.Value.ToString(), false);
                         int finalPrice = GetFinalPrice(hammerPrice, newBuyerServiceCharge);
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.BuyerServiceCharge, newBuyerServiceCharge);
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.FinalPrice, finalPrice);
@@ -124,13 +126,13 @@ namespace Accounting
                 case "保證金繳納":
                     {
                         DataGridViewComboBoxCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewComboBoxCell;
-                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.PayGuaranteeState, Utility.ToEnumInt<PayGuarantee>(cell.Value.ToString()));
+                        m_beInternet.UpdateField<string, string>(be => be.BidderID, bidderId, be => be.GuaranteeType, cell.Value.ToString());
                     }
                     break;
                 case "保證金繳納金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
-                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.PayGuaranteeNumber, Utility.ParseToInt(cell.Value.ToString()));
+                        m_beInternet.UpdateField<string, string>(be => be.BidderID, bidderId, be => be.GuaranteeCost, Utility.ParseToInt(cell.Value.ToString(), false).ToString());
                     }
                     break;
                 case "保證金退還":
@@ -142,7 +144,7 @@ namespace Accounting
                 case "保證金退還金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
-                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnGuaranteeNumber, Utility.ParseToInt(cell.Value.ToString()));
+                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnGuaranteeNumber, Utility.ParseToInt(cell.Value.ToString(), false));
                     }
                     break;
                 case "付款方式":
@@ -288,6 +290,7 @@ namespace Accounting
             m_auctionsInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             m_dealerItemInternet = new Internet<DealerItemEntity>(ip, "bidding_data", "dealer_item_table");
             m_memberInternet = new Internet<MemberEntity>(ip, "bidding_data", "member_table");
+            m_beInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
             Login();
 
             if (m_auctionsInternet.Connect())
@@ -332,11 +335,10 @@ namespace Accounting
             {
                 AuctionEntity auction = new AuctionEntity();
                 auction.AuctionId = "111";
-                auction.Name = "國寶";
+                auction.Artwork = "國寶";
                 auction.BidderNumber = "100";
                 auction.StockState = "home";
                 auction.ReturnState = 1;
-                auction.PayGuaranteeState = 2;
                 auction.ReturnGuaranteeState = 2;
                 auction.PayWayState = 3;
                 m_auctionsInternet.Insert(auction);
@@ -406,6 +408,7 @@ namespace Accounting
             foreach (AuctionEntity auction in auctionEntities)
             {
                 DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
+                BidderEntity bidder = m_beInternet.FineOne<string>(be => be.BidderID, auction.BidderNumber);
                 if (dealerItem == null)
                 {
                     MessageBox.Show("找不到拍品 " + auction.AuctionId + "在dealer_item_table");
@@ -414,25 +417,25 @@ namespace Accounting
 
                 if (m_isSuperUser)
                 {
-                    dataGridView1.Rows.Add(auction.AuctionId, auction.Name, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
+                    dataGridView1.Rows.Add(auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
                         dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
                         auction.BuyerServiceCharge, auction.FinalPrice,
-                        Utility.GetEnumString(typeof(PayGuarantee), auction.PayGuaranteeState), auction.PayGuaranteeNumber,
+                        bidder.GuaranteeType, bidder.GuaranteeCost,
                         Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
                         Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
                         dealerItem.ReservePrice, auction.SellerAccountPayable);
 
-                    if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice))
+                    if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice, true))
                     {
                         dataGridView1.Rows[dataGridView1.Rows.Count - 1].ErrorText = "落槌價低於保留價!!!";
                     }
                 }
                 else
                 {
-                    dataGridView1.Rows.Add(auction.AuctionId, auction.Name, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
+                    dataGridView1.Rows.Add(auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
                         Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
                         auction.BuyerServiceCharge, auction.FinalPrice,
-                        Utility.GetEnumString(typeof(PayGuarantee), auction.PayGuaranteeState), auction.PayGuaranteeNumber,
+                        bidder.GuaranteeType, bidder.GuaranteeCost,
                         Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
                         Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState));
                 }

@@ -1,4 +1,4 @@
-﻿namespace SJ_Bidding_System
+﻿namespace SetAuction
 {
     partial class SetAuctionForm
     {
@@ -33,6 +33,7 @@
             this.artistColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.artworkColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.initialPriceColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.companyColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.viewsGroupBox = new System.Windows.Forms.GroupBox();
             this.tileRadioButton = new System.Windows.Forms.RadioButton();
             this.listRadioButton = new System.Windows.Forms.RadioButton();
@@ -40,6 +41,7 @@
             this.detailsRadioButton = new System.Windows.Forms.RadioButton();
             this.largeIconRadioButton = new System.Windows.Forms.RadioButton();
             this.setAuctionGroupBox = new System.Windows.Forms.GroupBox();
+            this.companyLabel = new System.Windows.Forms.Label();
             this.openPhotoButton = new System.Windows.Forms.Button();
             this.photoTextBox = new System.Windows.Forms.TextBox();
             this.auctionPhotoLabel = new System.Windows.Forms.Label();
@@ -55,9 +57,7 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.companyTextBox = new System.Windows.Forms.TextBox();
-            this.companyLabel = new System.Windows.Forms.Label();
-            this.companyColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.auctioneerComboBox = new System.Windows.Forms.ComboBox();
             this.viewsGroupBox.SuspendLayout();
             this.setAuctionGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -102,6 +102,10 @@
             // 
             this.initialPriceColumnHeader.Text = "起拍價";
             this.initialPriceColumnHeader.Width = 105;
+            // 
+            // companyColumnHeader
+            // 
+            this.companyColumnHeader.Text = "公司";
             // 
             // viewsGroupBox
             // 
@@ -178,7 +182,7 @@
             // setAuctionGroupBox
             // 
             this.setAuctionGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.setAuctionGroupBox.Controls.Add(this.companyTextBox);
+            this.setAuctionGroupBox.Controls.Add(this.auctioneerComboBox);
             this.setAuctionGroupBox.Controls.Add(this.companyLabel);
             this.setAuctionGroupBox.Controls.Add(this.openPhotoButton);
             this.setAuctionGroupBox.Controls.Add(this.photoTextBox);
@@ -200,6 +204,15 @@
             this.setAuctionGroupBox.TabIndex = 4;
             this.setAuctionGroupBox.TabStop = false;
             this.setAuctionGroupBox.Text = "設定";
+            // 
+            // companyLabel
+            // 
+            this.companyLabel.AutoSize = true;
+            this.companyLabel.Location = new System.Drawing.Point(9, 199);
+            this.companyLabel.Name = "companyLabel";
+            this.companyLabel.Size = new System.Drawing.Size(29, 12);
+            this.companyLabel.TabIndex = 14;
+            this.companyLabel.Text = "公司";
             // 
             // openPhotoButton
             // 
@@ -333,26 +346,13 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // companyTextBox
+            // auctioneerComboBox
             // 
-            this.companyTextBox.Location = new System.Drawing.Point(70, 196);
-            this.companyTextBox.Name = "companyTextBox";
-            this.companyTextBox.Size = new System.Drawing.Size(59, 22);
-            this.companyTextBox.TabIndex = 15;
-            this.companyTextBox.TextChanged += new System.EventHandler(this.companyTextBox_TextChanged);
-            // 
-            // companyLabel
-            // 
-            this.companyLabel.AutoSize = true;
-            this.companyLabel.Location = new System.Drawing.Point(9, 199);
-            this.companyLabel.Name = "companyLabel";
-            this.companyLabel.Size = new System.Drawing.Size(29, 12);
-            this.companyLabel.TabIndex = 14;
-            this.companyLabel.Text = "公司";
-            // 
-            // companyColumnHeader
-            // 
-            this.companyColumnHeader.Text = "公司";
+            this.auctioneerComboBox.FormattingEnabled = true;
+            this.auctioneerComboBox.Location = new System.Drawing.Point(70, 194);
+            this.auctioneerComboBox.Name = "auctioneerComboBox";
+            this.auctioneerComboBox.Size = new System.Drawing.Size(121, 20);
+            this.auctioneerComboBox.TabIndex = 15;
             // 
             // SetAuctionForm
             // 
@@ -405,8 +405,8 @@
         private System.Windows.Forms.Button openPhotoButton;
         private System.Windows.Forms.TextBox photoTextBox;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.TextBox companyTextBox;
         private System.Windows.Forms.Label companyLabel;
         private System.Windows.Forms.ColumnHeader companyColumnHeader;
+        private System.Windows.Forms.ComboBox auctioneerComboBox;
     }
 }

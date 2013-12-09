@@ -54,11 +54,14 @@ namespace Checkout
         private void CheckoutForm_Load(object sender, EventArgs e)
         {
             string settingsFP = Path.Combine(System.Windows.Forms.Application.StartupPath, m_settingsFN);
-            if (Utility.IsFileExist(settingsFP))
+            if (Utility.IsFileExist(settingsFP, false))
                 LoadSettings(settingsFP);
             string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
             if (ip.Length == 0)
+            {
+                MessageBox.Show("IP不可為空!!!");
                 return;
+            }
             m_auctionInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             m_auctionInternet.Connect();
             m_bidderInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
@@ -186,7 +189,7 @@ namespace Checkout
             if (bidderNoTextBox.Text.Length == 0)
                 return;
 
-            if (Utility.ParseToInt(bidderNoTextBox.Text) == -1)
+            if (Utility.ParseToInt(bidderNoTextBox.Text, false) == -1)
             {
                 bidderNoTextBox.Text = "";
             }

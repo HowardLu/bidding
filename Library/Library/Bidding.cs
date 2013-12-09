@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using InternetLibrary;
 using Microsoft.Office.Interop.Word;
 using UtilityLibrary;
-using InternetLibrary;
 
 namespace Bidding
 {
@@ -68,10 +69,12 @@ namespace Bidding
             AuctionEntity ae = auctions[fileName];
             this.lot = ae.AuctionId;
             this.artist = ae.Artist;
-            this.artwork = ae.Name;
+            this.artwork = ae.Artwork;
             this.initialPrice = ae.InitialPrice;
             this.nowPrice = ae.NowPrice;
             this.auctioneer = ae.Auctioneer;
+            int bidderNo = Utility.ParseToInt(ae.BidderNumber, true);
+            this.winBidderNo = bidderNo < 0 ? 0 : bidderNo;
             return true;
         }
 
@@ -120,6 +123,42 @@ namespace Bidding
             ae.NowPrice = this.nowPrice;
             ae.Auctioneer = this.auctioneer;
             return ae;
+        }
+
+        public static void LoadAuctions(ref List<Auction> auctions, ref Internet<AuctionEntity> aeInternet, bool isSilence)
+        {
+            Dictionary<string, AuctionEntity> aeDic = aeInternet.GetCollectionList().ToDictionary<AuctionEntity, string>(ae => ae.AuctionId);
+            auctions = new List<Auction>();
+            List<string> illegalFiles = new List<string>();
+            string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                Auction auction = new Auction();
+                string fp = filePaths[i];
+                if (auction.GetInfoFromDictionary(ref aeDic, fp))
+                {
+                    auction.photofilePath = fp;
+                    if (auctions.Count < 10)
+                        auction.photo = Utility.OpenBitmap(fp);
+                    else
+                        auction.photo = null;
+                    auctions.Add(auction);
+                }
+                else
+                {
+                    illegalFiles.Add(fp);
+                }
+            }
+
+            if (illegalFiles.Count != 0)
+            {
+                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                foreach (string s in illegalFiles)
+                    sb.AppendLine(s);
+
+                if (!isSilence)
+                    System.Windows.Forms.MessageBox.Show("不合法的拍品，請設定:\n" + sb.ToString());
+            }
         }
     }
 
@@ -171,7 +210,7 @@ namespace Bidding
             this.auctioneer = Utility.ToEnum<Auctioneer>(bidder.Auctioneer);
             this.auctions = new Dictionary<string, Auction>();
             this.payGuaranteeState = Utility.ToEnum<PayGuarantee>(bidder.GuaranteeType);
-            this.payGuaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost);
+            this.payGuaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost, true);
             for (int i = 0; i < auctions.Count; i++)
             {
                 AuctionEntity ae = auctions[i];

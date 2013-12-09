@@ -8,7 +8,7 @@ using Bidding;
 using UtilityLibrary;
 using InternetLibrary;
 
-namespace SJ_Bidding_System
+namespace SetAuction
 {
     public partial class SetAuctionForm : Form
     {
@@ -33,22 +33,31 @@ namespace SJ_Bidding_System
         #endregion
 
         #region Constructors and Finalizers
-        public SetAuctionForm(Dictionary<string, Auction> auctions, ref Internet<AuctionEntity> aeInternet)
+        public SetAuctionForm()
         {
             InitializeComponent();
             m_listViewSize = this.auctionsListView.Size;
             m_lvColWidths = new int[auctionsListView.Columns.Count];
             for (int i = 0; i < auctionsListView.Columns.Count; i++)
                 m_lvColWidths[i] = auctionsListView.Columns[i].Width;
-            m_auctions = auctions;
-            m_aeInternet = aeInternet;
         }
         #endregion
 
         #region Windows Form Events
         private void SetAuctionForm_Load(object sender, EventArgs e)
         {
+            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
+            if (ip.Length == 0)
+            {
+                MessageBox.Show("IP不可為空!!!");
+                return;
+            }
+            m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
+            List<Auction> auctions = null;
+            Auction.LoadAuctions(ref auctions, ref m_aeInternet, false);
+            m_auctions = auctions.ToDictionary<Auction, string>(auc => auc.lot);
             LoadAuctionPhotos();
+            InitAuctioneerComboBox();
         }
 
         private void SetAuctionForm_Resize(object sender, EventArgs e)
@@ -103,7 +112,8 @@ namespace SJ_Bidding_System
             initialPriceTextBox.Text = int.Parse(lvi.SubItems[3].Text, System.Globalization.NumberStyles.Currency).ToString();
             m_addImgFP = Path.Combine(Application.StartupPath, m_auctions[auctionsListView.SelectedItems[0].Text].photofilePath);
             photoTextBox.Text = Path.GetFileName(m_addImgFP);
-            companyTextBox.Text = lvi.SubItems[4].Text;
+            int index = Utility.ToEnumInt<Auctioneer>(lvi.SubItems[4].Text);
+            auctioneerComboBox.SelectedIndex = index < 0 ? 0 : index;
         }
 
         private void lotTextBox_TextChanged(object sender, EventArgs e)
@@ -111,7 +121,7 @@ namespace SJ_Bidding_System
             if (lotTextBox.Text.Length == 0)
                 return;
 
-            if (!Utility.IsValidFileName(lotTextBox.Text))
+            if (!Utility.IsValidFileName(lotTextBox.Text, false))
             {
                 lotTextBox.Text = "";
             }
@@ -122,7 +132,7 @@ namespace SJ_Bidding_System
             if (artistTextBox.Text.Length == 0)
                 return;
 
-            if (!Utility.IsValidFileName(artistTextBox.Text))
+            if (!Utility.IsValidFileName(artistTextBox.Text, false))
             {
                 artistTextBox.Text = "";
             }
@@ -133,7 +143,7 @@ namespace SJ_Bidding_System
             if (artworkTextBox.Text.Length == 0)
                 return;
 
-            if (!Utility.IsValidFileName(artworkTextBox.Text))
+            if (!Utility.IsValidFileName(artworkTextBox.Text, false))
             {
                 artworkTextBox.Text = "";
             }
@@ -144,8 +154,8 @@ namespace SJ_Bidding_System
             if (initialPriceTextBox.Text.Length == 0)
                 return;
 
-            if (!Utility.IsValidFileName(initialPriceTextBox.Text) ||
-                Utility.ParseToInt(initialPriceTextBox.Text) == -1)
+            if (!Utility.IsValidFileName(initialPriceTextBox.Text, false) ||
+                Utility.ParseToInt(initialPriceTextBox.Text, false) == -1)
             {
                 initialPriceTextBox.Text = "";
             }
@@ -177,7 +187,7 @@ namespace SJ_Bidding_System
             auction.artist = artistTextBox.Text;
             auction.artwork = artworkTextBox.Text;
             auction.initialPrice = int.Parse(initialPriceTextBox.Text);
-            auction.auctioneer = companyTextBox.Text;
+            auction.auctioneer = Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex);
             CopyPhotoToAuctionsFolder(ref auction);
             string fp = Path.Combine(Application.StartupPath, auction.photofilePath);
             auction.photo = Utility.OpenBitmap(fp);
@@ -188,7 +198,8 @@ namespace SJ_Bidding_System
             m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
             auctionsListView.BeginUpdate();
             AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
-               int.Parse(initialPriceTextBox.Text, System.Globalization.NumberStyles.Currency).ToString("c"), companyTextBox.Text);
+               int.Parse(initialPriceTextBox.Text, System.Globalization.NumberStyles.Currency).ToString("c"),
+               Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex));
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
@@ -228,7 +239,7 @@ namespace SJ_Bidding_System
             auc.initialPrice = int.Parse(initialPriceTextBox.Text);
             auctionsListView.Items[id].SubItems[3].Text = int.Parse(initialPriceTextBox.Text,
                 System.Globalization.NumberStyles.Currency).ToString("c");
-            auctionsListView.Items[id].SubItems[4].Text = auc.auctioneer = companyTextBox.Text;
+            auctionsListView.Items[id].SubItems[4].Text = auc.auctioneer = Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex);
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
@@ -236,7 +247,7 @@ namespace SJ_Bidding_System
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artwork, auc.artwork);
             m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auc.lot, ae => ae.InitialPrice, auc.initialPrice);
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Auctioneer, auc.auctioneer);
-            
+
             photoTextBox.Text = Path.GetFileName(auc.photofilePath);
             ClearAllTextBox();
         }
@@ -294,15 +305,6 @@ namespace SJ_Bidding_System
         {
             auctionsListView.View = View.Tile;
         }
-
-        private void companyTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (companyTextBox.Text != "S" && companyTextBox.Text != "A" && companyTextBox.Text != "M")
-            {
-                MessageBox.Show("請輸入有效公司簡稱：\n 台灣世家：S 安德昇：A 沐春堂：M");
-                companyTextBox.Text = "";
-            }
-        }
         #endregion
 
         #region Public Methods
@@ -331,7 +333,7 @@ namespace SJ_Bidding_System
                 m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
                 m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
-                    auction.initialPrice.ToString("n0"), auction.auctioneer);
+                    auction.initialPrice.ToString("c"), auction.auctioneer);
             }
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;
@@ -353,7 +355,7 @@ namespace SJ_Bidding_System
         private void ClearAllTextBox()
         {
             lotTextBox.Text = artistTextBox.Text = artworkTextBox.Text = initialPriceTextBox.Text =
-                photoTextBox.Text = companyTextBox.Text = "";
+                photoTextBox.Text = "";
         }
 
         private void CopyPhotoToAuctionsFolder(ref Auction auction)
@@ -373,6 +375,14 @@ namespace SJ_Bidding_System
             {
                 photoTextBox.Text = "";
                 MessageBox.Show(m_addImgFP + "圖片來源不存在! ");
+            }
+        }
+
+        private void InitAuctioneerComboBox()
+        {
+            for (int i = 0; i < (int)AuctioneerName.Count; i++)
+            {
+                auctioneerComboBox.Items.Add(Utility.GetEnumString(typeof(AuctioneerName), i));
             }
         }
         #endregion

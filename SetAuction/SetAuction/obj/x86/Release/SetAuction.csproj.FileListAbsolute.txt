@@ -1,0 +1,17 @@
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\ResolveAssemblyReference.cache
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.Properties.Resources.resources
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.SetAuctionForm.resources
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\GenerateResource.read.1.tlog
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\SetAuction.exe
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\SetAuction.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\Library.dll
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\MongoDB.Bson.dll
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\MongoDB.Driver.dll
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\Library.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\MongoDB.Bson.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\MongoDB.Bson.xml
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\MongoDB.Driver.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\MongoDB.Driver.xml
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.exe
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.pdb

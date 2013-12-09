@@ -55,7 +55,6 @@
             this.hkLabel = new System.Windows.Forms.Label();
             this.winBidderTextBox = new System.Windows.Forms.TextBox();
             this.winBidderLabel = new System.Windows.Forms.Label();
-            this.setAllAuctionButton = new System.Windows.Forms.Button();
             this.confirmBidderButton = new System.Windows.Forms.Button();
             this.clearBidderButton = new System.Windows.Forms.Button();
             this.auctionPictureBox = new System.Windows.Forms.PictureBox();
@@ -346,18 +345,6 @@
             this.winBidderLabel.TabIndex = 30;
             this.winBidderLabel.Text = "得標者 :";
             // 
-            // setAllAuctionButton
-            // 
-            this.setAllAuctionButton.BackColor = System.Drawing.Color.White;
-            this.setAllAuctionButton.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.setAllAuctionButton.Location = new System.Drawing.Point(543, 550);
-            this.setAllAuctionButton.Name = "setAllAuctionButton";
-            this.setAllAuctionButton.Size = new System.Drawing.Size(107, 40);
-            this.setAllAuctionButton.TabIndex = 32;
-            this.setAllAuctionButton.Text = "設定拍品";
-            this.setAllAuctionButton.UseVisualStyleBackColor = false;
-            this.setAllAuctionButton.Click += new System.EventHandler(this.setAllAuctionButton_Click);
-            // 
             // confirmBidderButton
             // 
             this.confirmBidderButton.Font = new System.Drawing.Font("PMingLiU", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
@@ -404,7 +391,6 @@
             this.ClientSize = new System.Drawing.Size(1016, 730);
             this.Controls.Add(this.clearBidderButton);
             this.Controls.Add(this.confirmBidderButton);
-            this.Controls.Add(this.setAllAuctionButton);
             this.Controls.Add(this.winBidderTextBox);
             this.Controls.Add(this.winBidderLabel);
             this.Controls.Add(this.hkTextBox);
@@ -477,7 +463,6 @@
         private System.Windows.Forms.Label hkLabel;
         private System.Windows.Forms.TextBox winBidderTextBox;
         private System.Windows.Forms.Label winBidderLabel;
-        private System.Windows.Forms.Button setAllAuctionButton;
         private System.Windows.Forms.Button confirmBidderButton;
         private System.Windows.Forms.Button clearBidderButton;
     }

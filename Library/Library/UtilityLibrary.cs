@@ -21,7 +21,7 @@ namespace UtilityLibrary
         /// <param name="fn">exchange rate file name</param>
         public static void Load(string fn)
         {
-            if (!Utility.IsFileExist(fn))
+            if (!Utility.IsFileExist(fn, false))
                 return;
 
             using (StreamReader sr = new StreamReader(fn))
@@ -125,17 +125,19 @@ namespace UtilityLibrary
             pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
         }
 
-        public static bool IsFileExist(string filePath)
+        public static bool IsFileExist(string filePath, bool isSilence)
         {
-            if (File.Exists(filePath))
-                return true;
-            else
-                MessageBox.Show(Path.GetFileName(filePath) + " 檔案不存在!");
+            if (!File.Exists(filePath))
+            {
+                if (!isSilence)
+                    MessageBox.Show(Path.GetFileName(filePath) + " 檔案不存在!");
+                return false;
+            }
 
-            return false;
+            return true;
         }
 
-        public static bool IsValidFileName(string input)
+        public static bool IsValidFileName(string input, bool isSilence)
         {
             char[] invalidChars = Path.GetInvalidFileNameChars();
             int index = input.IndexOfAny(invalidChars);
@@ -145,12 +147,13 @@ namespace UtilityLibrary
             }
             else
             {
-                MessageBox.Show("不可輸入無效字元: " + input[index]);
+                if (!isSilence)
+                    MessageBox.Show("不可輸入無效字元: " + input[index]);
                 return false;
             }
         }
 
-        public static int ParseToInt(string input)
+        public static int ParseToInt(string input, bool isSilence)
         {
             int number = 0;
             if (int.TryParse(input, out number))
@@ -159,7 +162,9 @@ namespace UtilityLibrary
             }
             else
             {
-                MessageBox.Show("請輸入有效數字" + input);
+                if (!isSilence)
+                    MessageBox.Show("請輸入有效數字" + input);
+
                 return -1;
             }
         }
@@ -206,6 +211,8 @@ namespace UtilityLibrary
 
         public static int ToEnumInt<TEnum>(string stringToParse) where TEnum : struct, IConvertible
         {
+            if (stringToParse == "")
+                return -1;
             TEnum e = (TEnum)Enum.Parse(typeof(TEnum), stringToParse);
             return Convert.ToInt32(Enum.Format(typeof(TEnum), e, "d"));
         }
@@ -250,7 +257,7 @@ namespace UtilityLibrary
             priceLevelFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.priceLevelFN);
             exchangeRateFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN);
 
-            if (!Utility.IsFileExist(fn))
+            if (!Utility.IsFileExist(fn, false))
                 return;
 
             string[] settingName = { "DisplayPos", "DisplaySize", "Server", "Unit" };

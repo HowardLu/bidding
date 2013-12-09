@@ -66,7 +66,6 @@ C:\Documents and Settings\XPMUser\My Documents\Visual Studio 2010\Projects\SJ Bi
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.ControlForm.resources
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
-\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetAuctionForm.resources
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe

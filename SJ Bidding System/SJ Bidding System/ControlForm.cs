@@ -23,7 +23,6 @@ namespace SJ_Bidding_System
 
         #region Member Variables
         private DisplayForm m_displayForm;
-        private SetAuctionForm m_setAllAuctionForm;
         private List<Auction> m_auctions;
         private int m_auctionIdNow = 0;
         private List<PriceLevel> m_priceLevels;
@@ -31,6 +30,7 @@ namespace SJ_Bidding_System
         //private Thread m_loadPhotoThread;
         private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
+        private Internet<BidderEntity> m_beInternet;
         #endregion
 
         #region Properties
@@ -46,6 +46,7 @@ namespace SJ_Bidding_System
             ci.NumberFormat.CurrencySymbol = "";
             Thread.CurrentThread.CurrentCulture = ci;
             m_aeInternet = new Internet<AuctionEntity>("127.0.0.1", "bidding_data", "auctions_table");
+            m_beInternet = new Internet<BidderEntity>("127.0.0.1", "bidding_data", "buyer_table");
         }
         #endregion
 
@@ -70,7 +71,7 @@ namespace SJ_Bidding_System
 
             InitDisplayForm();
 
-            LoadAuctions();
+            Auction.LoadAuctions(ref m_auctions, ref m_aeInternet, false);
             LoadPrices(Settings.pricesFP);
 
             LoadPriceLevel(Settings.priceLevelFP);
@@ -401,12 +402,6 @@ namespace SJ_Bidding_System
             }
         }
 
-        private void setAllAuctionButton_Click(object sender, EventArgs e)
-        {
-            m_setAllAuctionForm = new SetAuctionForm(m_auctions.ToDictionary<Auction, string>(ae => ae.lot), ref m_aeInternet);
-            m_setAllAuctionForm.ShowDialog();
-        }
-
         private void confirmBidderButton_Click(object sender, EventArgs e)
         {
             if (m_auctions.Count == 0)
@@ -417,6 +412,12 @@ namespace SJ_Bidding_System
             int bidderNo = 0;
             if (int.TryParse(winBidderTextBox.Text, out bidderNo))
             {
+                if (m_beInternet.FineOne<int>(be => be.BidderID_int, bidderNo) == null)
+                {
+                    winBidderTextBox.Text = "";
+                    MessageBox.Show("無此買家牌號：" + bidderNo.ToString());
+                    return;
+                }
                 m_auctions[m_auctionIdNow].winBidderNo = bidderNo;
                 winBidderTextBox.BackColor = Color.DarkBlue;
                 DoSaveBiddingResult(Settings.biddingResultFP);
@@ -482,45 +483,6 @@ namespace SJ_Bidding_System
                 auctionComboBox.SelectedIndex = 0;
         }
 
-        /// <summary>
-        /// Load all auctions in "Auctions" folder.
-        /// </summary>
-        private void LoadAuctions()
-        {
-            Dictionary<string, AuctionEntity> aeDic = m_aeInternet.GetCollectionList().ToDictionary<AuctionEntity, string>(ae => ae.AuctionId);
-            m_auctions = new List<Auction>();
-            List<string> illegalFiles = new List<string>();
-            string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
-            for (int i = 0; i < filePaths.Length; i++)
-            {
-                Auction auction = new Auction();
-                string fp = filePaths[i];
-                if (auction.GetInfoFromDictionary(ref aeDic, fp))
-                {
-                    auction.photofilePath = fp;
-                    if (m_auctions.Count < 10)
-                        auction.photo = Utility.OpenBitmap(fp);
-                    else
-                        auction.photo = null;
-
-                    auction.winBidderNo = 0;
-                    m_auctions.Add(auction);
-                }
-                else
-                {
-                    illegalFiles.Add(fp);
-                }
-            }
-
-            if (illegalFiles.Count != 0)
-            {
-                System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                foreach (string s in illegalFiles)
-                    sb.AppendLine(s);
-                MessageBox.Show(this, "不合法的拍品圖檔名，請檢查Auctions:\n" + sb.ToString());
-            }
-        }
-
         private void DoLoadAuctionPhoto(int id)
         {
             if (m_auctions[id].photo == null)
@@ -565,7 +527,7 @@ namespace SJ_Bidding_System
         /// <param name="fn">price file name</param>
         private void LoadPrices(string fn)
         {
-            if (!Utility.IsFileExist(fn))
+            if (!Utility.IsFileExist(fn, false))
                 return;
 
             using (StreamReader sr = new StreamReader(fn))
@@ -629,7 +591,7 @@ namespace SJ_Bidding_System
         /// <param name="fn">price level file name</param>
         private void LoadPriceLevel(string fn)
         {
-            if (!Utility.IsFileExist(fn))
+            if (!Utility.IsFileExist(fn, false))
                 return;
 
             m_priceLevels = new List<PriceLevel>();
@@ -786,7 +748,7 @@ namespace SJ_Bidding_System
 
         private void LoadBackupPath(string path)
         {
-            if (!Utility.IsFileExist(path))
+            if (!Utility.IsFileExist(path, false))
                 return;
 
             using (StreamReader sr = new StreamReader(path))

@@ -1,0 +1,17 @@
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\SetAuction.exe
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\SetAuction.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\Library.dll
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Bson.dll
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Driver.dll
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\Library.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Bson.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Bson.xml
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Driver.pdb
+\\tsclient\D\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Driver.xml
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Debug\ResolveAssemblyReference.cache
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.Properties.Resources.resources
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.SetAuctionForm.resources
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Debug\GenerateResource.read.1.tlog
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Debug\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.exe
+\\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.pdb
