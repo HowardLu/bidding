@@ -13,6 +13,13 @@ namespace SJ_Bidding_System
 
         //FontFamily ff;
         //Font font;
+        #region Events
+        #endregion
+
+        #region Enums, Structs, and Classes
+        #endregion
+
+        #region Member Variables
         private Size m_formSize;
         private ControlState m_lotLabelState;
         private ControlState m_logoPictureBoxState;
@@ -27,7 +34,15 @@ namespace SJ_Bidding_System
         private ControlState m_artworkTextBoxState;
         private ControlState m_hkPriceLabelState;
         private ControlState m_hkLabelState;
+        private Bitmap m_logo_S = Properties.Resources.LOGO_S_big;
+        private Bitmap m_logo_A = Properties.Resources.LOGO_A;
+        private Bitmap m_logo_M = Properties.Resources.LOGO_M;
+        #endregion
 
+        #region Properties
+        #endregion
+
+        #region Constructors and Finalizers
         public DisplayForm()
         {
             InitializeComponent();
@@ -75,7 +90,69 @@ namespace SJ_Bidding_System
             m_hkLabelState = new ControlState(hkLabel.Location, hkLabel.Size, hkLabel.Font.Size, ref cHkLabel);
             //label6.Font = new Font("HelveticaNeueLT Pro 45 Lt", 36);
         }
+        #endregion
 
+        #region Windows Form Events
+        private void DisplayForm_Load(object sender, EventArgs e)
+        {
+            //CargoPrivateFontCollection();
+            //CargoEtiqueta(font);
+            if (m_formSize.Width == 0 || m_formSize.Height == 0)
+                return;
+            float xRatio = (float)this.Width / m_formSize.Width;
+            float yRatio = (float)this.Height / m_formSize.Height;
+            ReArrangeAll(xRatio, yRatio);
+        }
+
+        private void DisplayForm_Resize(object sender, EventArgs e)
+        {
+            if (m_formSize.Width == 0 || m_formSize.Height == 0)
+                return;
+            float xRatio = (float)this.Width / m_formSize.Width;
+            float yRatio = (float)this.Height / m_formSize.Height;
+            ReArrangeAll(xRatio, yRatio);
+
+            Console.WriteLine("DisplayForm_Resize -----------");
+            Console.WriteLine("this: " + this.Size + "; m_formSize: " + m_formSize);
+            Console.WriteLine("logo Location: " + this.logoPictureBox.Location + "; Size: " + this.logoPictureBox.Size);
+        }
+        #endregion
+
+        #region Public Methods
+        /// <summary>
+        /// Set auction on this Form by Auction object.
+        /// </summary>
+        /// <param name="auction">Auction object</param>
+        public void SetAuctionOnForm(Auction auction)
+        {
+            lotNumLabel.Text = auction.lot;
+            artistLabel.Text = auction.artist;
+            artworkTextBox.Text = auction.artwork;
+            SetNewPrice(auction.nowPrice);
+            if (auction.photo != null)
+                Utility.SetImageNoStretch(ref auctionPictureBox, ref auction.photo);
+            else
+                auctionPictureBox.Image = Properties.Resources.loading;
+            SetLogo(Utility.ToEnum<Auctioneer>(auction.auctioneer));
+        }
+
+        /// <summary>
+        /// Set new price on display form.
+        /// </summary>
+        /// <param name="newNtd">new ntd price now</param>
+        public void SetNewPrice(int newNtd)
+        {
+            ntdPriceLabel.Text = newNtd.ToString("c");
+            rmbPriceLabel.Text = ExchangeRate.NtdToRmb(newNtd).ToString("c");
+            usdPriceLabel.Text = ExchangeRate.NtdToUsd(newNtd).ToString("c");
+            hkPriceLabel.Text = ExchangeRate.NtdToHk(newNtd).ToString("c");
+        }
+        #endregion
+
+        #region Protected Methods
+        #endregion
+
+        #region Private Methods
         /*private void CargoPrivateFontCollection()
         {
             // Create the byte array and get its length
@@ -108,58 +185,6 @@ namespace SJ_Bidding_System
             this.label6.Font = new Font(ff, 36, fontStyle);
         }*/
 
-        /// <summary>
-        /// Set auction on this Form by Auction object.
-        /// </summary>
-        /// <param name="auction">Auction object</param>
-        public void SetAuctionOnForm(Auction auction)
-        {
-            lotNumLabel.Text = auction.lot;
-            artistLabel.Text = auction.artist;
-            artworkTextBox.Text = auction.artwork;
-            SetNewPrice(auction.nowPrice);
-            if (auction.photo != null)
-                Utility.SetImageNoStretch(ref auctionPictureBox, ref auction.photo);
-            else
-                auctionPictureBox.Image = Properties.Resources.loading;
-        }
-
-        /// <summary>
-        /// Set new price on display form.
-        /// </summary>
-        /// <param name="newNtd">new ntd price now</param>
-        public void SetNewPrice(int newNtd)
-        {
-            ntdPriceLabel.Text = newNtd.ToString("c");
-            rmbPriceLabel.Text = ExchangeRate.NtdToRmb(newNtd).ToString("c");
-            usdPriceLabel.Text = ExchangeRate.NtdToUsd(newNtd).ToString("c");
-            hkPriceLabel.Text = ExchangeRate.NtdToHk(newNtd).ToString("c");
-        }
-
-        private void DisplayForm_Load(object sender, EventArgs e)
-        {
-            //CargoPrivateFontCollection();
-            //CargoEtiqueta(font);
-            if (m_formSize.Width == 0 || m_formSize.Height == 0)
-                return;
-            float xRatio = (float)this.Width / m_formSize.Width;
-            float yRatio = (float)this.Height / m_formSize.Height;
-            ReArrangeAll(xRatio, yRatio);
-        }
-
-        private void DisplayForm_Resize(object sender, EventArgs e)
-        {
-            if (m_formSize.Width == 0 || m_formSize.Height == 0)
-                return;
-            float xRatio = (float)this.Width / m_formSize.Width;
-            float yRatio = (float)this.Height / m_formSize.Height;
-            ReArrangeAll(xRatio, yRatio);
-
-            Console.WriteLine("DisplayForm_Resize -----------");
-            Console.WriteLine("this: " + this.Size + "; m_formSize: " + m_formSize);
-            Console.WriteLine("logo Location: " + this.logoPictureBox.Location + "; Size: " + this.logoPictureBox.Size);
-        }
-
         private void ReArrangeAll(float xRatio, float yRatio)
         {
             m_lotLabelState.ReArrange(xRatio, yRatio);
@@ -176,5 +201,24 @@ namespace SJ_Bidding_System
             m_hkPriceLabelState.ReArrange(xRatio, yRatio);
             m_hkLabelState.ReArrange(xRatio, yRatio);
         }
+
+        private void SetLogo(Auctioneer auctioneer)
+        {
+            switch (auctioneer)
+            {
+                case Auctioneer.S:
+                    logoPictureBox.Image = m_logo_S;
+                    break;
+                case Auctioneer.A:
+                    logoPictureBox.Image = m_logo_A;
+                    break;
+                case Auctioneer.M:
+                    logoPictureBox.Image = m_logo_M;
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
     }
 }

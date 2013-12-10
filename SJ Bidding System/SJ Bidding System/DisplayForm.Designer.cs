@@ -210,11 +210,11 @@
             // logoPictureBox
             // 
             this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO121128_big;
+            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO_S_big;
             this.logoPictureBox.Location = new System.Drawing.Point(47, 30);
             this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(160, 160);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.logoPictureBox.Size = new System.Drawing.Size(160, 162);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.logoPictureBox.TabIndex = 2;
             this.logoPictureBox.TabStop = false;
             // 
@@ -254,6 +254,7 @@
             this.Load += new System.EventHandler(this.DisplayForm_Load);
             this.Resize += new System.EventHandler(this.DisplayForm_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

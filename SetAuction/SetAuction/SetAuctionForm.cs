@@ -169,7 +169,7 @@ namespace SetAuction
                 MessageBox.Show("請輸入資料!!!");
                 return;
             }
-            if (m_auctions.ContainsKey(lotTextBox.Text))
+            if (m_auctions.ContainsKey(lotTextBox.Text) || m_aeInternet.FineOne<string>(ae => ae.AuctionId, lotTextBox.Text) != null)
             {
                 MessageBox.Show("重複Lot，請重新輸入!");
                 lotTextBox.Text = "";

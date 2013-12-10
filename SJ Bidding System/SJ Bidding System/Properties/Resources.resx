@@ -127,10 +127,16 @@
   <data name="loading" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\loading.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LOGO121128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LOGO121128.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="LOGO_A" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LOGO_A.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LOGO121128_big" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LOGO121128_big.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="LOGO_M" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LOGO_M.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LOGO_S" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LOGO_S.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LOGO_S_big" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LOGO_S_big.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

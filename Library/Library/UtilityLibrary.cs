@@ -244,7 +244,7 @@ namespace UtilityLibrary
         public static string settingsFN = "settings.txt";
         public static string biddingResultFN = "bid_items.txt";
         public static string biddingResultFP = "bid_items.txt";
-        public static string backupFP = @"C:\";
+        public static string backupFP = @"Z:\";
         public static string serverFN = "server.exe";
         public static string serverDir = @"BidderDataServer\exe";
         public static int unit = 1000;

@@ -31,6 +31,7 @@ namespace SJ_Bidding_System
         private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
         private Internet<BidderEntity> m_beInternet;
+        private string m_serverIp = "220.132.63.79";
         #endregion
 
         #region Properties
@@ -45,8 +46,8 @@ namespace SJ_Bidding_System
             ci.NumberFormat.CurrencyDecimalDigits = 0;
             ci.NumberFormat.CurrencySymbol = "";
             Thread.CurrentThread.CurrentCulture = ci;
-            m_aeInternet = new Internet<AuctionEntity>("127.0.0.1", "bidding_data", "auctions_table");
-            m_beInternet = new Internet<BidderEntity>("127.0.0.1", "bidding_data", "buyer_table");
+            m_aeInternet = new Internet<AuctionEntity>(m_serverIp, "bidding_data", "auctions_table");
+            m_beInternet = new Internet<BidderEntity>(m_serverIp, "bidding_data", "buyer_table");
         }
         #endregion
 
@@ -736,7 +737,8 @@ namespace SJ_Bidding_System
                 }
             }
 
-            File.Copy(fp, Path.Combine(Settings.backupFP, Settings.biddingResultFN), true);
+            if (Directory.Exists(Settings.backupFP))
+                File.Copy(fp, Path.Combine(Settings.backupFP, Settings.biddingResultFN), true);
         }
 
         private void DoSaveBiddingResult(string fp)
