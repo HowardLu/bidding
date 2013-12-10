@@ -25,7 +25,7 @@ ATTR_MAP = {	# 賣家屬性
 										[ "ItemName", "ItemNum", "Spec", "ReservePrice", "Remain", "ItemPS", "LotNO" ],
 									"NONEMPTY_ATTR":
 										[ "ItemName" ],
-									"KEY_ATTR": "ItemName", "ListCom": "ListItem", "CacheData": { "Main": {}, "Index": {} }
+									"KEY_ATTR": "_id", "ListCom": "ListItem", "CacheData": { "Main": {}, "Index": {} }
 								},
 						}
 
@@ -96,6 +96,8 @@ Const			= {	"STATICTEXTNAME":												"委託方",
 							"OPEN_FILE_SUCCESS":										u"成功匯入資料檔，路徑為%s",
 							"OPEN_FILE_NAME":												u"資料檔<%s>",
 							"TEXT_CHK_FAIL_EMPTY":									u"[%s]不可為空",
+							"TEXT_LOT_NO_NOT_EXIST":								u"拍品編號[%s]不存在",
+							"TEXT_LOT_NO_REPEATED":									u"拍品編號[%s]已重複",
 							"BIDDER_ID_LEN_EXCEEDED":								"牌號位數過大，請修正",
 							"BIDDER_ID_HAS_FOUR":										"牌號不可含有""4""或是""7""",
 							"BIDDER_ID_NOT_DIGIT":									"牌號必須是數字，請修正",
@@ -216,6 +218,7 @@ class MyBackground( model.Background ):
 		self.__dbtable_main					= self.__mongo_db.dealer_table
 		self.__dbtable_item					= self.__mongo_db.dealer_item_table
 		self.__dbtable_item_serial	= self.__mongo_db.dealer_item_serail
+		self.__dbtable_auction			= self.__mongo_db.auctions_table
 		
 		# 直接顯示所有賣家
 		self.__gen_list_ui_by_data()
@@ -307,10 +310,12 @@ class MyBackground( model.Background ):
 			return
 		
 		# 如果無法取得資料 下面的function會送系統訊息
-		dict_data = self.__gen_item_data_by_text_field( key )
+		dict_data = self.__gen_item_data_by_text_field( key, None )
 		if not dict_data:
 			return
 
+		dict_data[ "_id" ] = self.__gen_item_serial()
+		
 		# 插入資料並重新整理頁面
 		if not self.__add_item_dict( dict_data ):
 			return
@@ -318,8 +323,8 @@ class MyBackground( model.Background ):
 		self.__gen_item_list_ui_by_data( dict_data[ "SrcDealer" ] )
 		self.__add_msg( Const[ "ADD_ITEM_SUCCESS" ] % self.__gen_item_title( dict_data ) )
 		
-		item_name = dict_data[ ITEM_KEY ]
-		index, dict_data = self.__get_cache_data( "Item", "Main" )[ item_name ]
+		item_key = dict_data[ ITEM_KEY ]
+		index, dict_data = self.__get_cache_data( "Item", "Main" )[ item_key ]
 		self.__show_serail( dict_data )
 		self.components.ListItem.selection = index
 		
@@ -368,32 +373,20 @@ class MyBackground( model.Background ):
 			return
 		
 		# 沒有選取的項目
-		index, key_ori = self.__get_key_by_selection( "Item" )
-		if key_ori not in self.__get_cache_data( "Item", "Main" ):
+		index, key = self.__get_key_by_selection( "Item" )
+		if key not in self.__get_cache_data( "Item", "Main" ):
 			self.__add_msg( Const[ "NO_SELECTED_ITEM" ] )
 			return
 			
 		# 如果無法取得資料 下面的function會送系統訊息
-		dict_data = self.__gen_item_data_by_text_field( key_src )
+		dict_data = self.__gen_item_data_by_text_field( key_src, key )
 		if not dict_data:
 			return
 		
-		key = dict_data[ ITEM_KEY ]
-		
 		# 如果沒改Key 那就是單純改資料
-		search_key = { ITEM_KEY: key_ori }
-		if key_ori == key:
-			self.__dbtable_item.update( search_key, dict_data )
+		search_key = { ITEM_KEY: key }
+		self.__dbtable_item.update( search_key, dict_data )
 		
-		# 如果要改Key
-		else:
-			# 嘗試插入資料 如果失敗代表重複
-			if not self.__add_item_dict( dict_data ):
-				return
-			
-			# 刪除舊牌號資料
-			self.__dbtable_item.remove( search_key )
-			
 		self.__gen_item_list_ui_by_data( key_src )
 		self.__add_msg( Const[ "FIX_DATA_DONE" ] % self.__gen_item_title( dict_data ) )
 		
@@ -561,7 +554,7 @@ class MyBackground( model.Background ):
 		
 	# 產生道具顯示在列表的字串
 	def __gen_item_title( self, dict_data ):
-		return dict_data[ ITEM_KEY ]
+		return dict_data[ "ItemName" ]
 		
 	# 程序紀錄
 	def __add_msg( self, msg, plus_pop = False ):
@@ -569,8 +562,30 @@ class MyBackground( model.Background ):
 			dialog.alertDialog( self, msg, Const[ "WARNING" ] )
 		self.components.TextAreaLog.appendText( msg + "\n" )
 		
+	# 產生賣家拍品序號
+	def __gen_item_serial( self ):
+		# 建立PK 從表找出序號
+		year_now = time.localtime( time.time() )[ 0 ] - 1911
+		serial = 0
+		for collection in self.__dbtable_item_serial.find():
+			year = collection[ "year" ]
+			serial = collection[ "serial" ]
+		
+		# 如果是空的 插入一筆資料 否則更新之
+		table = self.__dbtable_item_serial
+		if serial == 0:
+			serial += 1
+			table.insert( { "year": year_now, "serial": serial } )
+		else:
+			if year_now != year:
+				serial = 0
+			serial += 1
+			table.update( { "year": year }, { "year": year_now, "serial": serial } )
+		
+		return "%d-%04d" % ( year_now, serial )
+		
 	# 由界面的文字輸入格 產生賣家拍品資料
-	def __gen_item_data_by_text_field( self, dealer_name ):
+	def __gen_item_data_by_text_field( self, dealer_name, item_key ):
 		# 作基本資料檢測
 		com = self.components
 		
@@ -599,27 +614,23 @@ class MyBackground( model.Background ):
 		for attr, com_name in ITEM_COM_DATA.iteritems():
 			canvas = getattr( com, com_name )
 			dict_data[ attr ] = canvas.path if hasattr( canvas, "path" ) else ""
-			
-		# 建立PK 從表找出序號
-		year_now = time.localtime( time.time() )[ 0 ] - 1911
-		serial = 0
-		for collection in self.__dbtable_item_serial.find():
-			year = collection[ "year" ]
-			serial = collection[ "serial" ]
 		
-		# 如果是空的 插入一筆資料 否則更新之
-		table = self.__dbtable_item_serial
-		if serial == 0:
-			serial += 1
-			table.insert( { "year": year_now, "serial": serial } )
-		else:
-			if year_now != year:
-				serial = 0
-			serial += 1
-			table.update( { "year": year }, { "year": year_now, "serial": serial } )
-		
-		dict_data[ "_id" ] = "%d-%04d" % ( year_now, serial )
-		
+		# 如果有填拍品編號
+		lot_number = dict_data[ "LotNO" ]
+		if lot_number != "":
+			# 檢查拍品編號是否存在
+			query_result = self.__dbtable_auction.find( { "AuctionId": lot_number } ).count()
+			if not query_result:
+				self.__add_msg( Const[ "TEXT_LOT_NO_NOT_EXIST" ] % lot_number )
+				return None
+				
+			# 檢查拍品編號唯一性 有改or新增才判斷
+			if not item_key or lot_number != self.__dbtable_item.find( { "_id": item_key } )[ 0 ][ "LotNO" ]:
+				query_result = self.__dbtable_item.find( { "LotNO": lot_number } ).count()
+				if query_result:
+					self.__add_msg( Const[ "TEXT_LOT_NO_REPEATED" ] % lot_number )
+					return None
+
 		return dict_data
 		
 	# 嘗試新增道具
@@ -645,10 +656,10 @@ class MyBackground( model.Background ):
 		
 		index = -1
 		for index, collection in enumerate( self.__dbtable_item.find( { "SrcDealer": dealer_name } ).sort( ITEM_KEY, 1 ) ):
-			item_name = collection[ ITEM_KEY ]
+			item_key = collection[ ITEM_KEY ]
 			
-			cache_data[ item_name ] = index, collection
-			cache_index[ index ] = item_name
+			cache_data[ item_key ] = index, collection
+			cache_index[ index ] = item_key
 			
 			com.ListItem.append( self.__gen_item_title( collection ) )
 			
