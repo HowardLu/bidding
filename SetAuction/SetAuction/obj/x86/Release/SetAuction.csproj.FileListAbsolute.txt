@@ -15,3 +15,5 @@
 \\tsclient\D\bidding\SetAuction\SetAuction\bin\Release\MongoDB.Driver.xml
 \\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.exe
 \\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.pdb
+D:\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.exe
+D:\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.pdb

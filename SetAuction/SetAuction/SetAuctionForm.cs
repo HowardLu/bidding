@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 using System.Linq;
+using System.Windows.Forms;
 using Bidding;
-using UtilityLibrary;
 using InternetLibrary;
+using UtilityLibrary;
 
 namespace SetAuction
 {
@@ -54,7 +54,15 @@ namespace SetAuction
             }
             m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             List<Auction> auctions = null;
-            Auction.LoadAuctions(ref auctions, ref m_aeInternet, false);
+            try
+            {
+                Auction.LoadAuctions(ref auctions, ref m_aeInternet, false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                Application.Exit();
+            }
             m_auctions = auctions.ToDictionary<Auction, string>(auc => auc.lot);
             LoadAuctionPhotos();
             InitAuctioneerComboBox();
