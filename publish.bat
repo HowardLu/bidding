@@ -1,10 +1,11 @@
 @echo off
 set BIDDINGDIR="..\bidding exe"
+if exist %BIDDINGDIR% rd %BIDDINGDIR%
 if not exist %BIDDINGDIR% md %BIDDINGDIR%
-xcopy /s /e /i Accounting\Accounting\bin\Debug %BIDDINGDIR%\Accounting 
-xcopy /s /e /i BidderDataInput\exe %BIDDINGDIR%\BidderDataInput
-xcopy /s /e /i Checkout\Checkout\bin\Debug %BIDDINGDIR%\Checkout
-xcopy /s /e /i DealerDataInput\exe %BIDDINGDIR%\DealerDataInput
-xcopy /s /e /i SetAuction\SetAuction\bin\Debug %BIDDINGDIR%\SetAuction
-xcopy /s /e /i "SJ Bidding System\SJ Bidding System\bin\Debug" %BIDDINGDIR%"\SJ Bidding System"
-goto :eof
+xcopy /s /e /i /y Accounting\Accounting\bin\Debug %BIDDINGDIR%\Accounting 
+xcopy /s /e /i /y BidderDataInput\exe %BIDDINGDIR%\BidderDataInput
+xcopy /s /e /i /y Checkout\Checkout\bin\Debug %BIDDINGDIR%\Checkout
+xcopy /s /e /i /y DealerDataInput\exe %BIDDINGDIR%\DealerDataInput
+xcopy /s /e /i /y SetAuction\SetAuction\bin\Debug %BIDDINGDIR%\SetAuction
+xcopy /s /e /i /y "SJ Bidding System\SJ Bidding System\bin\Debug" %BIDDINGDIR%"\SJ Bidding System"
+pause
