@@ -50,6 +50,7 @@ namespace SetAuction
             if (ip.Length == 0)
             {
                 MessageBox.Show("IP不可為空!!!");
+                Application.Exit();
                 return;
             }
             m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
@@ -251,10 +252,12 @@ namespace SetAuction
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artist, auc.artist);
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artwork, auc.artwork);
-            m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auc.lot, ae => ae.InitialPrice, auc.initialPrice);
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Auctioneer, auc.auctioneer);
+            
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Artist, auc.artist);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Artwork, auc.artwork);
+            m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, lot, ae => ae.InitialPrice, auc.initialPrice);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Auctioneer, auc.auctioneer);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.AuctionId, auc.lot);
 
             photoTextBox.Text = Path.GetFileName(auc.photofilePath);
             ClearAllTextBox();
@@ -265,8 +268,8 @@ namespace SetAuction
             foreach (ListViewItem lvi in auctionsListView.SelectedItems)
             {
                 string lot = lvi.Text;
-                if (File.Exists(m_auctions[lot].photofilePath))
-                    File.Delete(m_auctions[lot].photofilePath);
+                /*if (File.Exists(m_auctions[lot].photofilePath))
+                    File.Delete(m_auctions[lot].photofilePath);*/
                 m_auctions.Remove(lot);
                 m_aeInternet.Remove<string>(ae => ae.AuctionId, lot);
                 auctionsListView.Items.Remove(lvi);
