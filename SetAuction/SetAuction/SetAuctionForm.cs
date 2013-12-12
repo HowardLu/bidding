@@ -252,7 +252,7 @@ namespace SetAuction
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
-            
+
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Artist, auc.artist);
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Artwork, auc.artwork);
             m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, lot, ae => ae.InitialPrice, auc.initialPrice);
@@ -265,14 +265,23 @@ namespace SetAuction
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem lvi in auctionsListView.SelectedItems)
+            if (auctionsListView.SelectedItems.Count == 0)
             {
-                string lot = lvi.Text;
-                /*if (File.Exists(m_auctions[lot].photofilePath))
-                    File.Delete(m_auctions[lot].photofilePath);*/
-                m_auctions.Remove(lot);
-                m_aeInternet.Remove<string>(ae => ae.AuctionId, lot);
-                auctionsListView.Items.Remove(lvi);
+                MessageBox.Show("請選擇欲刪除的拍品");
+                return;
+            }
+
+            if (MessageBox.Show("確定刪除?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+            {
+                foreach (ListViewItem lvi in auctionsListView.SelectedItems)
+                {
+                    string lot = lvi.Text;
+                    /*if (File.Exists(m_auctions[lot].photofilePath))
+                        File.Delete(m_auctions[lot].photofilePath);*/
+                    m_auctions.Remove(lot);
+                    m_aeInternet.Remove<string>(ae => ae.AuctionId, lot);
+                    auctionsListView.Items.Remove(lvi);
+                }
             }
         }
 
