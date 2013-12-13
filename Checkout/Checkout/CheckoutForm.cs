@@ -56,7 +56,7 @@ namespace Checkout
             string settingsFP = Path.Combine(System.Windows.Forms.Application.StartupPath, m_settingsFN);
             if (Utility.IsFileExist(settingsFP, false))
                 LoadSettings(settingsFP);
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
             {
                 MessageBox.Show("IP不可為空!!!");
@@ -225,7 +225,7 @@ namespace Checkout
 
         private void connectButton_Click(object sender, EventArgs e)
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
                 return;
             m_auctionInternet.IP = ip;

@@ -228,6 +228,31 @@ namespace UtilityLibrary
             Enum.TryParse<TEnum>(stringToParse, true, out e);
             return e;
         }
+
+        public static string InputIp()
+        {
+            string lastInputIp = "127.0.0.1";
+            string fileName = "ip_cache.txt";
+            if (IsFileExist(fileName, true))
+            {
+                using (StreamReader sr = new StreamReader(fileName))
+                {
+                    lastInputIp = sr.ReadLine();
+                }
+            }
+
+            string ip = InputBox("", "請輸入Server IP:", lastInputIp, -1, -1);
+            using (StreamWriter sw = new StreamWriter(fileName, false))
+            {
+                sw.WriteLine(ip);
+            }
+            return ip;
+        }
+
+        public static string InputBox(string prompt, string title = "", string defaultResponse = "", int xPos = -1, int yPos = -1)
+        {
+            return Microsoft.VisualBasic.Interaction.InputBox(prompt, title, defaultResponse, xPos, yPos);
+        }
     }
 
     public static class Settings

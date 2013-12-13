@@ -51,7 +51,7 @@ namespace Accounting
         {
             ConnectToServer();
             // LoadExcelTemplate();
-            if (m_auctionsInternet.IsConnected)
+            if (m_auctionsInternet != null && m_auctionsInternet.IsConnected)
             {
                 LoadCollectionToDataGridView();
             }
@@ -70,7 +70,7 @@ namespace Accounting
 
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", m_auctionsInternet.IP, -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
                 return;
 
@@ -273,7 +273,7 @@ namespace Accounting
 
         private void Login()
         {
-            string account = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入帳號:", "", -1, -1);
+            string account = Utility.InputBox("", "請輸入帳號:", "", -1, -1);
             if (account.Length == 0)
                 return;
 
@@ -284,14 +284,13 @@ namespace Accounting
 
         private void ConnectToServer()
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP:", "127.0.0.1", -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
                 return;
             m_auctionsInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             m_dealerItemInternet = new Internet<DealerItemEntity>(ip, "bidding_data", "dealer_item_table");
             m_memberInternet = new Internet<MemberEntity>(ip, "bidding_data", "member_table");
             m_beInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
-            Login();
 
             if (m_auctionsInternet.Connect())
             {
@@ -301,6 +300,8 @@ namespace Accounting
             {
                 toolStripStatusLabel1.Text = "連線失敗!";
             }
+
+            Login();
         }
 
         private void AddCol(string headerText, Color color, bool readOnly)
@@ -394,54 +395,83 @@ namespace Accounting
             AddColumnsToCheckedListBox();
 
             List<AuctionEntity> auctionEntities = null;
+            List<DealerItemEntity> dealerItemEntities = null;
             try
             {
                 auctionEntities = m_auctionsInternet.GetCollectionList();
+                dealerItemEntities = m_dealerItemInternet.GetCollectionList();
             }
             catch (MongoDB.Driver.MongoException e)
             {
                 MessageBox.Show(e.ToString());
             }
 
-            if (auctionEntities == null)
-                return;
-            foreach (AuctionEntity auction in auctionEntities)
+            if (auctionEntities != null)
             {
-                DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
-                BidderEntity bidder = m_beInternet.FineOne<string>(be => be.BidderID, auction.BidderNumber);
-                if (dealerItem == null)
+                StringBuilder sb = new StringBuilder();
+                foreach (AuctionEntity auction in auctionEntities)
                 {
-                    MessageBox.Show("找不到拍品 " + auction.AuctionId + "在dealer_item_table");
-                    continue;
-                }
-
-                if (m_isSuperUser)
-                {
-                    dataGridView1.Rows.Add(auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
-                        dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
-                        auction.BuyerServiceCharge, auction.FinalPrice,
-                        bidder.GuaranteeType, bidder.GuaranteeCost,
-                        Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
-                        Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
-                        dealerItem.ReservePrice, auction.SellerAccountPayable);
-
-                    if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice, true))
+                    DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
+                    BidderEntity bidder = m_beInternet.FineOne<string>(be => be.BidderID, auction.BidderNumber);
+                    if (dealerItem == null)
                     {
-                        dataGridView1.Rows[dataGridView1.Rows.Count - 1].ErrorText = "落槌價低於保留價!!!";
+                        sb.AppendLine(auction.AuctionId);
+                        dealerItem = new DealerItemEntity();
                     }
+                    if (bidder == null)
+                    {
+                        bidder = new BidderEntity();
+                    }
+
+                    AuctionEntity auc = auction;
+                    AddDataRowToDataGridView(ref auc, ref bidder, ref dealerItem);
                 }
-                else
+
+                if (sb.Length > 0)
+                    MessageBox.Show("找不到以下拍品在[賣家建檔資料表]:\n\n" + sb.ToString());
+            }
+
+            if (dealerItemEntities != null)
+            {
+                foreach (DealerItemEntity dealerItem in dealerItemEntities)
                 {
-                    dataGridView1.Rows.Add(auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
-                        Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
-                        auction.BuyerServiceCharge, auction.FinalPrice,
-                        bidder.GuaranteeType, bidder.GuaranteeCost,
-                        Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
-                        Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState));
+                    if (dealerItem.LotNO != "")
+                        continue;
+
+                    AuctionEntity auction = new AuctionEntity();
+                    BidderEntity bidder = new BidderEntity();
+                    DealerItemEntity dItem = dealerItem;
+                    AddDataRowToDataGridView(ref auction, ref bidder, ref dItem);
                 }
             }
 
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+        }
+
+        private void AddDataRowToDataGridView(ref AuctionEntity auction, ref BidderEntity bidder, ref DealerItemEntity dealerItem)
+        {
+            if (m_isSuperUser)
+            {
+                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber,
+                    dealerItem.Remain, dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState),
+                    auction.HammerPrice, auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
+                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
+                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
+                    dealerItem.ReservePrice, auction.SellerAccountPayable);
+
+                if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice, true))
+                {
+                    dataGridView1.Rows[dataGridView1.Rows.Count - 1].ErrorText = "落槌價低於保留價!!!";
+                }
+            }
+            else
+            {
+                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber,
+                    dealerItem.Remain, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
+                    auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
+                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
+                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState));
+            }
         }
 
         private void DataGridViewToCsv(DataGridView dgv, string filename)

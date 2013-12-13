@@ -46,7 +46,7 @@ namespace SetAuction
         #region Windows Form Events
         private void SetAuctionForm_Load(object sender, EventArgs e)
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
             {
                 MessageBox.Show("IP不可為空!!!");
