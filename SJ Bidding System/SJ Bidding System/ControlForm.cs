@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using System.Linq;
 using Bidding;
-using UtilityLibrary;
 using InternetLibrary;
+using UtilityLibrary;
 
 namespace SJ_Bidding_System
 {
@@ -28,7 +26,7 @@ namespace SJ_Bidding_System
         private List<PriceLevel> m_priceLevels;
         private string m_inputNumbers = "";
         //private Thread m_loadPhotoThread;
-        private Process m_server;
+        //private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
         private Internet<BidderEntity> m_beInternet;
         private string m_serverIp = "220.132.63.79";
@@ -71,6 +69,7 @@ namespace SJ_Bidding_System
                 m_server = System.Diagnostics.Process.Start(pStartInfo);*/
 
             InitDisplayForm();
+            m_displayForm.ChangeLogoCheck();
 
             Auction.LoadAuctions(ref m_auctions, ref m_aeInternet, false);
             LoadPrices(Settings.pricesFP);

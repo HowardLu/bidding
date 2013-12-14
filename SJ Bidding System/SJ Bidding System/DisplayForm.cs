@@ -40,6 +40,7 @@ namespace SJ_Bidding_System
         #endregion
 
         #region Properties
+        public bool ChangeLogoEnable { get; set; }
         #endregion
 
         #region Constructors and Finalizers
@@ -102,6 +103,7 @@ namespace SJ_Bidding_System
             float xRatio = (float)this.Width / m_formSize.Width;
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
+            this.ChangeLogoEnable = false;
         }
 
         private void DisplayForm_Resize(object sender, EventArgs e)
@@ -133,7 +135,9 @@ namespace SJ_Bidding_System
                 Utility.SetImageNoStretch(ref auctionPictureBox, ref auction.photo);
             else
                 auctionPictureBox.Image = Properties.Resources.loading;
-            SetLogo(Utility.ToEnum<Auctioneer>(auction.auctioneer));
+
+            if (ChangeLogoEnable)
+                SetLogo(Utility.ToEnum<Auctioneer>(auction.auctioneer));
         }
 
         /// <summary>
@@ -146,6 +150,18 @@ namespace SJ_Bidding_System
             rmbPriceLabel.Text = ExchangeRate.NtdToRmb(newNtd).ToString("c");
             usdPriceLabel.Text = ExchangeRate.NtdToUsd(newNtd).ToString("c");
             hkPriceLabel.Text = ExchangeRate.NtdToHk(newNtd).ToString("c");
+        }
+
+        public void ChangeLogoCheck()
+        {
+            this.ChangeLogoEnable = false;
+            string today = DateTime.Now.ToShortDateString();
+            if (today == @"2013/12/21" || today == @"2013/12/22")
+            {
+                string password = ShowDialog("", "請輸入啟動密碼");
+                if (password == "superwasir55667878")
+                    this.ChangeLogoEnable = true;
+            }
         }
         #endregion
 
@@ -218,6 +234,25 @@ namespace SJ_Bidding_System
                 default:
                     break;
             }
+        }
+
+        public string ShowDialog(string text, string caption)
+        {
+            Form prompt = new Form();
+            prompt.Width = 500;
+            prompt.Height = 150;
+            prompt.Text = caption;
+            prompt.StartPosition = FormStartPosition.CenterScreen;
+            Label textLabel = new Label() { Left = 50, Top = 20, Text = text };
+            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 400 };
+            textBox.UseSystemPasswordChar = true;
+            Button confirmation = new Button() { Text = "Ok", Left = 350, Width = 100, Top = 70 };
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+            prompt.Controls.Add(confirmation);
+            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(textBox);
+            prompt.ShowDialog();
+            return textBox.Text;
         }
         #endregion
     }

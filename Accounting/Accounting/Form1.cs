@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.Office.Core;
-using Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
-using System.IO;
-using System.Data.OleDb;
-using InternetLibrary;
-using UtilityLibrary;
 using Bidding;
+using InternetLibrary;
+using Microsoft.Office.Interop.Excel;
+using UtilityLibrary;
 
 namespace Accounting
 {
@@ -34,6 +27,7 @@ namespace Accounting
         private Internet<MemberEntity> m_memberInternet;
         private Internet<BidderEntity> m_beInternet;
         private bool m_isSuperUser = false;
+        private _Application m_excelApp = null;
         #endregion
 
         #region Properties
@@ -64,7 +58,7 @@ namespace Accounting
             sfd.FileName = "account.xls";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                DataGridViewToCsv(dataGridView1, sfd.FileName); // Here dataGridview1 is your grid view name 
+                DataGridViewToXls(sfd.FileName); // Here dataGridview1 is your grid view name 
             }
         }
 
@@ -212,7 +206,7 @@ namespace Accounting
 
         private void checkAllCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox cb = sender as CheckBox;
+            System.Windows.Forms.CheckBox cb = sender as System.Windows.Forms.CheckBox;
             for (int i = 0; i < this.checkedListBox1.Items.Count; i++)
             {
                 this.checkedListBox1.SetItemChecked(i, cb.Checked);
@@ -401,7 +395,7 @@ namespace Accounting
                 auctionEntities = m_auctionsInternet.GetCollectionList();
                 dealerItemEntities = m_dealerItemInternet.GetCollectionList();
             }
-            catch (MongoDB.Driver.MongoException e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
@@ -474,8 +468,9 @@ namespace Accounting
             }
         }
 
-        private void DataGridViewToCsv(DataGridView dgv, string filename)
+        private void DataGridViewToCsv(string filename)
         {
+            DataGridView dgv = dataGridView1;
             string stOutput = "";
             // Export titles:
             string sHeaders = "";
@@ -491,7 +486,8 @@ namespace Accounting
                     stLine = stLine.ToString() + Convert.ToString(dgv.Rows[i].Cells[j].Value) + "\t";
                 stOutput += stLine + "\r\n";
             }
-            Encoding utf16 = Encoding.GetEncoding(1254);
+            //Encoding utf16 = Encoding.GetEncoding(1254);
+            Encoding utf16 = Encoding.GetEncoding("big5");
             byte[] output = utf16.GetBytes(stOutput);
             FileStream fs = new FileStream(filename, FileMode.Create);
             BinaryWriter bw = new BinaryWriter(fs);
@@ -499,6 +495,42 @@ namespace Accounting
             bw.Flush();
             bw.Close();
             fs.Close();
+        }
+
+        private void DataGridViewToXls(string filename)
+        {
+            if (m_excelApp == null)
+                m_excelApp = new Microsoft.Office.Interop.Excel.Application();
+            Workbook workbook = m_excelApp.Workbooks.Add();
+            Worksheet sheet = workbook.Worksheets.get_Item(1);
+            DataGridView dgv = dataGridView1;
+
+            for (int i = 0; i < dgv.ColumnCount; i++)
+                sheet.Cells[1, i + 1] = dgv.Columns[i].HeaderText;
+
+            sheet.get_Range("A1").EntireRow.Font.Bold = true;
+            //sheet.get_Range("A1").EntireRow.Interior.Color = System.Drawing.ColorTranslator.ToWin32(Color.LightCyan);
+
+            for (int i = 0; i < dgv.RowCount; i++)
+            {
+                for (int j = 0; j < dgv.ColumnCount; j++)
+                {
+                    object value = dgv.Rows[i].Cells[j].Value;
+                    sheet.Cells[i + 2, j + 1] = value == null ? "" : value.ToString();
+                }
+            }
+
+            sheet.get_Range("A1", "T100").EntireColumn.AutoFit();
+            sheet.get_Range("A1", "T100").EntireRow.AutoFit();
+            workbook.SaveAs(filename, XlFileFormat.xlWorkbookNormal/*, Type.Missing,
+            Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive,
+            Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing*/);
+            workbook.Close(true/*, misValue, misValue*/);
+            m_excelApp.Quit();
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(sheet);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(m_excelApp);
         }
 
         private int GetFinalPrice(int hammerPrice, int newBuyerServiceCharge)

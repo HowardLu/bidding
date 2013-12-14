@@ -17,3 +17,5 @@
 \\tsclient\D\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.pdb
 D:\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.exe
 D:\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.pdb
+E:\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.exe
+E:\bidding\SetAuction\SetAuction\obj\x86\Release\SetAuction.pdb

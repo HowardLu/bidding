@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using UtilityLibrary;
 using Bidding;
 using InternetLibrary;
 using Microsoft.Office.Interop.Word;
+using UtilityLibrary;
 
 namespace Checkout
 {
@@ -19,7 +19,7 @@ namespace Checkout
         #endregion
 
         #region Member Variables
-        private Microsoft.Office.Interop.Word._Application m_wordApp;
+        private Microsoft.Office.Interop.Word._Application m_wordApp = null;
         private string m_paymentTemplateFN = "拍賣成交單_";
         private Bidder m_bidder;
         private Internet<AuctionEntity> m_auctionInternet;
@@ -271,7 +271,8 @@ namespace Checkout
         #region Private Methods
         private void SetDataInDoc()
         {
-            m_wordApp = new Microsoft.Office.Interop.Word.Application();
+            if (m_wordApp == null)
+                m_wordApp = new Microsoft.Office.Interop.Word.Application();
             List<int> totalSums = new List<int>();
             if (isPrintOneByOneCheckBox.Checked)
             {

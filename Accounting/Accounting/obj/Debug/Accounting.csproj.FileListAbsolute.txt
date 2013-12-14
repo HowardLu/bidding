@@ -33,7 +33,6 @@ E:\bidding\Accounting\Accounting\obj\Debug\Accounting.pdb
 E:\bidding\Accounting\Accounting\bin\Debug\Accounting.exe
 E:\bidding\Accounting\Accounting\bin\Debug\Accounting.pdb
 E:\bidding\Accounting\Accounting\bin\Debug\Library.dll
-E:\bidding\Accounting\Accounting\bin\Debug\Microsoft.Office.Tools.Excel.v4.0.Utilities.dll
 E:\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.dll
 E:\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.dll
 E:\bidding\Accounting\Accounting\bin\Debug\Library.pdb

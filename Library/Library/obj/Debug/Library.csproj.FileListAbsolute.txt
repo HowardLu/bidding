@@ -36,7 +36,6 @@ E:\bidding\Library\Library\obj\Debug\ResolveAssemblyReference.cache
 E:\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Core.dll
 E:\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Interop.Excel.dll
 E:\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Interop.Word.dll
-E:\bidding\Library\Library\obj\Debug\Interop.VBIDE.dll
 E:\bidding\Library\Library\obj\Debug\Library.csproj.ResolveComReference.cache
 E:\bidding\Library\Library\obj\Debug\Library.dll
 E:\bidding\Library\Library\obj\Debug\Library.pdb

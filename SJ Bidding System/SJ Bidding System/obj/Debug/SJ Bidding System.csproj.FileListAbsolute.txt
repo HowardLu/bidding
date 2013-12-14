@@ -84,6 +84,5 @@ E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\ResolveAssemblyReferenc
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.ControlForm.resources
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
-E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetAuctionForm.resources
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
