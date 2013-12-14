@@ -29,6 +29,14 @@ namespace InternetLibrary
         public int InitialPrice { get; set; }
         public int NowPrice { get; set; }
         public string Auctioneer { get; set; }
+
+        public AuctionEntity()
+        {
+            Id = ObjectId.Empty;
+            AuctionId = BidderNumber = StockState = PhotoUrl = Artist = Artwork = Auctioneer = "";
+            ReturnState = HammerPrice = BuyerServiceCharge = FinalPrice = ReturnGuaranteeState = ReturnGuaranteeNumber = PayWayState =
+                SellerServiceCharge = SellerAccountPayable = InitialPrice = NowPrice = 0;
+        }
     }
 
     public class BidderEntity
@@ -53,6 +61,15 @@ namespace InternetLibrary
         public string CreditCardType { get; set; }
         public string EMail { get; set; }
         public string Bank { get; set; }
+
+        public BidderEntity()
+        {
+            _id = BidderID_int = 0;
+            Fax = Tel = Name = GuaranteeCost = Company = GuaranteeType = BankAcc = CareerTitle = IDNumber = BankContactTel =
+                Address = BidderID = CreditCardID = Auctioneer = CreditCardType = EMail = Bank = "";
+            GuaranteeCost = "0";
+            GuaranteeType = Bidding.PayGuarantee.台幣現鈔.ToString();
+        }
     }
 
     public class SellerEntity
@@ -92,6 +109,11 @@ namespace InternetLibrary
         public string PackImg { get; set; }
         public string ItemName { get; set; }
         public string Spec { get; set; }
+
+        public DealerItemEntity()
+        {
+            _id = ReservePrice = BuildImg = SrcDealer = ItemPS = Remain = ItemNum = LotNO = PackImg = ItemName = Spec = "";
+        }
     }
 
     public class MemberEntity
@@ -102,7 +124,8 @@ namespace InternetLibrary
 
     public enum AuctionColumnHeader
     {
-        拍品編號 = 0,
+        流水號 = 0,
+        拍品編號,
         拍品名稱,
         尺寸,
         得標牌號,

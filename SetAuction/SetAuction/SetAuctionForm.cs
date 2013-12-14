@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 using System.Linq;
+using System.Windows.Forms;
 using Bidding;
-using UtilityLibrary;
 using InternetLibrary;
+using UtilityLibrary;
 
 namespace SetAuction
 {
@@ -46,15 +46,24 @@ namespace SetAuction
         #region Windows Form Events
         private void SetAuctionForm_Load(object sender, EventArgs e)
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", "127.0.0.1", -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
             {
                 MessageBox.Show("IP不可為空!!!");
+                Application.Exit();
                 return;
             }
             m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             List<Auction> auctions = null;
-            Auction.LoadAuctions(ref auctions, ref m_aeInternet, false);
+            try
+            {
+                Auction.LoadAuctions(ref auctions, ref m_aeInternet, false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                Application.Exit();
+            }
             m_auctions = auctions.ToDictionary<Auction, string>(auc => auc.lot);
             LoadAuctionPhotos();
             InitAuctioneerComboBox();
@@ -169,7 +178,7 @@ namespace SetAuction
                 MessageBox.Show("請輸入資料!!!");
                 return;
             }
-            if (m_auctions.ContainsKey(lotTextBox.Text))
+            if (m_auctions.ContainsKey(lotTextBox.Text) || m_aeInternet.FineOne<string>(ae => ae.AuctionId, lotTextBox.Text) != null)
             {
                 MessageBox.Show("重複Lot，請重新輸入!");
                 lotTextBox.Text = "";
@@ -243,10 +252,12 @@ namespace SetAuction
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
             m_auctions[lotTextBox.Text] = auc;
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artist, auc.artist);
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Artwork, auc.artwork);
-            m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auc.lot, ae => ae.InitialPrice, auc.initialPrice);
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auc.lot, ae => ae.Auctioneer, auc.auctioneer);
+
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Artist, auc.artist);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Artwork, auc.artwork);
+            m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, lot, ae => ae.InitialPrice, auc.initialPrice);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Auctioneer, auc.auctioneer);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.AuctionId, auc.lot);
 
             photoTextBox.Text = Path.GetFileName(auc.photofilePath);
             ClearAllTextBox();
@@ -254,14 +265,23 @@ namespace SetAuction
 
         private void deleteButton_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem lvi in auctionsListView.SelectedItems)
+            if (auctionsListView.SelectedItems.Count == 0)
             {
-                string lot = lvi.Text;
-                if (File.Exists(m_auctions[lot].photofilePath))
-                    File.Delete(m_auctions[lot].photofilePath);
-                m_auctions.Remove(lot);
-                m_aeInternet.Remove<string>(ae => ae.AuctionId, lot);
-                auctionsListView.Items.Remove(lvi);
+                MessageBox.Show("請選擇欲刪除的拍品");
+                return;
+            }
+
+            if (MessageBox.Show("確定刪除?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+            {
+                foreach (ListViewItem lvi in auctionsListView.SelectedItems)
+                {
+                    string lot = lvi.Text;
+                    /*if (File.Exists(m_auctions[lot].photofilePath))
+                        File.Delete(m_auctions[lot].photofilePath);*/
+                    m_auctions.Remove(lot);
+                    m_aeInternet.Remove<string>(ae => ae.AuctionId, lot);
+                    auctionsListView.Items.Remove(lvi);
+                }
             }
         }
 

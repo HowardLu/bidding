@@ -157,7 +157,7 @@ namespace Bidding
                     sb.AppendLine(s);
 
                 if (!isSilence)
-                    System.Windows.Forms.MessageBox.Show("不合法的拍品，請設定:\n" + sb.ToString());
+                    System.Windows.Forms.MessageBox.Show("不合法的拍品，請設定:\n\n" + sb.ToString());
             }
         }
     }

@@ -69,7 +69,6 @@
     <Reference Include="Library">
       <HintPath>..\..\Library\Library\bin\Release\Library.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

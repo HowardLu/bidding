@@ -41,6 +41,7 @@
             this.detailsRadioButton = new System.Windows.Forms.RadioButton();
             this.largeIconRadioButton = new System.Windows.Forms.RadioButton();
             this.setAuctionGroupBox = new System.Windows.Forms.GroupBox();
+            this.auctioneerComboBox = new System.Windows.Forms.ComboBox();
             this.companyLabel = new System.Windows.Forms.Label();
             this.openPhotoButton = new System.Windows.Forms.Button();
             this.photoTextBox = new System.Windows.Forms.TextBox();
@@ -57,7 +58,6 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.auctioneerComboBox = new System.Windows.Forms.ComboBox();
             this.viewsGroupBox.SuspendLayout();
             this.setAuctionGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -77,7 +77,7 @@
             this.auctionsListView.GridLines = true;
             this.auctionsListView.Location = new System.Drawing.Point(10, 10);
             this.auctionsListView.Name = "auctionsListView";
-            this.auctionsListView.Size = new System.Drawing.Size(619, 545);
+            this.auctionsListView.Size = new System.Drawing.Size(620, 545);
             this.auctionsListView.TabIndex = 0;
             this.auctionsListView.UseCompatibleStateImageBehavior = false;
             this.auctionsListView.View = System.Windows.Forms.View.Details;
@@ -106,6 +106,7 @@
             // companyColumnHeader
             // 
             this.companyColumnHeader.Text = "公司";
+            this.companyColumnHeader.Width = 61;
             // 
             // viewsGroupBox
             // 
@@ -204,6 +205,14 @@
             this.setAuctionGroupBox.TabIndex = 4;
             this.setAuctionGroupBox.TabStop = false;
             this.setAuctionGroupBox.Text = "設定";
+            // 
+            // auctioneerComboBox
+            // 
+            this.auctioneerComboBox.FormattingEnabled = true;
+            this.auctioneerComboBox.Location = new System.Drawing.Point(70, 194);
+            this.auctioneerComboBox.Name = "auctioneerComboBox";
+            this.auctioneerComboBox.Size = new System.Drawing.Size(121, 20);
+            this.auctioneerComboBox.TabIndex = 15;
             // 
             // companyLabel
             // 
@@ -346,18 +355,10 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // auctioneerComboBox
-            // 
-            this.auctioneerComboBox.FormattingEnabled = true;
-            this.auctioneerComboBox.Location = new System.Drawing.Point(70, 194);
-            this.auctioneerComboBox.Name = "auctioneerComboBox";
-            this.auctioneerComboBox.Size = new System.Drawing.Size(121, 20);
-            this.auctioneerComboBox.TabIndex = 15;
-            // 
             // SetAuctionForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(851, 562);
             this.Controls.Add(this.setAuctionGroupBox);
             this.Controls.Add(this.viewsGroupBox);

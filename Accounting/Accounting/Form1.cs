@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.Office.Core;
-using Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
-using System.IO;
-using System.Data.OleDb;
-using InternetLibrary;
-using UtilityLibrary;
 using Bidding;
+using InternetLibrary;
+using Microsoft.Office.Interop.Excel;
+using UtilityLibrary;
 
 namespace Accounting
 {
@@ -34,6 +27,7 @@ namespace Accounting
         private Internet<MemberEntity> m_memberInternet;
         private Internet<BidderEntity> m_beInternet;
         private bool m_isSuperUser = false;
+        private _Application m_excelApp = null;
         #endregion
 
         #region Properties
@@ -51,7 +45,7 @@ namespace Accounting
         {
             ConnectToServer();
             // LoadExcelTemplate();
-            if (m_auctionsInternet.IsConnected)
+            if (m_auctionsInternet != null && m_auctionsInternet.IsConnected)
             {
                 LoadCollectionToDataGridView();
             }
@@ -64,13 +58,13 @@ namespace Accounting
             sfd.FileName = "account.xls";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                DataGridViewToCsv(dataGridView1, sfd.FileName); // Here dataGridview1 is your grid view name 
+                DataGridViewToXls(sfd.FileName); // Here dataGridview1 is your grid view name 
             }
         }
 
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP", m_auctionsInternet.IP, -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
                 return;
 
@@ -212,7 +206,7 @@ namespace Accounting
 
         private void checkAllCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox cb = sender as CheckBox;
+            System.Windows.Forms.CheckBox cb = sender as System.Windows.Forms.CheckBox;
             for (int i = 0; i < this.checkedListBox1.Items.Count; i++)
             {
                 this.checkedListBox1.SetItemChecked(i, cb.Checked);
@@ -273,7 +267,7 @@ namespace Accounting
 
         private void Login()
         {
-            string account = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入帳號:", "", -1, -1);
+            string account = Utility.InputBox("", "請輸入帳號:", "", -1, -1);
             if (account.Length == 0)
                 return;
 
@@ -284,14 +278,13 @@ namespace Accounting
 
         private void ConnectToServer()
         {
-            string ip = Microsoft.VisualBasic.Interaction.InputBox("", "請輸入Server IP:", "127.0.0.1", -1, -1);
+            string ip = Utility.InputIp();
             if (ip.Length == 0)
                 return;
             m_auctionsInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             m_dealerItemInternet = new Internet<DealerItemEntity>(ip, "bidding_data", "dealer_item_table");
             m_memberInternet = new Internet<MemberEntity>(ip, "bidding_data", "member_table");
             m_beInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
-            Login();
 
             if (m_auctionsInternet.Connect())
             {
@@ -301,6 +294,8 @@ namespace Accounting
             {
                 toolStripStatusLabel1.Text = "連線失敗!";
             }
+
+            Login();
         }
 
         private void AddCol(string headerText, Color color, bool readOnly)
@@ -394,58 +389,88 @@ namespace Accounting
             AddColumnsToCheckedListBox();
 
             List<AuctionEntity> auctionEntities = null;
+            List<DealerItemEntity> dealerItemEntities = null;
             try
             {
                 auctionEntities = m_auctionsInternet.GetCollectionList();
+                dealerItemEntities = m_dealerItemInternet.GetCollectionList();
             }
-            catch (MongoDB.Driver.MongoException e)
+            catch (Exception e)
             {
                 MessageBox.Show(e.ToString());
             }
 
-            if (auctionEntities == null)
-                return;
-            foreach (AuctionEntity auction in auctionEntities)
+            if (auctionEntities != null)
             {
-                DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
-                BidderEntity bidder = m_beInternet.FineOne<string>(be => be.BidderID, auction.BidderNumber);
-                if (dealerItem == null)
+                StringBuilder sb = new StringBuilder();
+                foreach (AuctionEntity auction in auctionEntities)
                 {
-                    MessageBox.Show("找不到拍品 " + auction.AuctionId + "在dealer_item_table");
-                    continue;
-                }
-
-                if (m_isSuperUser)
-                {
-                    dataGridView1.Rows.Add(auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
-                        dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
-                        auction.BuyerServiceCharge, auction.FinalPrice,
-                        bidder.GuaranteeType, bidder.GuaranteeCost,
-                        Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
-                        Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
-                        dealerItem.ReservePrice, auction.SellerAccountPayable);
-
-                    if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice, true))
+                    DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
+                    BidderEntity bidder = m_beInternet.FineOne<string>(be => be.BidderID, auction.BidderNumber);
+                    if (dealerItem == null)
                     {
-                        dataGridView1.Rows[dataGridView1.Rows.Count - 1].ErrorText = "落槌價低於保留價!!!";
+                        sb.AppendLine(auction.AuctionId);
+                        dealerItem = new DealerItemEntity();
                     }
+                    if (bidder == null)
+                    {
+                        bidder = new BidderEntity();
+                    }
+
+                    AuctionEntity auc = auction;
+                    AddDataRowToDataGridView(ref auc, ref bidder, ref dealerItem);
                 }
-                else
+
+                if (sb.Length > 0)
+                    MessageBox.Show("找不到以下拍品在[賣家建檔資料表]:\n\n" + sb.ToString());
+            }
+
+            if (dealerItemEntities != null)
+            {
+                foreach (DealerItemEntity dealerItem in dealerItemEntities)
                 {
-                    dataGridView1.Rows.Add(auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, dealerItem.Remain,
-                        Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
-                        auction.BuyerServiceCharge, auction.FinalPrice,
-                        bidder.GuaranteeType, bidder.GuaranteeCost,
-                        Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
-                        Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState));
+                    if (dealerItem.LotNO != "")
+                        continue;
+
+                    AuctionEntity auction = new AuctionEntity();
+                    BidderEntity bidder = new BidderEntity();
+                    DealerItemEntity dItem = dealerItem;
+                    AddDataRowToDataGridView(ref auction, ref bidder, ref dItem);
                 }
             }
 
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
 
-        private void DataGridViewToCsv(DataGridView dgv, string filename)
+        private void AddDataRowToDataGridView(ref AuctionEntity auction, ref BidderEntity bidder, ref DealerItemEntity dealerItem)
         {
+            if (m_isSuperUser)
+            {
+                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber,
+                    dealerItem.Remain, dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState),
+                    auction.HammerPrice, auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
+                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
+                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
+                    dealerItem.ReservePrice, auction.SellerAccountPayable);
+
+                if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice, true))
+                {
+                    dataGridView1.Rows[dataGridView1.Rows.Count - 1].ErrorText = "落槌價低於保留價!!!";
+                }
+            }
+            else
+            {
+                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber,
+                    dealerItem.Remain, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
+                    auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
+                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
+                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState));
+            }
+        }
+
+        private void DataGridViewToCsv(string filename)
+        {
+            DataGridView dgv = dataGridView1;
             string stOutput = "";
             // Export titles:
             string sHeaders = "";
@@ -461,7 +486,8 @@ namespace Accounting
                     stLine = stLine.ToString() + Convert.ToString(dgv.Rows[i].Cells[j].Value) + "\t";
                 stOutput += stLine + "\r\n";
             }
-            Encoding utf16 = Encoding.GetEncoding(1254);
+            //Encoding utf16 = Encoding.GetEncoding(1254);
+            Encoding utf16 = Encoding.GetEncoding("big5");
             byte[] output = utf16.GetBytes(stOutput);
             FileStream fs = new FileStream(filename, FileMode.Create);
             BinaryWriter bw = new BinaryWriter(fs);
@@ -469,6 +495,42 @@ namespace Accounting
             bw.Flush();
             bw.Close();
             fs.Close();
+        }
+
+        private void DataGridViewToXls(string filename)
+        {
+            if (m_excelApp == null)
+                m_excelApp = new Microsoft.Office.Interop.Excel.Application();
+            Workbook workbook = m_excelApp.Workbooks.Add();
+            Worksheet sheet = workbook.Worksheets.get_Item(1);
+            DataGridView dgv = dataGridView1;
+
+            for (int i = 0; i < dgv.ColumnCount; i++)
+                sheet.Cells[1, i + 1] = dgv.Columns[i].HeaderText;
+
+            sheet.get_Range("A1").EntireRow.Font.Bold = true;
+            //sheet.get_Range("A1").EntireRow.Interior.Color = System.Drawing.ColorTranslator.ToWin32(Color.LightCyan);
+
+            for (int i = 0; i < dgv.RowCount; i++)
+            {
+                for (int j = 0; j < dgv.ColumnCount; j++)
+                {
+                    object value = dgv.Rows[i].Cells[j].Value;
+                    sheet.Cells[i + 2, j + 1] = value == null ? "" : value.ToString();
+                }
+            }
+
+            sheet.get_Range("A1", "T100").EntireColumn.AutoFit();
+            sheet.get_Range("A1", "T100").EntireRow.AutoFit();
+            workbook.SaveAs(filename, XlFileFormat.xlWorkbookNormal/*, Type.Missing,
+            Type.Missing, Type.Missing, Type.Missing, XlSaveAsAccessMode.xlExclusive,
+            Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing*/);
+            workbook.Close(true/*, misValue, misValue*/);
+            m_excelApp.Quit();
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(sheet);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(m_excelApp);
         }
 
         private int GetFinalPrice(int hammerPrice, int newBuyerServiceCharge)

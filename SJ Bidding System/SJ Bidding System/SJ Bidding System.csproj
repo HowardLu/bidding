@@ -121,8 +121,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\loading.gif" />
-    <None Include="Resources\LOGO121128.bmp" />
-    <None Include="Resources\LOGO121128_big.bmp" />
+    <Content Include="Resources\LOGO_A.jpg" />
+    <Content Include="Resources\LOGO_M.jpg" />
+    <None Include="Resources\LOGO_S.bmp" />
+    <None Include="Resources\LOGO_S_big.bmp" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

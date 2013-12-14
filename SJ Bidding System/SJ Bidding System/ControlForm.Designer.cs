@@ -377,7 +377,7 @@
             // 
             // logoPictureBox
             // 
-            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO121128;
+            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO_S;
             this.logoPictureBox.Location = new System.Drawing.Point(892, 24);
             this.logoPictureBox.Name = "logoPictureBox";
             this.logoPictureBox.Size = new System.Drawing.Size(100, 101);
