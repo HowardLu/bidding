@@ -29,7 +29,6 @@ namespace SJ_Bidding_System
         //private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
         private Internet<BidderEntity> m_beInternet;
-        private string m_serverIp = "220.132.63.79";
         #endregion
 
         #region Properties
@@ -44,8 +43,16 @@ namespace SJ_Bidding_System
             ci.NumberFormat.CurrencyDecimalDigits = 0;
             ci.NumberFormat.CurrencySymbol = "";
             Thread.CurrentThread.CurrentCulture = ci;
-            m_aeInternet = new Internet<AuctionEntity>(m_serverIp, "bidding_data", "auctions_table");
-            m_beInternet = new Internet<BidderEntity>(m_serverIp, "bidding_data", "buyer_table");
+            string ip = Utility.InputIp();
+            if (ip != "")
+            {
+                m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
+                m_beInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
+            }
+            else
+            {
+                Environment.Exit(Environment.ExitCode);
+            }
         }
         #endregion
 
@@ -414,9 +421,12 @@ namespace SJ_Bidding_System
             {
                 if (m_beInternet.FineOne<int>(be => be.BidderID_int, bidderNo) == null)
                 {
-                    winBidderTextBox.Text = "";
-                    MessageBox.Show("無此買家牌號：" + bidderNo.ToString());
-                    return;
+                    if (MessageBox.Show("無此買家牌號：" + bidderNo.ToString() + "\n是否強制輸入此牌號", "警告", MessageBoxButtons.OKCancel) !=
+                        System.Windows.Forms.DialogResult.OK)
+                    {
+                        winBidderTextBox.Text = "";
+                        return;
+                    }
                 }
                 m_auctions[m_auctionIdNow].winBidderNo = bidderNo;
                 winBidderTextBox.BackColor = Color.DarkBlue;
@@ -442,6 +452,7 @@ namespace SJ_Bidding_System
             winBidderTextBox.Text = "";
             m_auctions[m_auctionIdNow].winBidderNo = 0;
             winBidderTextBox.BackColor = Color.Black;
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, m_auctions[m_auctionIdNow].lot, ae => ae.BidderNumber, "");
         }
         #endregion
 
