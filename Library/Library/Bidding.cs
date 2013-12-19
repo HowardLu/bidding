@@ -72,6 +72,8 @@ namespace Bidding
             this.artwork = ae.Artwork;
             this.initialPrice = ae.InitialPrice;
             this.nowPrice = ae.NowPrice;
+            if (this.nowPrice < this.initialPrice)
+                this.nowPrice = this.initialPrice;
             this.auctioneer = ae.Auctioneer;
             int bidderNo = Utility.ParseToInt(ae.BidderNumber, true);
             this.winBidderNo = bidderNo < 0 ? 0 : bidderNo;
@@ -90,12 +92,17 @@ namespace Bidding
         /// 0 ~ 10,000,000 = 18%
         /// 10,000,000 ~ 20,000,000 = 15%
         /// 20,000,000 ~ = 12%
+        /// 20131219 all 20%
         /// </summary>
         public void ComputeChargeAndTotal()
         {
-            if (hammerPrice == 0)
+            if (this.hammerPrice == 0)
+            {
+                this.serviceCharge = this.total = 0;
                 return;
+            }
 
+            /* befor 20131219, old
             if (hammerPrice > 20000000)
             {
                 serviceCharge = Convert.ToInt32((hammerPrice - 20000000) * 0.12f + 10000000 * 0.15f + 10000000 * 0.18f);
@@ -110,7 +117,11 @@ namespace Bidding
             {
                 serviceCharge = Convert.ToInt32(hammerPrice * 0.18f);
                 total = hammerPrice + serviceCharge;
-            }
+            }*/
+
+            // 20131219 new 
+            serviceCharge = Convert.ToInt32(hammerPrice * 0.2f);
+            total = hammerPrice + serviceCharge;
         }
 
         public AuctionEntity ToAuctionEntity()
@@ -159,6 +170,11 @@ namespace Bidding
                 if (!isSilence)
                     System.Windows.Forms.MessageBox.Show("不合法的拍品，請設定:\n\n" + sb.ToString());
             }
+        }
+
+        public void ResetPrice()
+        {
+            this.hammerPrice = this.nowPrice = this.initialPrice;
         }
     }
 

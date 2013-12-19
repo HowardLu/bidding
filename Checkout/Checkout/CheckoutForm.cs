@@ -56,15 +56,15 @@ namespace Checkout
             string settingsFP = Path.Combine(System.Windows.Forms.Application.StartupPath, m_settingsFN);
             if (Utility.IsFileExist(settingsFP, false))
                 LoadSettings(settingsFP);
-            string ip = Utility.InputIp();
-            if (ip.Length == 0)
+            m_serverIp = Utility.InputIp();
+            if (m_serverIp.Length == 0)
             {
                 MessageBox.Show("IP不可為空!!!");
                 return;
             }
-            m_auctionInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
+            m_auctionInternet = new Internet<AuctionEntity>(m_serverIp, "bidding_data", "auctions_table");
             m_auctionInternet.Connect();
-            m_bidderInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
+            m_bidderInternet = new Internet<BidderEntity>(m_serverIp, "bidding_data", "buyer_table");
             m_bidderInternet.Connect();
             if (m_auctionInternet.IsConnected && m_bidderInternet.IsConnected)
             {
@@ -100,14 +100,25 @@ namespace Checkout
                 BidderEntity bidder = m_bidderInternet.FineOne<int>(b => b.BidderID_int, bidderNo);
                 if (bidder == null)
                 {
-                    MessageBox.Show("查詢不到此買家");
-                    return;
+                    if (auctions.Count == 0)
+                    {
+                        MessageBox.Show("查詢不到此買家!");
+                        return;
+                    }
+                    else
+                    {
+                        bidder = new BidderEntity();
+                        bidder.BidderID_int = bidderNo;
+                        MessageBox.Show("此買家無登記資料!");
+                    }
                 }
-
-                if (auctions.Count == 0)
+                else
                 {
-                    MessageBox.Show("此買家尚未有得標品");
-                    return;
+                    if (auctions.Count == 0)
+                    {
+                        MessageBox.Show("此買家尚未有得標品!");
+                        return;
+                    }
                 }
 
                 m_bidder = new Bidder();
@@ -162,7 +173,7 @@ namespace Checkout
                 foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
                     if (!m_bidder.auctionMappings.ContainsKey(paymentDoc.Key))
-                        continue;
+                        continue;   // dont print the doc that buy nothing.
 
                     if (m_bidder.auctionMappings[paymentDoc.Key].Count > 0)
                     {
@@ -463,7 +474,7 @@ namespace Checkout
             string fp = Path.Combine(System.Windows.Forms.Application.StartupPath, m_settingsFN);
             using (StreamWriter sw = new StreamWriter(fp))
             {
-                sw.WriteLine(m_auctionInternet.IP + " " + m_serverPort);
+                sw.WriteLine(m_serverIp + " " + m_serverPort);
             }
         }
 

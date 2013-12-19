@@ -211,7 +211,39 @@ namespace SJ_Bidding_System
                 return;
 
             if (MessageBox.Show("是否重置此拍品?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+            {
+                winBidderTextBox.Text = "";
+                winBidderTextBox.BackColor = Color.Black;
+
                 SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
+                ClearBidder(m_auctionIdNow);
+            }
+        }
+
+        /// <summary>
+        /// Reset all auction to original price.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void resetAllBtn_Click(object sender, EventArgs e)
+        {
+            if (m_auctions.Count == 0)
+                return;
+
+            if (MessageBox.Show("是否重置全部?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+            {
+                winBidderTextBox.Text = "";
+                winBidderTextBox.BackColor = Color.Black;
+
+                SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
+                for (int i = 0; i < m_auctions.Count; i++)
+                {
+                    m_auctions[i].ResetPrice();
+                    m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.NowPrice, m_auctions[i].initialPrice);
+                    m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.HammerPrice, m_auctions[i].initialPrice);
+                    ClearBidder(i);
+                }
+            }
         }
 
         /// <summary>
@@ -361,23 +393,6 @@ namespace SJ_Bidding_System
         }
 
         /// <summary>
-        /// Reset all auction to original price.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void resetAllBtn_Click(object sender, EventArgs e)
-        {
-            if (m_auctions.Count == 0)
-                return;
-            if (MessageBox.Show("是否重置全部?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
-            {
-                for (int i = 0; i < m_auctions.Count; i++)
-                    m_auctions[i].nowPrice = m_auctions[i].initialPrice;
-                SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
-            }
-        }
-
-        /// <summary>
         /// When user input price now and press enter, it will coutdown 1 seconds and change nowPriceTextBox.BackColor back to black color.
         /// </summary>
         /// <param name="sender"></param>
@@ -450,9 +465,8 @@ namespace SJ_Bidding_System
             }
 
             winBidderTextBox.Text = "";
-            m_auctions[m_auctionIdNow].winBidderNo = 0;
             winBidderTextBox.BackColor = Color.Black;
-            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, m_auctions[m_auctionIdNow].lot, ae => ae.BidderNumber, "");
+            ClearBidder(m_auctionIdNow);
         }
         #endregion
 
@@ -675,6 +689,9 @@ namespace SJ_Bidding_System
             nowPriceTextBox.Text = newPrice.ToString("c");
             m_displayForm.SetNewPrice(newPrice);
             m_auctions[m_auctionIdNow].nowPrice = newPrice;
+            m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[m_auctionIdNow].lot, ae => ae.NowPrice, newPrice);
+            if (m_auctions[m_auctionIdNow].winBidderNo > 0)
+                m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[m_auctionIdNow].lot, ae => ae.HammerPrice, newPrice);
         }
 
         private void LoadBiddingResult(string path)
@@ -742,6 +759,7 @@ namespace SJ_Bidding_System
                     {
                         sw.WriteLine("{0}\t{1}\t{2}\t{3}", auction.lot, auction.artwork, auction.winBidderNo, auction.nowPrice);
                         m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auction.lot, ae => ae.BidderNumber, auction.winBidderNo.ToString());
+                        m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auction.lot, ae => ae.NowPrice, auction.nowPrice);
                         m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auction.lot, ae => ae.HammerPrice, auction.nowPrice);
                     }
                 }
@@ -773,6 +791,12 @@ namespace SJ_Bidding_System
                 }
                 Settings.backupFP = line;
             }
+        }
+
+        private void ClearBidder(int auctionId)
+        {
+            m_auctions[auctionId].winBidderNo = 0;
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, m_auctions[auctionId].lot, ae => ae.BidderNumber, "");
         }
         #endregion
     }
