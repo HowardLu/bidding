@@ -226,7 +226,8 @@ namespace Bidding
             this.auctioneer = Utility.ToEnum<Auctioneer>(bidder.Auctioneer);
             this.auctions = new Dictionary<string, Auction>();
             this.payGuaranteeState = Utility.ToEnum<PayGuarantee>(bidder.GuaranteeType);
-            this.payGuaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost, true);
+            int guaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost, true);
+            this.payGuaranteeNum = guaranteeNum < 0 ? 0 : guaranteeNum;
             for (int i = 0; i < auctions.Count; i++)
             {
                 AuctionEntity ae = auctions[i];

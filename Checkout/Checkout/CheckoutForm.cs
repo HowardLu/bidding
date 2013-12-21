@@ -92,6 +92,8 @@ namespace Checkout
         {
             if (!m_auctionInternet.IsConnected)
                 SetButtonsEnable(false);
+            if (m_bidder != null)
+                m_bidder = null;
 
             int bidderNo = 0;
             if (Int32.TryParse(bidderNoTextBox.Text, out bidderNo))
