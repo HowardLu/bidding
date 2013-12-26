@@ -60,3 +60,11 @@ D:\bidding\Accounting\Accounting\obj\Debug\GenerateResource.write.1.tlog
 \\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Accounting.csproj.ResolveComReference.cache
 E:\bidding\Accounting\Accounting\obj\Debug\Interop.Microsoft.Office.Core.dll
 E:\bidding\Accounting\Accounting\obj\Debug\Accounting.csproj.ResolveComReference.cache
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.dll
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.dll
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.pdb
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Bson.xml
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.pdb
+\\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.xml
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Interop.Microsoft.Office.Interop.Excel.dll
+\\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Interop.VBIDE.dll

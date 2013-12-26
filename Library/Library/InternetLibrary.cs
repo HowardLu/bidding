@@ -129,6 +129,7 @@ namespace InternetLibrary
         拍品名稱,
         尺寸,
         得標牌號,
+        買家姓名,
         庫存狀態,
         賣家,
         歸還狀態,

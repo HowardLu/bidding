@@ -20,7 +20,6 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Lib
 \\tsclient\D\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Core.dll
 \\tsclient\D\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Interop.Excel.dll
 \\tsclient\D\bidding\Library\Library\obj\Debug\Interop.Microsoft.Office.Interop.Word.dll
-\\tsclient\D\bidding\Library\Library\obj\Debug\Interop.VBIDE.dll
 \\tsclient\D\bidding\Library\Library\obj\Debug\Library.csproj.ResolveComReference.cache
 \\tsclient\D\bidding\Library\Library\obj\Debug\Library.dll
 \\tsclient\D\bidding\Library\Library\obj\Debug\Library.pdb

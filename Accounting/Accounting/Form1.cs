@@ -446,7 +446,7 @@ namespace Accounting
         {
             if (m_isSuperUser)
             {
-                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber,
+                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, bidder.Name,
                     dealerItem.Remain, dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState),
                     auction.HammerPrice, auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
                     Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
@@ -460,7 +460,7 @@ namespace Accounting
             }
             else
             {
-                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber,
+                dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, bidder.Name,
                     dealerItem.Remain, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
                     auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
                     Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,

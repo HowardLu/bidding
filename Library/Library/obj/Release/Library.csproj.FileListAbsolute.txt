@@ -15,7 +15,6 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\Lib
 \\tsclient\D\bidding\Library\Library\obj\Release\Library.csproj.ResolveComReference.cache
 \\tsclient\D\bidding\Library\Library\obj\Release\Library.dll
 \\tsclient\D\bidding\Library\Library\obj\Release\Interop.Microsoft.Office.Interop.Excel.dll
-\\tsclient\D\bidding\Library\Library\obj\Release\Interop.VBIDE.dll
 \\tsclient\D\bidding\Library\Library\bin\Release\Library.dll
 \\tsclient\D\bidding\Library\Library\bin\Release\Library.pdb
 \\tsclient\D\bidding\Library\Library\bin\Release\MongoDB.Bson.pdb
