@@ -7,6 +7,7 @@ __date__ = "$Date: 2004/04/14 02:38:47 $"
 
 from PythonCard import dialog, model
 import pymongo, sys, re
+import xlwt
 
 # 買家所有屬性
 BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel", "Fax", "Address", "EMail", "Bank", "BankAcc",
@@ -14,6 +15,9 @@ BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel"
 								]
 
 BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel", "Auctioneer" ]
+
+# 買家資料輸出路徑
+EXPORT_PATH	= "bidder_export.xls"
 
 # 連線port
 DB_CFG_PORT	= 27017
@@ -61,6 +65,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"BUTTONTEXTDELBIDDER":			"刪除買家",
 							"BUTTONTEXTCLEAR":					"清空欄位",
 							"BUTTONTEXTSEARCH":					"搜尋/刷新",
+							"BUTTONTEXTEXPORT":					"匯出",
 							"COMBOBOXGUARANTEETYPE":		u"支付方式",
 							"COMBOBOXGUARANTEE_LIST":		[ u"台幣現鈔", u"人民幣現鈔", u"美金現鈔", u"信用卡", u"銀聯卡", u"VIP" ],
 							"NEW_FILE_TITLE":						"請建立一個資料檔",
@@ -95,7 +100,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"PLZ_ENTER_AUCTION_IP":			"請輸入資料庫的IP位址",
 							"PLZ_ENTER_LOGIN_CODE":			"請輸入登入密碼",
 							"READY_TO_CONNECT":					"準備開始連線",
-							"READY_TO_LOGIN":					"登入中",
+							"READY_TO_LOGIN":						"登入中",
 							"DEFAULT_IP":								"127.0.0.1",
 							"CONNECT_FAILED":						"無法連線到[%s]",
 							"CONNECT_SUCCESS":					"成功連線到[%s]",
@@ -103,6 +108,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"CONNECT_BEGIN":						u"正在連線至[%s]，請耐心等候",
 							"ERRMSG_DB_CNCT_FAIL":			u"無法連線到資料庫( %s, %d )",
 							"ERRMSG_DB_CNCT_OK":				u"成功連線到資料庫( %s, %d )",
+							"ERRMSG_EXPORT_OK":					u"已匯出買家資料至""%s""",
 						}
 
 # 視窗表單物件
@@ -139,6 +145,7 @@ class MyBackground( model.Background ):
 		com.ButtonDelBidder.label					= Const[ "BUTTONTEXTDELBIDDER" ]
 		com.ButtonClear.label							= Const[ "BUTTONTEXTCLEAR" ]
 		com.ButtonSearch.label						= Const[ "BUTTONTEXTSEARCH" ]
+		com.ButtonExport.label						= Const[ "BUTTONTEXTEXPORT" ]
 		
 		# 選單
 		com.ComboBoxGuaranteeType.text		= Const[ "COMBOBOXGUARANTEE_LIST" ][ GUARANTEE_INIT ]
@@ -253,14 +260,14 @@ class MyBackground( model.Background ):
 		bidder_id = bidder_data[ "BidderID_int" ]
 		self.__add_msg( Const[ "ADD_BIDDER_SUCCESS" ] % self.__gen_bid_id_plus_name_str( bidder_id ) )
 		
-		index, bidder_data = self.__chched_data[ bidder_id ]
+		index, bidder_data = self.__cached_data[ bidder_id ]
 		self.components.ListBidders.selection = index
 		
 	# 按下 編輯買家資料 按鈕
 	def on_ButtonFixBidder_mouseClick( self, event ):
 		# 沒有選取的項目
 		index, bidder_id_ori = self.get_bidder_id_by_selection()
-		if bidder_id_ori not in self.__chched_data:
+		if bidder_id_ori not in self.__cached_data:
 			self.__add_msg( Const[ "NO_SELECTED_BIDDER" ] )
 			return
 			
@@ -288,20 +295,20 @@ class MyBackground( model.Background ):
 		self.__gen_list_ui_by_bidder_data()
 		self.__add_msg( Const[ "FIX_BIDDER_DONE" ] % self.__gen_bid_id_plus_name_str( bidder_id ) )
 		
-		index, bidder_data = self.__chched_data[ bidder_id ]
+		index, bidder_data = self.__cached_data[ bidder_id ]
 		self.components.ListBidders.selection = index
 		
 	# 按下 刪除買家資料 按鈕
 	def on_ButtonDelBidder_mouseClick( self, event ):
 		# 沒有選取的項目
 		index, bidder_id = self.get_bidder_id_by_selection()
-		if bidder_id not in self.__chched_data:
+		if bidder_id not in self.__cached_data:
 			self.__add_msg( Const[ "NO_SELECTED_BIDDER" ] )
 			return
 		
 		# 取得要顯示的文字/index
 		mag_arg = self.__gen_bid_id_plus_name_str( bidder_id );
-		index, bidder_data = self.__chched_data[ bidder_id ]
+		index, bidder_data = self.__cached_data[ bidder_id ]
 		
 		# 刪除牌號資料
 		self.__dbtable_buyer.remove( { "BidderID_int": bidder_id } )
@@ -326,6 +333,27 @@ class MyBackground( model.Background ):
 		search_text = None if search_text == "" else search_text
 		self.__gen_list_ui_by_bidder_data( search_text )
 		
+	# 按下 匯出 按鈕
+	def on_ButtonExport_mouseClick( self, event ):
+		wb = xlwt.Workbook()
+		ws = wb.add_sheet( "bidders" )
+		
+		com = self.components
+		index_row = 0
+		for index, attr in enumerate( BIDDER_ATTRS ):
+			ws.write( index_row, index, getattr( com, "StaticText%s" % attr ).text )
+		index_row += 1
+		
+		for cached_data_iter in self.__cached_data.itervalues():
+			collection = cached_data_iter[ 1 ]
+			for index, attr in enumerate( BIDDER_ATTRS ):
+				ws.write( index_row, index, collection[ attr ] )
+				
+			index_row += 1
+			
+		wb.save( EXPORT_PATH )
+		self.__add_msg( Const[ "ERRMSG_EXPORT_OK" ] % EXPORT_PATH )
+	
 	# 顯示買家資料
 	def __display_bidder_data( self, bidder_data ):
 		com = self.components
@@ -339,12 +367,12 @@ class MyBackground( model.Background ):
 	# 按下買家列表資料
 	def on_ListBidders_select( self, event = None ):
 		index, bidder_id = self.get_bidder_id_by_selection()
-		if bidder_id not in self.__chched_data:
+		if bidder_id not in self.__cached_data:
 			if bidder_id > 0:
 				self.__add_msg( Const[ "NO_BIDDER_DATA" ] % bidder_id )
 			return
 		
-		index, bidder_data = self.__chched_data[ bidder_id ]
+		index, bidder_data = self.__cached_data[ bidder_id ]
 		self.__display_bidder_data( bidder_data )
 	
 	# 利用索引值取得牌號ID
@@ -413,7 +441,7 @@ class MyBackground( model.Background ):
 		
 		com.ListBidders.clear()
 		
-		self.__chched_data = {}
+		self.__cached_data = {}
 		self.__chched_index = {}
 		index = -1
 		
@@ -437,7 +465,7 @@ class MyBackground( model.Background ):
 		for index, collection in enumerate( find_result.sort( "BidderID_int", 1 ) ):
 			id = collection[ "BidderID_int" ]
 			
-			self.__chched_data[ id ] = index, collection
+			self.__cached_data[ id ] = index, collection
 			self.__chched_index[ index ] = id
 			com.ListBidders.append( self.__gen_bid_id_plus_name_str( id ) )
 			
@@ -445,7 +473,7 @@ class MyBackground( model.Background ):
 		
 	# 產生牌號:姓名的字串
 	def __gen_bid_id_plus_name_str( self, bidder_id ):
-		index, bidder_data = self.__chched_data[ bidder_id ]
+		index, bidder_data = self.__cached_data[ bidder_id ]
 		return "%s: %s" % ( bidder_data[ "BidderID" ], bidder_data[ "Name" ] )
 		
 	# 程序紀錄
