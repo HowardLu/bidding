@@ -222,7 +222,7 @@ namespace Bidding
             this.phone = bidder.Tel;
             this.fax = bidder.Fax;
             this.email = bidder.EMail;
-            this.addr = bidder.EMail;
+            this.addr = bidder.Address;
             this.auctioneer = Utility.ToEnum<Auctioneer>(bidder.Auctioneer);
             this.auctions = new Dictionary<string, Auction>();
             this.payGuaranteeState = Utility.ToEnum<PayGuarantee>(bidder.GuaranteeType);
