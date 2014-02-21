@@ -326,18 +326,18 @@ namespace Accounting
         private void LoadCollectionToDataGridView()
         {
             List<AuctionEntity> auctions = m_auctionsInternet.GetCollectionList();
-            if (auctions.Count == 0)
-            {
-                AuctionEntity auction = new AuctionEntity();
-                auction.AuctionId = "111";
-                auction.Artwork = "國寶";
-                auction.BidderNumber = "100";
-                auction.StockState = "home";
-                auction.ReturnState = 1;
-                auction.ReturnGuaranteeState = 2;
-                auction.PayWayState = 3;
-                m_auctionsInternet.Insert(auction);
-            }
+            //if (auctions.Count == 0)
+            //{
+            //    AuctionEntity auction = new AuctionEntity();
+            //    auction.AuctionId = "111";
+            //    auction.Artwork = "國寶";
+            //    auction.BidderNumber = "100";
+            //    auction.StockState = "home";
+            //    auction.ReturnState = 1;
+            //    auction.ReturnGuaranteeState = 2;
+            //    auction.PayWayState = 3;
+            //    m_auctionsInternet.Insert(auction);
+            //}
 
             dataGridView1.ReadOnly = false;
 
