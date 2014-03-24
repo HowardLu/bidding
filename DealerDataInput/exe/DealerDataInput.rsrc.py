@@ -11,6 +11,38 @@
 
          'components': [
 
+{'type':'TextField', 
+    'name':'TextFieldCellPhone', 
+    'position':(554, 41), 
+    'size':(90, -1), 
+    },
+
+{'type':'StaticText', 
+    'name':'StaticTextCellPhone', 
+    'position':(521, 44), 
+    'size':(43, -1), 
+    'text':'StaticTextCellPhone', 
+    },
+
+{'type':'TextField', 
+    'name':'TextFieldContractDate', 
+    'position':(337, 13), 
+    'size':(88, -1), 
+    },
+
+{'type':'StaticText', 
+    'name':'StaticTextContractDate', 
+    'position':(285, 16), 
+    'text':'StaticTextContractDate', 
+    },
+
+{'type':'StaticText', 
+    'name':'StaticTextReservePricePost', 
+    'position':(627, 281), 
+    'size':(19, -1), 
+    'text':'StaticTextReservePricePost', 
+    },
+
 {'type':'StaticText', 
     'name':'StaticTextSerial', 
     'position':(570, 229), 
@@ -52,8 +84,8 @@
 
 {'type':'TextField', 
     'name':'TextFieldReservePrice', 
-    'position':(584, 278), 
-    'size':(57, -1), 
+    'position':(583, 278), 
+    'size':(40, -1), 
     },
 
 {'type':'TextField', 
@@ -89,6 +121,7 @@
 {'type':'StaticText', 
     'name':'StaticTextReservePrice', 
     'position':(506, 281), 
+    'size':(74, -1), 
     'text':'StaticTextReservePrice', 
     },
 
@@ -506,38 +539,39 @@
 
 {'type':'TextField', 
     'name':'TextFieldTel', 
-    'position':(544, 41), 
+    'position':(427, 41), 
+    'size':(90, -1), 
     },
 
 {'type':'StaticText', 
     'name':'StaticTextTel', 
-    'position':(515, 44), 
+    'position':(398, 44), 
     'size':(24, -1), 
     'text':'StaticTextTel', 
     },
 
 {'type':'TextField', 
     'name':'TextFieldCardID', 
-    'position':(417, 41), 
+    'position':(300, 41), 
     'size':(92, -1), 
     },
 
 {'type':'StaticText', 
     'name':'StaticTextCardID', 
-    'position':(366, 44), 
+    'position':(249, 44), 
     'size':(90, -1), 
     'text':'StaticTextCardID', 
     },
 
 {'type':'TextField', 
     'name':'TextFieldCountry', 
-    'position':(273, 41), 
+    'position':(174, 41), 
     'size':(66, -1), 
     },
 
 {'type':'StaticText', 
     'name':'StaticTextCountry', 
-    'position':(246, 44), 
+    'position':(147, 44), 
     'size':(48, -1), 
     'text':'StaticTextCountry', 
     },
@@ -552,7 +586,7 @@
 {'type':'TextField', 
     'name':'TextFieldName', 
     'position':(60, 41), 
-    'size':(166, -1), 
+    'size':(81, -1), 
     },
 
 {'type':'StaticText', 

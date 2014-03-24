@@ -6,12 +6,12 @@ __date__ = "$Date: 2004/04/14 02:38:47 $"
 """
 
 from PythonCard import dialog, model, EXIF, graphic
-import pymongo, sys, time
+import pymongo, sys, time, gridfs
 
 ATTR_MAP = {	# 賣家屬性
 							"Dealer":
 								{	"ALL_ATTR":
-										[	"Name", "Country", "CardID", "ContractID", "Tel", "Fax", "Address", "BankName", "BankAcc", "PostID", "IfDealedInsuranceFee",
+										[	"Name", "Country", "CardID", "ContractDate", "ContractID", "Tel", "CellPhone", "Fax", "Address", "BankName", "BankAcc", "PostID", "IfDealedInsuranceFee",
 											"IfDealedServiceFee", "IfNDealedInsuranceFee", "IfNDealedServiceFee", "IfDealedPictureFee", "IfNDealedPictureFee", "FrameFee", "FireFee", "IdentifyFee"
 										],
 									"NONEMPTY_ATTR":
@@ -45,8 +45,10 @@ INVALID_KEY = ""
 Const			= {	"STATICTEXTNAME":												"委託方",
 							"STATICTEXTCOUNTRY":										"國籍",
 							"STATICTEXTCARDID":											"證件號碼",
+							"STATICTEXTCONTRACTDATE":								"合約日期",
 							"STATICTEXTCONTRACTID":									"合約編號",
 							"STATICTEXTEL":													"電話",
+							"STATICTEXTCELLPHONE":									"手機",
 							"STATICTEXFAX":													"傳真",
 							"STATICTEXTADDRESS":										"詳細地址",
 							"STATICTEXTBANKNAME":										"開戶銀行",
@@ -78,6 +80,7 @@ Const			= {	"STATICTEXTNAME":												"委託方",
 							"STATICTEXTITEMNUM":										"數量",
 							"STATICTEXTSPEC":												"規格(cm)",
 							"STATICTEXTRESERVEPRICE":								"保留價(NTD)",
+							"STATICTEXTRESERVEPRICEPOST":						"萬",
 							"STATICTEXTREMAIN":											"保存現狀",
 							"STATICTEXTITEMPS":											"備註",
 							"STATICTEXTLOTNO":											"拍品編號",
@@ -104,12 +107,12 @@ Const			= {	"STATICTEXTNAME":												"委託方",
 							"WARNING":															"警告",
 							"ERRMSG_NAME_REPEAT":										u"不可有重複的名稱",
 							"ADD_DEALER_SUCCESS":										u"成功新增了賣家[%s]",
-							"ADD_ITEM_SUCCESS":										u"成功新增了拍品[%s]",
+							"ADD_ITEM_SUCCESS":											u"成功新增了拍品[%s]",
 							"NO_SELECTED_BIDDER":										"請選擇一個買家",
 							"NO_SELECTED_ITEM":											"請選擇一個拍品",
-							"FIX_DATA_DONE":											u"已成功修改[%s]的資料",
+							"FIX_DATA_DONE":												u"已成功修改[%s]的資料",
 							"NO_DEALER_DATA":												"查無買家資料!! ID = %d",
-							"DEL_DATA_SUCCESS":										u"成功刪除了[%s]",
+							"DEL_DATA_SUCCESS":											u"成功刪除了[%s]",
 							"WIN_TITLE_TEXT":												"台灣世家拍賣-賣家資料建檔系統",
 							"SAVE_FILE_SUCCESS":										"資料檔已儲存",
 							"MAX_DIGIT_NOW":												"目前牌號最大位數為%d位",
@@ -142,8 +145,10 @@ class MyBackground( model.Background ):
 		com.StaticTextName.text											= Const[ "STATICTEXTNAME" ]
 		com.StaticTextCountry.text									= Const[ "STATICTEXTCOUNTRY" ]
 		com.StaticTextCardID.text										= Const[ "STATICTEXTCARDID" ]
+		com.StaticTextContractDate.text							= Const[ "STATICTEXTCONTRACTDATE" ]
 		com.StaticTextContractID.text								= Const[ "STATICTEXTCONTRACTID" ]
 		com.StaticTextTel.text											= Const[ "STATICTEXTEL" ]
+		com.StaticTextCellPhone.text								= Const[ "STATICTEXTCELLPHONE" ]
 		com.StaticTextFax.text											= Const[ "STATICTEXFAX" ]
 		com.StaticTextAddress.text									= Const[ "STATICTEXTADDRESS" ]
 		com.StaticTextBankName.text									= Const[ "STATICTEXTBANKNAME" ]
@@ -182,6 +187,7 @@ class MyBackground( model.Background ):
 		com.StaticTextItemNum.text									= Const[ "STATICTEXTITEMNUM" ]
 		com.StaticTextSpec.text											= Const[ "STATICTEXTSPEC" ]
 		com.StaticTextReservePrice.text							= Const[ "STATICTEXTRESERVEPRICE" ]
+		com.StaticTextReservePricePost.text					= Const[ "STATICTEXTRESERVEPRICEPOST" ]
 		com.StaticTextRemain.text										= Const[ "STATICTEXTREMAIN" ]
 		com.StaticTextItemPS.text										= Const[ "STATICTEXTITEMPS" ]
 		com.StaticTextLotNO.text										= Const[ "STATICTEXTLOTNO" ]
@@ -215,6 +221,8 @@ class MyBackground( model.Background ):
 		 
 		# 取得資料庫相關資料表
 		self.__mongo_db = self.__mongo_client.bidding_data
+		self.__file_store = gridfs.GridFS( self.__mongo_db )
+		
 		self.__dbtable_main					= self.__mongo_db.dealer_table
 		self.__dbtable_item					= self.__mongo_db.dealer_item_table
 		self.__dbtable_item_serial	= self.__mongo_db.dealer_item_serail
@@ -377,12 +385,19 @@ class MyBackground( model.Background ):
 		if key not in self.__get_cache_data( "Item", "Main" ):
 			self.__add_msg( Const[ "NO_SELECTED_ITEM" ] )
 			return
-			
+		
+		# 取得圖片ID 等等有可能要刪掉
+		index, dict_data_ori = self.__get_cache_data( "Item", "Main" )[ key ]
+		
 		# 如果無法取得資料 下面的function會送系統訊息
 		dict_data = self.__gen_item_data_by_text_field( key_src, key )
 		if not dict_data:
 			return
 		
+		# 已取得 資料可刪
+		for pic_attr in ITEM_COM_DATA.iterkeys():
+			self.__file_store.delete( dict_data_ori[ pic_attr ] )
+			
 		# 如果沒改Key 那就是單純改資料
 		search_key = { ITEM_KEY: key }
 		self.__dbtable_item.update( search_key, dict_data )
@@ -439,6 +454,10 @@ class MyBackground( model.Background ):
 		index, dict_data = cache_data[ key ]
 		mag_arg = self.__gen_item_title( dict_data );
 		
+		# 先刪除圖片資料
+		for pic_attr in ITEM_COM_DATA.iterkeys():
+			self.__file_store.delete( dict_data[ pic_attr ] )
+		
 		# 刪除拍品資料
 		self.__dbtable_item.remove( { ITEM_KEY: key } )
 		
@@ -462,11 +481,16 @@ class MyBackground( model.Background ):
 		index, dict_data = cache_data[ key ]
 		attr_list = ATTR_MAP[ "Dealer" ][ "ALL_ATTR" ]
 		for attr in attr_list:
-			getattr( self.components, "TextField" + attr ).text = dict_data[ attr ]
+			value = dict_data[ attr ] if attr in dict_data else ""
+			getattr( self.components, "TextField" + attr ).text = value
 			
 		self.__gen_item_list_ui_by_data( key )
 		self.on_ListItem_select()
 	
+	# 取得暫存圖檔檔名
+	def __get_temp_bmp_fname( self, keyword ):
+		return "tmp_pic_%s" % keyword
+		
 	# 按下拍品列表資料
 	def on_ListItem_select( self, event = None ):
 		index, key = self.__get_key_by_selection( "Item" )
@@ -484,7 +508,17 @@ class MyBackground( model.Background ):
 			
 		# 圖片部分
 		for pic_attr in ITEM_COM_DATA.iterkeys():
-			self.__set_image( pic_attr, dict_data[ pic_attr ] if pic_attr in dict_data else "", 0 )
+			if pic_attr in dict_data and dict_data[ pic_attr ]:
+				fname = "tmp_pic_%s.jpg" % pic_attr
+				file_obj = open( fname, "wb" )
+				
+				file_obj_load = self.__file_store.get( dict_data[ pic_attr ] )
+				file_obj.write( file_obj_load.read() )
+				file_obj.close()
+			else:
+				fname = ""
+			
+			self.__set_image( pic_attr, fname, 0 )
 			
 		# 序號
 		self.__show_serail( dict_data )
@@ -613,7 +647,17 @@ class MyBackground( model.Background ):
 		# 圖示路徑
 		for attr, com_name in ITEM_COM_DATA.iteritems():
 			canvas = getattr( com, com_name )
-			dict_data[ attr ] = canvas.path if hasattr( canvas, "path" ) else ""
+			
+			if hasattr( canvas, "path" ):
+				try:
+					file_obj = open( canvas.path, "rb" )
+					file_id = self.__file_store.put( file_obj )
+				except:
+					file_id = None
+			else:
+				file_id = None
+			
+			dict_data[ attr ] = file_id
 		
 		# 如果有填拍品編號
 		lot_number = dict_data[ "LotNO" ]
@@ -665,18 +709,6 @@ class MyBackground( model.Background ):
 			
 		return index
 		
-	# 讀取圖片
-	def __load_image( self, path ):
-		if path == "":
-			return None
-		
-		try:
-			bmp = graphic.Bitmap( path )
-		except:
-			return None
-			
-		return bmp
-		
 	# 設定圖片顯示
 	def __set_image( self, attr_name, path, need_msg ):
 		com_name = ITEM_COM_DATA[ attr_name ]
@@ -684,19 +716,20 @@ class MyBackground( model.Background ):
 		canvas = getattr( com, com_name )
 		
 		canvas.visible = False
-		canvas.path = ""
-		bmp = self.__load_image( path )
-		if not bmp:
+		
+		try:
+			canvas.visible = True
+			canvas.clear()
+			canvas.autoRefresh = 1
+			
+			bmp_obj = graphic.Bitmap( path )
+			canvas.drawBitmapScaled( bmp_obj, ( 0, 0 ), canvas.size )
+			
+			canvas.path = path
+		
+		except:
 			if need_msg:
 				self.__add_msg( Const[ "ERRMSG_INVALID_IMG_FILE" ], 1 )
-			return
-		
-		canvas.visible = True
-		canvas.clear()
-		canvas.autoRefresh = 1
-		canvas.drawBitmapScaled( bmp, ( 0, 0 ), canvas.size )
-		
-		canvas.path = path
 	
 	# 按下 設定圖片 按鈕
 	def __set_image_path( self, attr_name ):
@@ -704,7 +737,8 @@ class MyBackground( model.Background ):
 		if not result.paths:
 			return
 		
-		self.__set_image( attr_name, result.paths[ 0 ], 1 )
+		path = result.paths[ 0 ]
+		self.__set_image( attr_name, path, 1 )
 	
 	def on_ButtonSetPackImg_mouseClick( self, event ):
 		self.__set_image_path( "PackImg" )
