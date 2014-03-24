@@ -131,6 +131,7 @@
             // 
             // checkAllCheckBox
             // 
+            this.checkAllCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkAllCheckBox.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkAllCheckBox.Checked = true;
             this.checkAllCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;

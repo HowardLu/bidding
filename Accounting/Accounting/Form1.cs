@@ -28,6 +28,7 @@ namespace Accounting
         private Internet<BidderEntity> m_beInternet;
         private bool m_isSuperUser = false;
         private _Application m_excelApp = null;
+        private int m_unit = 10000;
         #endregion
 
         #region Properties
@@ -59,6 +60,7 @@ namespace Accounting
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 DataGridViewToXls(sfd.FileName); // Here dataGridview1 is your grid view name 
+                MessageBox.Show(sfd.FileName + "已儲存!");
             }
         }
 
@@ -113,7 +115,7 @@ namespace Accounting
                         int newBuyerServiceCharge = Utility.ParseToInt(bscCell.Value.ToString(), false);
                         int finalPrice = GetFinalPrice(hammerPrice, newBuyerServiceCharge);
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.BuyerServiceCharge, newBuyerServiceCharge);
-                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.FinalPrice, finalPrice);
+                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.FinalPrice, finalPrice * m_unit);
                         fpCell.Value = finalPrice;
                     }
                     break;
@@ -126,7 +128,8 @@ namespace Accounting
                 case "保證金繳納金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
-                        m_beInternet.UpdateField<string, string>(be => be.BidderID, bidderId, be => be.GuaranteeCost, Utility.ParseToInt(cell.Value.ToString(), false).ToString());
+                        int guaranteeCost = Utility.ParseToInt(cell.Value.ToString(), false) * m_unit;
+                        m_beInternet.UpdateField<string, string>(be => be.BidderID, bidderId, be => be.GuaranteeCost, guaranteeCost.ToString());
                     }
                     break;
                 case "保證金退還":
@@ -138,7 +141,8 @@ namespace Accounting
                 case "保證金退還金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
-                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnGuaranteeNumber, Utility.ParseToInt(cell.Value.ToString(), false));
+                        int returnGuaranteeNumber = Utility.ParseToInt(cell.Value.ToString(), false) * m_unit;
+                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnGuaranteeNumber, returnGuaranteeNumber);
                     }
                     break;
                 case "付款方式":
@@ -439,19 +443,28 @@ namespace Accounting
                 }
             }
 
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
         }
 
         private void AddDataRowToDataGridView(ref AuctionEntity auction, ref BidderEntity bidder, ref DealerItemEntity dealerItem)
         {
+            int hammerPrice = auction.HammerPrice / m_unit;
+            int buyerServiceCharge = auction.BuyerServiceCharge / m_unit;
+            int finalPrice = auction.FinalPrice / m_unit;
+            int guaranteeCost = int.Parse(bidder.GuaranteeCost) / m_unit;
+            int returnGuaranteeNumber = auction.ReturnGuaranteeNumber / m_unit;
+            int reservePrice = 0;//int.Parse(dealerItem.ReservePrice);
+            reservePrice = int.TryParse(dealerItem.ReservePrice, out reservePrice) ? reservePrice / m_unit : 0;
+            int sellerAccountPayable = auction.SellerAccountPayable / m_unit;
+
             if (m_isSuperUser)
             {
                 dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, bidder.Name,
                     dealerItem.Remain, dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState),
-                    auction.HammerPrice, auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
-                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
+                    hammerPrice, buyerServiceCharge, finalPrice, bidder.GuaranteeType, guaranteeCost,
+                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), returnGuaranteeNumber,
                     Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
-                    dealerItem.ReservePrice, auction.SellerAccountPayable);
+                    reservePrice, sellerAccountPayable);
 
                 if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice, true))
                 {
@@ -461,9 +474,9 @@ namespace Accounting
             else
             {
                 dataGridView1.Rows.Add(dealerItem._id, auction.AuctionId, auction.Artwork, dealerItem.Spec, auction.BidderNumber, bidder.Name,
-                    dealerItem.Remain, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), auction.HammerPrice,
-                    auction.BuyerServiceCharge, auction.FinalPrice, bidder.GuaranteeType, bidder.GuaranteeCost,
-                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), auction.ReturnGuaranteeNumber,
+                    dealerItem.Remain, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState), hammerPrice,
+                    buyerServiceCharge, finalPrice, bidder.GuaranteeType, guaranteeCost,
+                    Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), returnGuaranteeNumber,
                     Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState));
             }
         }
@@ -497,16 +510,68 @@ namespace Accounting
             fs.Close();
         }
 
+        private DataGridView CopyDataGridView(DataGridView dgv_org)
+        {
+            DataGridView dgv_copy = new DataGridView();
+            /*try
+            {*/
+            if (dgv_copy.Columns.Count == 0)
+            {
+                foreach (DataGridViewColumn dgvc in dgv_org.Columns)
+                {
+                    DataGridViewColumn dgvcTemp = new DataGridViewColumn();
+                    dgvcTemp = dgvc.Clone() as DataGridViewColumn;
+                    dgvcTemp.CellTemplate = dgvc.CellTemplate;
+                    dgv_copy.Columns.Add(dgvcTemp);
+                }
+            }
+
+            DataGridViewRow row = new DataGridViewRow();
+
+            for (int i = 0; i < dgv_org.Rows.Count; i++)
+            {
+                row = (DataGridViewRow)dgv_org.Rows[i].Clone();
+                int intColIndex = 0;
+                foreach (DataGridViewCell cell in dgv_org.Rows[i].Cells)
+                {
+                    row.Cells[intColIndex].Value = cell.Value;
+                    intColIndex++;
+                }
+                dgv_copy.Rows.Add(row);
+            }
+            dgv_copy.AllowUserToAddRows = false;
+            dgv_copy.Refresh();
+
+            /*}
+            catch (Exception ex)
+            {
+                MessageBox.Show("Copy DataGridViw " + ex.ToString());
+            }*/
+            return dgv_copy;
+        }
+
         private void DataGridViewToXls(string filename)
         {
             if (m_excelApp == null)
                 m_excelApp = new Microsoft.Office.Interop.Excel.Application();
             Workbook workbook = m_excelApp.Workbooks.Add();
             Worksheet sheet = workbook.Worksheets.get_Item(1);
-            DataGridView dgv = dataGridView1;
+            DataGridView dgv = CopyDataGridView(this.dataGridView1);
+
+            for (int i = dgv.ColumnCount - 1; i > -1; i--)
+            {
+                if (!dgv.Columns[i].Visible)
+                {
+                    dgv.Columns.RemoveAt(i);
+                }
+            }
 
             for (int i = 0; i < dgv.ColumnCount; i++)
+            {
+                if (!dgv.Columns[i].Visible)
+                    continue;
                 sheet.Cells[1, i + 1] = dgv.Columns[i].HeaderText;
+            }
 
             sheet.get_Range("A1").EntireRow.Font.Bold = true;
             //sheet.get_Range("A1").EntireRow.Interior.Color = System.Drawing.ColorTranslator.ToWin32(Color.LightCyan);
@@ -515,6 +580,8 @@ namespace Accounting
             {
                 for (int j = 0; j < dgv.ColumnCount; j++)
                 {
+                    if (!dgv.Columns[i].Visible)
+                        continue;
                     object value = dgv.Rows[i].Cells[j].Value;
                     sheet.Cells[i + 2, j + 1] = value == null ? "" : value.ToString();
                 }
@@ -531,6 +598,10 @@ namespace Accounting
             System.Runtime.InteropServices.Marshal.ReleaseComObject(sheet);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(workbook);
             System.Runtime.InteropServices.Marshal.ReleaseComObject(m_excelApp);
+            dgv = null;
+            sheet = null;
+            workbook = null;
+            m_excelApp = null;
         }
 
         private int GetFinalPrice(int hammerPrice, int newBuyerServiceCharge)
