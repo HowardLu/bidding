@@ -11,20 +11,28 @@ import pymongo, sys, time, gridfs
 ATTR_MAP = {	# 賣家屬性
 							"Dealer":
 								{	"ALL_ATTR":
-										[	"Name", "Country", "CardID", "ContractDate", "ContractID", "Tel", "CellPhone", "Fax", "Address", "BankName", "BankAcc", "PostID", "IfDealedInsuranceFee",
+										(	"Name", "Country", "CardID", "ContractDate", "ContractID", "Tel", "CellPhone", "Fax", "Address", "BankName", "BankAcc", "PostID", "IfDealedInsuranceFee",
 											"IfDealedServiceFee", "IfNDealedInsuranceFee", "IfNDealedServiceFee", "IfDealedPictureFee", "IfNDealedPictureFee", "FrameFee", "FireFee", "IdentifyFee"
-										],
+										),
 									"NONEMPTY_ATTR":
-										[ "Name", "ContractID", "Tel", "Country", "CardID"
-										],
+										( "Name", "ContractID", "Tel", "Country", "CardID"
+										),
+									"DIGIT_ATTR":
+										( "IfDealedInsuranceFee", "IfDealedServiceFee", "IfNDealedInsuranceFee", "IfNDealedServiceFee", "IfDealedPictureFee", "IfNDealedPictureFee", "FrameFee", "FireFee", "IdentifyFee"
+										),
 									"KEY_ATTR": "Name", "ListCom": "ListDealer", "CacheData": { "Main": {}, "Index": {} }
 								},
 							# 賣家商品屬性
 							"Item":
 								{	"ALL_ATTR":
-										[ "ItemName", "ItemNum", "Spec", "ReservePrice", "Remain", "ItemPS", "LotNO" ],
+										( "ItemName", "ItemNum", "Spec", "ReservePrice", "Remain", "ItemPS", "LotNO"
+										),
 									"NONEMPTY_ATTR":
-										[ "ItemName" ],
+										( "ItemName"
+										),
+									"DIGIT_ATTR":
+										( "ItemNum", "ReservePrice"
+										),
 									"KEY_ATTR": "_id", "ListCom": "ListItem", "CacheData": { "Main": {}, "Index": {} }
 								},
 						}
@@ -99,6 +107,7 @@ Const			= {	"STATICTEXTNAME":												"委託方",
 							"OPEN_FILE_SUCCESS":										u"成功匯入資料檔，路徑為%s",
 							"OPEN_FILE_NAME":												u"資料檔<%s>",
 							"TEXT_CHK_FAIL_EMPTY":									u"[%s]不可為空",
+							"TEXT_CHK_FAIL_MUST_DIGIT":							u"[%s]必須為數字",
 							"TEXT_LOT_NO_NOT_EXIST":								u"拍品編號[%s]不存在",
 							"TEXT_LOT_NO_REPEATED":									u"拍品編號[%s]已重複",
 							"BIDDER_ID_LEN_EXCEEDED":								"牌號位數過大，請修正",
@@ -131,6 +140,7 @@ Const			= {	"STATICTEXTNAME":												"委託方",
 							"ERRMSG_DB_CNCT_FAIL":									u"無法連線到資料庫( %s, %d )",
 							"ERRMSG_DB_CNCT_OK":										u"成功連線到資料庫( %s, %d )",
 							"ERRMSG_INVALID_IMG_FILE":							u"這不是一張有效的圖片檔",
+							"ERRMSG_IMG_ID_NOT_EXIST":							u"圖片資料庫ID[%s]不存在",
 						}
 
 # 視窗表單物件
@@ -508,14 +518,21 @@ class MyBackground( model.Background ):
 			
 		# 圖片部分
 		for pic_attr in ITEM_COM_DATA.iterkeys():
+			pic_loaded = False
 			if pic_attr in dict_data and dict_data[ pic_attr ]:
 				fname = "tmp_pic_%s.jpg" % pic_attr
 				file_obj = open( fname, "wb" )
 				
-				file_obj_load = self.__file_store.get( dict_data[ pic_attr ] )
-				file_obj.write( file_obj_load.read() )
-				file_obj.close()
-			else:
+				file_id = dict_data[ pic_attr ]
+				if self.__file_store.exists( file_id ):
+					file_obj_load = self.__file_store.get( dict_data[ pic_attr ] )
+					file_obj.write( file_obj_load.read() )
+					file_obj.close()
+					pic_loaded = True
+				else:
+					self.__add_msg( Const[ "ERRMSG_IMG_ID_NOT_EXIST" ] % file_id )
+			
+			if not pic_loaded:
 				fname = ""
 			
 			self.__set_image( pic_attr, fname, 0 )
@@ -539,21 +556,51 @@ class MyBackground( model.Background ):
 		
 		return index, self.__get_key_by_index( index, type )
 	
-	# 由界面的文字輸入格 產生買家資料
+	# 數字判定
+	def __str_digit_test( self, chk_text ):
+		try:
+			int( chk_text )
+			return_val = True
+		except:
+			# 空字串幫你強轉 貼心ㄅ
+			if chk_text == "":
+				chk_text = "0"
+				return_val = True
+			else:
+				return_val = False
+		
+		return return_val, chk_text
+		
+	# 由界面的文字輸入格 產生賣家資料
 	def __gen_data_by_text_field( self ):
 		# 作基本資料檢測
 		com = self.components
 		
-		# 部分資料不可為空
 		dict_data = {}
-		attr_list = ATTR_MAP[ "Dealer" ][ "ALL_ATTR" ]
-		ne_attr_list = ATTR_MAP[ "Dealer" ][ "NONEMPTY_ATTR" ]
+		dealer_map = ATTR_MAP[ "Dealer" ]
+		
+		attr_list = dealer_map[ "ALL_ATTR" ]
+		ne_attr_list = dealer_map[ "NONEMPTY_ATTR" ]
+		dig_attr_list = dealer_map[ "DIGIT_ATTR" ]
 		
 		for attr in attr_list:
-			chk_text = getattr( com, "TextField" + attr ).text
+			text_com = getattr( com, "TextField" + attr )
+			chk_text = text_com.text
+			attr_name = getattr( com, "StaticText" + attr ).text
+			
+			# 部分資料不可為空
 			if attr in ne_attr_list and not len( chk_text ):
-				self.__add_msg( Const[ "TEXT_CHK_FAIL_EMPTY" ] % getattr( com, "StaticText" + attr ).text )
+				self.__add_msg( Const[ "TEXT_CHK_FAIL_EMPTY" ] % attr_name )
 				return None
+			
+			# 部分資料必須是數字
+			if attr in dig_attr_list:
+				return_val, chk_text = self.__str_digit_test( chk_text )
+				if return_val:
+					text_com.text = chk_text
+				else:
+					self.__add_msg( Const[ "TEXT_CHK_FAIL_MUST_DIGIT" ] % attr_name )
+					return None
 			
 			dict_data[ attr ] = chk_text
 		
@@ -629,15 +676,30 @@ class MyBackground( model.Background ):
 			self.__add_msg( Const[ "NO_DEALER_DATA" ] % key )
 			return None
 		
-		# 部分資料不可為空
 		dict_data = {}
-		attr_list = ATTR_MAP[ "Item" ][ "ALL_ATTR" ]
-		ne_attr_list = ATTR_MAP[ "Item" ][ "NONEMPTY_ATTR" ]
+		item_map = ATTR_MAP[ "Item" ]
+		attr_list = item_map[ "ALL_ATTR" ]
+		ne_attr_list = item_map[ "NONEMPTY_ATTR" ]
+		dig_attr_list = item_map[ "DIGIT_ATTR" ]
+		
 		for attr in attr_list:
-			chk_text = getattr( com, "TextField" + attr ).text
+			text_com = getattr( com, "TextField" + attr )
+			chk_text = text_com.text
+			attr_name = getattr( com, "StaticText" + attr ).text
+			
+			# 部分資料不可為空
 			if attr in ne_attr_list and not len( chk_text ):
-				self.__add_msg( Const[ "TEXT_CHK_FAIL_EMPTY" ] % getattr( com, "StaticText" + attr ).text )
+				self.__add_msg( Const[ "TEXT_CHK_FAIL_EMPTY" ] % attr_name )
 				return None
+			
+			# 部分資料必須是數字
+			if attr in dig_attr_list:
+				return_val, chk_text = self.__str_digit_test( chk_text )
+				if return_val:
+					text_com.text = chk_text
+				else:
+					self.__add_msg( Const[ "TEXT_CHK_FAIL_MUST_DIGIT" ] % attr_name )
+					return None
 			
 			dict_data[ attr ] = chk_text
 		
