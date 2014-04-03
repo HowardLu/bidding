@@ -41,7 +41,6 @@
             this.nowPriceTextBox = new System.Windows.Forms.TextBox();
             this.increaseByLevelBtn = new System.Windows.Forms.Button();
             this.prevsBtn = new System.Windows.Forms.Button();
-            this.nextBtn = new System.Windows.Forms.Button();
             this.resetBtn = new System.Windows.Forms.Button();
             this.rateLabel = new System.Windows.Forms.Label();
             this.rmbLabel = new System.Windows.Forms.Label();
@@ -57,6 +56,9 @@
             this.winBidderLabel = new System.Windows.Forms.Label();
             this.confirmBidderButton = new System.Windows.Forms.Button();
             this.clearBidderButton = new System.Windows.Forms.Button();
+            this.playButton = new System.Windows.Forms.Button();
+            this.stopButton = new System.Windows.Forms.Button();
+            this.nextBtn = new System.Windows.Forms.Button();
             this.auctionPictureBox = new System.Windows.Forms.PictureBox();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).BeginInit();
@@ -184,26 +186,22 @@
             // 
             // prevsBtn
             // 
-            this.prevsBtn.BackColor = System.Drawing.Color.White;
+            this.prevsBtn.BackColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.prevsBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.prevsBtn.FlatAppearance.BorderSize = 0;
+            this.prevsBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.prevsBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.prevsBtn.Location = new System.Drawing.Point(463, 367);
+            this.prevsBtn.ForeColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Left;
+            this.prevsBtn.Location = new System.Drawing.Point(491, 367);
             this.prevsBtn.Name = "prevsBtn";
-            this.prevsBtn.Size = new System.Drawing.Size(60, 40);
+            this.prevsBtn.Size = new System.Drawing.Size(32, 32);
             this.prevsBtn.TabIndex = 17;
-            this.prevsBtn.Text = "<<";
             this.prevsBtn.UseVisualStyleBackColor = false;
             this.prevsBtn.Click += new System.EventHandler(this.prevsBtn_Click);
-            // 
-            // nextBtn
-            // 
-            this.nextBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.nextBtn.Location = new System.Drawing.Point(929, 367);
-            this.nextBtn.Name = "nextBtn";
-            this.nextBtn.Size = new System.Drawing.Size(60, 40);
-            this.nextBtn.TabIndex = 18;
-            this.nextBtn.Text = ">>";
-            this.nextBtn.UseVisualStyleBackColor = true;
-            this.nextBtn.Click += new System.EventHandler(this.nextBtn_Click);
             // 
             // resetBtn
             // 
@@ -367,6 +365,57 @@
             this.clearBidderButton.UseVisualStyleBackColor = true;
             this.clearBidderButton.Click += new System.EventHandler(this.clearBidderButton_Click);
             // 
+            // playButton
+            // 
+            this.playButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.playButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.playButton.FlatAppearance.BorderSize = 0;
+            this.playButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.playButton.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Play_Green;
+            this.playButton.Location = new System.Drawing.Point(597, 552);
+            this.playButton.Name = "playButton";
+            this.playButton.Size = new System.Drawing.Size(32, 32);
+            this.playButton.TabIndex = 35;
+            this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.Click += new System.EventHandler(this.playButton_Click);
+            // 
+            // stopButton
+            // 
+            this.stopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.stopButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.stopButton.FlatAppearance.BorderSize = 0;
+            this.stopButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.stopButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.stopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stopButton.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Stop;
+            this.stopButton.Location = new System.Drawing.Point(644, 552);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(32, 32);
+            this.stopButton.TabIndex = 36;
+            this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
+            // nextBtn
+            // 
+            this.nextBtn.BackColor = System.Drawing.Color.Transparent;
+            this.nextBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.nextBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.nextBtn.FlatAppearance.BorderSize = 0;
+            this.nextBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.nextBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.nextBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.nextBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.nextBtn.ForeColor = System.Drawing.Color.Transparent;
+            this.nextBtn.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Forward;
+            this.nextBtn.Location = new System.Drawing.Point(929, 367);
+            this.nextBtn.Name = "nextBtn";
+            this.nextBtn.Size = new System.Drawing.Size(32, 32);
+            this.nextBtn.TabIndex = 18;
+            this.nextBtn.UseVisualStyleBackColor = false;
+            this.nextBtn.Click += new System.EventHandler(this.nextBtn_Click);
+            // 
             // auctionPictureBox
             // 
             this.auctionPictureBox.Location = new System.Drawing.Point(543, 216);
@@ -389,6 +438,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1016, 730);
+            this.Controls.Add(this.stopButton);
+            this.Controls.Add(this.playButton);
             this.Controls.Add(this.clearBidderButton);
             this.Controls.Add(this.confirmBidderButton);
             this.Controls.Add(this.winBidderTextBox);
@@ -465,6 +516,8 @@
         private System.Windows.Forms.Label winBidderLabel;
         private System.Windows.Forms.Button confirmBidderButton;
         private System.Windows.Forms.Button clearBidderButton;
+        private System.Windows.Forms.Button playButton;
+        private System.Windows.Forms.Button stopButton;
     }
 }
 

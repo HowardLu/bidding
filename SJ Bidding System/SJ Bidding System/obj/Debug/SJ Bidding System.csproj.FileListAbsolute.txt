@@ -86,3 +86,9 @@ E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Contr
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\Interop.WMPLib.dll
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\AxInterop.WMPLib.dll
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.csproj.ResolveComReference.cache
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.PlayerForm.resources
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Interop.WMPLib.dll
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\AxInterop.WMPLib.dll

@@ -29,6 +29,7 @@ namespace SJ_Bidding_System
         //private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
         private Internet<BidderEntity> m_beInternet;
+        private PlayerForm m_playerForm;
         #endregion
 
         #region Properties
@@ -120,6 +121,7 @@ namespace SJ_Bidding_System
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
+            ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
         }
 
         /// <summary>
@@ -139,6 +141,7 @@ namespace SJ_Bidding_System
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
+            ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
         }
 
         /// <summary>
@@ -468,6 +471,16 @@ namespace SJ_Bidding_System
             winBidderTextBox.BackColor = Color.Black;
             ClearBidder(m_auctionIdNow);
         }
+
+        private void playButton_Click(object sender, EventArgs e)
+        {
+            ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
+        }
+
+        private void stopButton_Click(object sender, EventArgs e)
+        {
+            ClosePlayerForm();
+        }
         #endregion
 
         #region Public Methods
@@ -511,7 +524,7 @@ namespace SJ_Bidding_System
         private void DoLoadAuctionPhoto(int id)
         {
             if (m_auctions[id].photo == null)
-                m_auctions[id].photo = Utility.OpenBitmap(m_auctions[id].photofilePath);
+                m_auctions[id].photo = Utility.OpenBitmap(m_auctions[id].photoFilePath);
             Thread t = new Thread(new ParameterizedThreadStart(this.LoadAuctionPhoto));
             t.IsBackground = true;
             t.Start(id);
@@ -528,12 +541,12 @@ namespace SJ_Bidding_System
                 if (min < max && (i >= min && i <= max))
                 {
                     if (auction.photo == null)
-                        auction.photo = Utility.OpenBitmap(auction.photofilePath);
+                        auction.photo = Utility.OpenBitmap(auction.photoFilePath);
                 }
                 else if (min > max && (i >= min || i <= max))
                 {
                     if (auction.photo == null)
-                        auction.photo = Utility.OpenBitmap(auction.photofilePath);
+                        auction.photo = Utility.OpenBitmap(auction.photoFilePath);
                 }
                 else
                 {
@@ -797,6 +810,34 @@ namespace SJ_Bidding_System
         {
             m_auctions[auctionId].winBidderNo = 0;
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, m_auctions[auctionId].lot, ae => ae.BidderNumber, "");
+        }
+
+        private void ShowPlayerForm(string videoPath)
+        {
+            ClosePlayerForm();
+
+            if (videoPath == "")
+                return;
+
+            m_playerForm = new PlayerForm(videoPath);
+            Screen otherScreen = Screen.FromControl(this);
+            if (Screen.AllScreens.Length > 1)
+            {
+                otherScreen = Screen.AllScreens[1];
+            }
+            m_playerForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
+            m_playerForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
+            m_playerForm.WindowState = FormWindowState.Maximized;
+            m_playerForm.Show();
+        }
+
+        private void ClosePlayerForm()
+        {
+            if (m_playerForm != null)
+            {
+                m_playerForm.CloseForm();
+                m_playerForm = null;
+            }
         }
         #endregion
     }
