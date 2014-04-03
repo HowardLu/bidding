@@ -29,13 +29,15 @@ namespace InternetLibrary
         public int InitialPrice { get; set; }
         public int NowPrice { get; set; }
         public string Auctioneer { get; set; }
+        public int CheckoutNumber { get; set; }
+        public string CheckoutTime { get; set; }
 
         public AuctionEntity()
         {
             Id = ObjectId.Empty;
-            AuctionId = BidderNumber = StockState = PhotoUrl = Artist = Artwork = Auctioneer = "";
+            AuctionId = BidderNumber = StockState = PhotoUrl = Artist = Artwork = Auctioneer = CheckoutTime = "";
             ReturnState = HammerPrice = BuyerServiceCharge = FinalPrice = ReturnGuaranteeState = ReturnGuaranteeNumber = PayWayState =
-                SellerServiceCharge = SellerAccountPayable = InitialPrice = NowPrice = 0;
+                SellerServiceCharge = SellerAccountPayable = InitialPrice = NowPrice = CheckoutNumber = 0;
         }
     }
 
@@ -147,7 +149,7 @@ namespace InternetLibrary
         Count
     }
 
-    public class AuctionEntityTW
+    /*public class AuctionEntityTW
     {
         public ObjectId Id { get; set; }
         public string 拍品編號 { get; set; }
@@ -168,7 +170,7 @@ namespace InternetLibrary
         public int 賣家服務及保險費 { get; set; }
         public int 保留價 { get; set; }
         public int 應付賣家金額 { get; set; }
-    }
+    }*/
 
     public class Internet<TEntity>
     {
@@ -225,6 +227,7 @@ namespace InternetLibrary
             catch (MongoConnectionException e)
             {
                 Console.WriteLine(m_client.GetServer().State.ToString() + "\n" + e.ToString());
+                System.Windows.Forms.MessageBox.Show("連線失敗!\n\n" + e.ToString());
                 return false;
             }
             return true;
@@ -281,6 +284,13 @@ namespace InternetLibrary
             IMongoQuery query = Query<TEntity>.EQ(expression, value);
             TEntity entity = m_collection.FindOne(query);
             return entity;
+        }
+
+        public TEntity Max<TKey>(Expression<Func<TEntity, TKey>> keyExpression, TKey key, string fieldName)
+        {
+            IMongoQuery query = Query<TEntity>.EQ(keyExpression, key);
+            MongoCursor<TEntity> entity = m_collection.Find(query).SetSortOrder(SortBy.Descending(fieldName));
+            return entity.First<TEntity>();
         }
         #endregion
 

@@ -183,16 +183,14 @@ namespace UtilityLibrary
             return filePath.Remove(slashPos + 1);
         }
 
-        public static string GetFileName(string filePath)
+        public static string GetFileName(string filePath, bool hasExtension)
         {
             int slashPos = filePath.LastIndexOf(@"/") == -1 ? filePath.LastIndexOf(@"\") : filePath.LastIndexOf(@"/");
-            return filePath.Remove(0, slashPos + 1);
-        }
-
-        public static string GetFileNameNoExtension(string filePath)
-        {
-            string fileName = GetFileName(filePath);
-            return fileName.Remove(fileName.LastIndexOf('.'));
+            string fileName = filePath.Remove(0, slashPos + 1);
+            if (hasExtension)
+                return fileName;
+            else
+                return fileName.Remove(fileName.LastIndexOf('.'));
         }
 
         public static string GetFileExtension(string filePath)
@@ -273,6 +271,7 @@ namespace UtilityLibrary
         public static string serverFN = "server.exe";
         public static string serverDir = @"BidderDataServer\exe";
         public static int unit = 1000;
+        public static string videoFolder = "Video";
         //public static Point displayPos = Point.Empty;
         //public static Size displaySize = Size.Empty;
 

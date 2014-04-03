@@ -20,7 +20,7 @@ namespace Bidding
         public int initialPrice;
         public int nowPrice;
         public Bitmap photo;
-        public string photofilePath;
+        public string photoFilePath;
         public int winBidderNo;
         //public string name;
         public int hammerPrice;
@@ -30,6 +30,9 @@ namespace Bidding
         public _Document paymentDoc;
         public bool isUseCreditCard;
         public string auctioneer;
+        public int checkoutNumber;
+        public string checkoutTime;
+        public string videoPath;
 
         public Auction()
         {
@@ -37,6 +40,9 @@ namespace Bidding
             lot = "";
             paymentDoc = null;
             isUseCreditCard = false;
+            checkoutNumber = 0;
+            checkoutTime = "";
+            videoPath = "";
         }
 
         /// <summary>
@@ -142,17 +148,20 @@ namespace Bidding
             auctions = new List<Auction>();
             List<string> illegalFiles = new List<string>();
             string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
+            Dictionary<string, string> videoPaths = GetVideosFilePaths();
             for (int i = 0; i < filePaths.Length; i++)
             {
                 Auction auction = new Auction();
                 string fp = filePaths[i];
                 if (auction.GetInfoFromDictionary(ref aeDic, fp))
                 {
-                    auction.photofilePath = fp;
+                    auction.photoFilePath = fp;
                     if (auctions.Count < 10)
                         auction.photo = Utility.OpenBitmap(fp);
                     else
                         auction.photo = null;
+                    if (videoPaths.ContainsKey(auction.lot))
+                        auction.videoPath = videoPaths[auction.lot];
                     auctions.Add(auction);
                 }
                 else
@@ -175,6 +184,19 @@ namespace Bidding
         public void ResetPrice()
         {
             this.hammerPrice = this.nowPrice = this.initialPrice;
+        }
+
+        private static Dictionary<string, string> GetVideosFilePaths()
+        {
+            string[] filePaths = Directory.GetFiles(Settings.videoFolder).OrderBy(f => f).ToArray<string>();
+            Dictionary<string, string> videoPaths = new Dictionary<string, string>();
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                string fp = filePaths[i];
+                string fn = Utility.GetFileName(fp, false);
+                videoPaths.Add(fn, fp);
+            }
+            return videoPaths;
         }
     }
 
@@ -215,7 +237,7 @@ namespace Bidding
         public PayGuarantee payGuaranteeState;
         public int payGuaranteeNum;
 
-        public void SetBidder(BidderEntity bidder, ref List<AuctionEntity> auctions)
+        public void SetBidder(BidderEntity bidder, ref List<AuctionEntity> auctionEntities)
         {
             this.name = bidder.Name;   //ignore first string of id.
             this.no = bidder.BidderID_int;
@@ -228,15 +250,17 @@ namespace Bidding
             this.payGuaranteeState = Utility.ToEnum<PayGuarantee>(bidder.GuaranteeType);
             int guaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost, true);
             this.payGuaranteeNum = guaranteeNum < 0 ? 0 : guaranteeNum;
-            for (int i = 0; i < auctions.Count; i++)
+            for (int i = 0; i < auctionEntities.Count; i++)
             {
-                AuctionEntity ae = auctions[i];
+                AuctionEntity ae = auctionEntities[i];
                 Auction auction = new Auction();
                 auction.lot = ae.AuctionId;
                 auction.artwork = ae.Artwork;
                 auction.hammerPrice = ae.HammerPrice;
                 auction.ComputeChargeAndTotal();
                 auction.auctioneer = ae.Auctioneer;
+                auction.checkoutNumber = ae.CheckoutNumber;
+                auction.checkoutTime = ae.CheckoutTime;
                 this.auctions[auction.lot] = auction;
             }
             MappingAuctions();
@@ -328,16 +352,16 @@ namespace Bidding
     public enum Auctioneer
     {
         S = 0,
-        A,
-        M,
+        /*A,
+        M,*/
         Count
     };
 
     public enum AuctioneerName
     {
         世家 = 0,
-        安德昇,
-        沐春堂,
+        /*安德昇,
+        沐春堂,*/
         Count
     }
 }
