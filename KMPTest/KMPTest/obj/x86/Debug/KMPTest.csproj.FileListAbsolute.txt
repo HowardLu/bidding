@@ -17,3 +17,18 @@ E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\KMP
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\KMPTest\KMPTest\obj\x86\Debug\KMPTest.Properties.Resources.resources
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\KMPTest\KMPTest\obj\x86\Debug\GenerateResource.read.1.tlog
 E:\Documents and Settings\L\My Documents\Visual Studio 2010\Projects\bidding\KMPTest\KMPTest\obj\x86\Debug\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\Interop.WMPLib.dll
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\AxInterop.WMPLib.dll
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\KMPTest.csproj.ResolveComReference.cache
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\KMPTest.exe
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\KMPTest.pdb
+\\tsclient\D\bidding\KMPTest\KMPTest\bin\Debug\KMPTest.exe
+\\tsclient\D\bidding\KMPTest\KMPTest\bin\Debug\KMPTest.pdb
+\\tsclient\D\bidding\KMPTest\KMPTest\bin\Debug\Interop.WMPLib.dll
+\\tsclient\D\bidding\KMPTest\KMPTest\bin\Debug\AxInterop.WMPLib.dll
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\ResolveAssemblyReference.cache
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\KMPTest.Form1.resources
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\KMPTest.Form2.resources
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\KMPTest.Properties.Resources.resources
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\GenerateResource.read.1.tlog
+\\tsclient\D\bidding\KMPTest\KMPTest\obj\x86\Debug\GenerateResource.write.1.tlog

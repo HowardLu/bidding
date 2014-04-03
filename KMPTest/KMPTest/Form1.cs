@@ -13,6 +13,7 @@ namespace KMPTest
     {
         System.Diagnostics.Process Proc;
         String pn;
+        Form2 form;
 
         public Form1()
         {
@@ -33,8 +34,17 @@ namespace KMPTest
 
         private void button2_Click(object sender, EventArgs e)
         {
-            KMPlayer kmplayer = new KMPlayer();
-            kmplayer.OpenFile("E:/Program Files/The KMPlayer/KMPlayer.exe", "D:/Antonio_mcDyess.flv", 10000);
+            //KMPlayer kmplayer = new KMPlayer();
+            //kmplayer.OpenFile("E:/Program Files/The KMPlayer/KMPlayer.exe", "D:/Antonio_mcDyess.flv", 10000);
+            form = new Form2();
+            //form.ShowDialog(this);
+            form.Show();
+            //form.ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            form.CloseForm();
         }
     }
 }
