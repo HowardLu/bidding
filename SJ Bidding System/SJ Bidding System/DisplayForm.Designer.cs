@@ -43,8 +43,11 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.auctionPictureBox = new System.Windows.Forms.PictureBox();
+            this.sessionLabel = new System.Windows.Forms.Label();
+            this.progressLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).BeginInit();
@@ -201,7 +204,12 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.sessionLabel);
             this.splitContainer1.Panel1.Controls.Add(this.logoPictureBox);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.progressLabel);
             this.splitContainer1.Size = new System.Drawing.Size(1360, 1020);
             this.splitContainer1.SplitterDistance = 560;
             this.splitContainer1.SplitterWidth = 1;
@@ -226,6 +234,28 @@
             this.auctionPictureBox.Size = new System.Drawing.Size(1360, 1020);
             this.auctionPictureBox.TabIndex = 12;
             this.auctionPictureBox.TabStop = false;
+            // 
+            // sessionLabel
+            // 
+            this.sessionLabel.AutoSize = true;
+            this.sessionLabel.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sessionLabel.ForeColor = System.Drawing.Color.White;
+            this.sessionLabel.Location = new System.Drawing.Point(0, 0);
+            this.sessionLabel.Name = "sessionLabel";
+            this.sessionLabel.Size = new System.Drawing.Size(52, 15);
+            this.sessionLabel.TabIndex = 3;
+            this.sessionLabel.Text = "session";
+            // 
+            // progressLabel
+            // 
+            this.progressLabel.AutoSize = true;
+            this.progressLabel.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.progressLabel.ForeColor = System.Drawing.Color.White;
+            this.progressLabel.Location = new System.Drawing.Point(744, 0);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(57, 15);
+            this.progressLabel.TabIndex = 4;
+            this.progressLabel.Text = "progress";
             // 
             // DisplayForm
             // 
@@ -255,6 +285,8 @@
             this.Resize += new System.EventHandler(this.DisplayForm_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
@@ -281,5 +313,7 @@
         private System.Windows.Forms.Label hkPriceLabel;
         private System.Windows.Forms.Label hkLabel;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Label sessionLabel;
+        private System.Windows.Forms.Label progressLabel;
     }
 }

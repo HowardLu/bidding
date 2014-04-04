@@ -125,6 +125,17 @@ namespace UtilityLibrary
             pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
         }
 
+        public static bool IsDirectoryExist(string directoryPath, bool isSilence)
+        {
+            if (!Directory.Exists(directoryPath))
+            {
+                if (!isSilence)
+                    MessageBox.Show(directoryPath + " 資料夾不存在!");
+                return false;
+            }
+            return true;
+        }
+
         public static bool IsFileExist(string filePath, bool isSilence)
         {
             if (!File.Exists(filePath))
@@ -133,7 +144,6 @@ namespace UtilityLibrary
                     MessageBox.Show(Path.GetFileName(filePath) + " 檔案不存在!");
                 return false;
             }
-
             return true;
         }
 

@@ -92,3 +92,9 @@ E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.PlayerForm.resources
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Interop.WMPLib.dll
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\AxInterop.WMPLib.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\Interop.WMPLib.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\AxInterop.WMPLib.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.csproj.ResolveComReference.cache
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Interop.WMPLib.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\AxInterop.WMPLib.dll
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.PlayerForm.resources

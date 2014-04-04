@@ -142,12 +142,26 @@ namespace Bidding
             return ae;
         }
 
-        public static void LoadAuctions(ref List<Auction> auctions, ref Internet<AuctionEntity> aeInternet, bool isSilence)
+        public static List<string> LoadSessions()
+        {
+            List<string> sessions = new List<string>();
+            string[] dirs = Directory.GetDirectories(Settings.auctionFolder);
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                string dirName = Path.GetFileNameWithoutExtension(dirs[i]);
+                if (Utility.ParseToInt(dirName, true) != -1)
+                    sessions.Add(dirName);
+            }
+            return sessions;
+        }
+
+        public static void LoadAuctions(string sessionId, ref List<Auction> auctions, ref Internet<AuctionEntity> aeInternet, bool isSilence)
         {
             Dictionary<string, AuctionEntity> aeDic = aeInternet.GetCollectionList().ToDictionary<AuctionEntity, string>(ae => ae.AuctionId);
             auctions = new List<Auction>();
             List<string> illegalFiles = new List<string>();
-            string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
+            string dir = Path.Combine(Settings.auctionFolder, sessionId);
+            string[] filePaths = Directory.GetFiles(dir).OrderBy(f => f).ToArray<string>();
             Dictionary<string, string> videoPaths = GetVideosFilePaths();
             for (int i = 0; i < filePaths.Length; i++)
             {
@@ -188,13 +202,16 @@ namespace Bidding
 
         private static Dictionary<string, string> GetVideosFilePaths()
         {
-            string[] filePaths = Directory.GetFiles(Settings.videoFolder).OrderBy(f => f).ToArray<string>();
             Dictionary<string, string> videoPaths = new Dictionary<string, string>();
-            for (int i = 0; i < filePaths.Length; i++)
+            if (Directory.Exists(Settings.videoFolder))
             {
-                string fp = filePaths[i];
-                string fn = Utility.GetFileName(fp, false);
-                videoPaths.Add(fn, fp);
+                string[] filePaths = Directory.GetFiles(Settings.videoFolder).OrderBy(f => f).ToArray<string>();
+                for (int i = 0; i < filePaths.Length; i++)
+                {
+                    string fp = filePaths[i];
+                    string fn = Utility.GetFileName(fp, false);
+                    videoPaths.Add(fn, fp);
+                }
             }
             return videoPaths;
         }

@@ -59,7 +59,7 @@ namespace SetAuction
             List<Auction> auctions = null;
             try
             {
-                Auction.LoadAuctions(ref auctions, ref m_aeInternet, false);
+                Auction.LoadAuctions("", ref auctions, ref m_aeInternet, false);
             }
             catch (Exception ex)
             {
@@ -122,7 +122,7 @@ namespace SetAuction
             artistTextBox.Text = lvi.SubItems[1].Text;
             artworkTextBox.Text = lvi.SubItems[2].Text;
             initialPriceTextBox.Text = int.Parse(lvi.SubItems[3].Text, System.Globalization.NumberStyles.Currency).ToString();
-            m_addImgFP = Path.Combine(Application.StartupPath, m_auctions[auctionsListView.SelectedItems[0].Text].photofilePath);
+            m_addImgFP = Path.Combine(Application.StartupPath, m_auctions[auctionsListView.SelectedItems[0].Text].photoFilePath);
             photoTextBox.Text = Path.GetFileName(m_addImgFP);
             int index = Utility.ToEnumInt<Auctioneer>(lvi.SubItems[4].Text);
             auctioneerComboBox.SelectedIndex = index < 0 ? 0 : index;
@@ -203,7 +203,7 @@ namespace SetAuction
             auction.initialPrice = initPrice * m_units[unitComboBox.SelectedIndex];
             //auction.auctioneer = Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex);
             CopyPhotoToAuctionsFolder(ref auction);
-            string fp = Path.Combine(Application.StartupPath, auction.photofilePath);
+            string fp = Path.Combine(Application.StartupPath, auction.photoFilePath);
             auction.photo = Utility.OpenBitmap(fp);
             m_auctions.Add(auction.lot, auction);
             m_aeInternet.Insert(auction.ToAuctionEntity());
@@ -267,7 +267,7 @@ namespace SetAuction
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.Auctioneer, auc.auctioneer);
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, lot, ae => ae.AuctionId, auc.lot);
 
-            photoTextBox.Text = Path.GetFileName(auc.photofilePath);
+            photoTextBox.Text = Path.GetFileName(auc.photoFilePath);
             ClearAllTextBox();
         }
 
@@ -366,7 +366,7 @@ namespace SetAuction
             {
                 if (auction.photo == null)
                 {
-                    auction.photo = Utility.OpenBitmap(auction.photofilePath);
+                    auction.photo = Utility.OpenBitmap(auction.photoFilePath);
                 }
                 m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
                 m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
@@ -400,8 +400,8 @@ namespace SetAuction
         {
             //string newFileName = auction.CreateFileName(Path.GetExtension(photoTextBox.Text));
             string newFileName = auction.lot + Path.GetExtension(photoTextBox.Text);
-            auction.photofilePath = Path.Combine(Settings.auctionFolder, newFileName);
-            string newFilePath = Path.Combine(Application.StartupPath, auction.photofilePath);
+            auction.photoFilePath = Path.Combine(Settings.auctionFolder, newFileName);
+            string newFilePath = Path.Combine(Application.StartupPath, auction.photoFilePath);
             if (File.Exists(newFilePath))
                 return;
 

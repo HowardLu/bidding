@@ -61,6 +61,8 @@
             this.nextBtn = new System.Windows.Forms.Button();
             this.auctionPictureBox = new System.Windows.Forms.PictureBox();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.sessionLabel = new System.Windows.Forms.Label();
+            this.sessionComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -433,11 +435,32 @@
             this.logoPictureBox.TabIndex = 10;
             this.logoPictureBox.TabStop = false;
             // 
+            // sessionLabel
+            // 
+            this.sessionLabel.AutoSize = true;
+            this.sessionLabel.ForeColor = System.Drawing.Color.White;
+            this.sessionLabel.Location = new System.Drawing.Point(789, 181);
+            this.sessionLabel.Name = "sessionLabel";
+            this.sessionLabel.Size = new System.Drawing.Size(41, 12);
+            this.sessionLabel.TabIndex = 37;
+            this.sessionLabel.Text = "場次：";
+            // 
+            // sessionComboBox
+            // 
+            this.sessionComboBox.FormattingEnabled = true;
+            this.sessionComboBox.Location = new System.Drawing.Point(836, 178);
+            this.sessionComboBox.Name = "sessionComboBox";
+            this.sessionComboBox.Size = new System.Drawing.Size(75, 20);
+            this.sessionComboBox.TabIndex = 38;
+            this.sessionComboBox.SelectedIndexChanged += new System.EventHandler(this.sessionComboBox_SelectedIndexChanged);
+            // 
             // ControlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1016, 730);
+            this.Controls.Add(this.sessionComboBox);
+            this.Controls.Add(this.sessionLabel);
             this.Controls.Add(this.stopButton);
             this.Controls.Add(this.playButton);
             this.Controls.Add(this.clearBidderButton);
@@ -518,6 +541,8 @@
         private System.Windows.Forms.Button clearBidderButton;
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button stopButton;
+        private System.Windows.Forms.Label sessionLabel;
+        private System.Windows.Forms.ComboBox sessionComboBox;
     }
 }
 

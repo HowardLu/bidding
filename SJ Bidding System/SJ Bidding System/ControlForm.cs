@@ -21,6 +21,8 @@ namespace SJ_Bidding_System
 
         #region Member Variables
         private DisplayForm m_displayForm;
+        private string m_sessionIdNow = "";
+        private List<string> m_sessions;
         private List<Auction> m_auctions;
         private int m_auctionIdNow = 0;
         private List<PriceLevel> m_priceLevels;
@@ -76,29 +78,22 @@ namespace SJ_Bidding_System
             if (Utility.IsFileExist(serverExePath))
                 m_server = System.Diagnostics.Process.Start(pStartInfo);*/
 
-            InitDisplayForm();
-            m_displayForm.ChangeLogoCheck();
-
-            Auction.LoadAuctions(ref m_auctions, ref m_aeInternet, false);
-            LoadPrices(Settings.pricesFP);
-
             LoadPriceLevel(Settings.priceLevelFP);
+
+            InitDisplayForm();
+
+            InitSessionComboBox();
+            if (m_sessions.Count > 0)
+            {
+                sessionComboBox.SelectedIndex = 0;
+            }
+
+            nowPriceTextBox.Focus();
 
             ExchangeRate.Load(Settings.exchangeRateFP);
             rmbTextBox.Text = ExchangeRate.ntdToRmbRate.ToString();
             usdTextBox.Text = ExchangeRate.ntdToUsdRate.ToString();
             hkTextBox.Text = ExchangeRate.ntdToHkRate.ToString();
-
-            if (m_auctions.Count != 0)
-            {
-                SetAuctionOnForm(m_auctions[m_auctionIdNow]);
-                m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
-            }
-            InitializeComboBox();
-            nowPriceTextBox.Focus();
-
-            if (m_auctions.Count != 0)
-                DoLoadAuctionPhoto(0);
 
             LoadBiddingResult(Settings.biddingResultFP);
             LoadBackupPath(Path.Combine(Path.GetDirectoryName(Settings.biddingResultFP), "backup_path.ini"));
@@ -122,6 +117,7 @@ namespace SJ_Bidding_System
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
             ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
+            m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
         }
 
         /// <summary>
@@ -142,6 +138,7 @@ namespace SJ_Bidding_System
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
             ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
+            m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
         }
 
         /// <summary>
@@ -256,7 +253,7 @@ namespace SJ_Bidding_System
         /// <param name="e"></param>
         private void ControlForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SavePrices(Path.Combine(Application.StartupPath, Settings.saveFolder, Settings.pricesFN));
+            //SavePrices(Path.Combine(Application.StartupPath, Settings.saveFolder, Settings.pricesFN));
             ExchangeRate.Save(Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN));
             //DoSaveBiddingResult(Settings.biddingResultFP);
             /*if (!m_server.HasExited)
@@ -321,6 +318,7 @@ namespace SJ_Bidding_System
             }
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
+            m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
         }
 
         /// <summary>
@@ -481,6 +479,14 @@ namespace SJ_Bidding_System
         {
             ClosePlayerForm();
         }
+
+        private void sessionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string sessionSelected = sessionComboBox.SelectedItem.ToString();
+            LoadAuctionsFromSession(sessionSelected);  // load auctions from session.
+            m_displayForm.SetSession(sessionSelected);
+            m_displayForm.SetProgress(1, m_auctions.Count);
+        }
         #endregion
 
         #region Public Methods
@@ -510,11 +516,33 @@ namespace SJ_Bidding_System
             m_displayForm.Show();
         }
 
+        private void LoadAuctionsFromSession(string sessionId)
+        {
+            if (m_auctions != null)
+                m_auctions.Clear();
+            Auction.LoadAuctions(sessionId, ref m_auctions, ref m_aeInternet, false);
+            //LoadPrices(Settings.pricesFP);
+
+            if (m_auctions.Count != 0)
+            {
+                m_auctionIdNow = 0;
+                SetAuctionOnForm(m_auctions[m_auctionIdNow]);
+                m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
+            }
+            InitAuctionComboBox();
+
+            if (m_auctions.Count != 0)
+                DoLoadAuctionPhoto(0);
+
+            m_sessionIdNow = sessionId;
+        }
+
         /// <summary>
         /// Initialize auction ComboBox.
         /// </summary>
-        private void InitializeComboBox()
+        private void InitAuctionComboBox()
         {
+            auctionComboBox.Items.Clear();
             for (int i = 0; i < m_auctions.Count; i++)
                 auctionComboBox.Items.Add(m_auctions[i].lot);
             if (m_auctions.Count != 0)
@@ -819,7 +847,13 @@ namespace SJ_Bidding_System
             if (videoPath == "")
                 return;
 
-            m_playerForm = new PlayerForm(videoPath);
+            try
+            {
+                m_playerForm = new PlayerForm(Path.Combine(Application.StartupPath, videoPath));
+            }
+            catch (Exception e)
+            { 
+            }
             Screen otherScreen = Screen.FromControl(this);
             if (Screen.AllScreens.Length > 1)
             {
@@ -838,6 +872,13 @@ namespace SJ_Bidding_System
                 m_playerForm.CloseForm();
                 m_playerForm = null;
             }
+        }
+
+        private void InitSessionComboBox()
+        {
+            sessionComboBox.Items.Clear();
+            m_sessions = Auction.LoadSessions();
+            sessionComboBox.Items.AddRange(m_sessions.ToArray());
         }
         #endregion
     }

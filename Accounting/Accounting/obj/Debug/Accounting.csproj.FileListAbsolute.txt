@@ -68,3 +68,5 @@ E:\bidding\Accounting\Accounting\obj\Debug\Accounting.csproj.ResolveComReference
 \\tsclient\D\bidding\Accounting\Accounting\bin\Debug\MongoDB.Driver.xml
 \\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Interop.Microsoft.Office.Interop.Excel.dll
 \\tsclient\D\bidding\Accounting\Accounting\obj\Debug\Interop.VBIDE.dll
+E:\bidding\Accounting\Accounting\obj\Debug\Interop.Microsoft.Office.Interop.Excel.dll
+E:\bidding\Accounting\Accounting\obj\Debug\Interop.VBIDE.dll

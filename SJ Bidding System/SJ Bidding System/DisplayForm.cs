@@ -103,7 +103,7 @@ namespace SJ_Bidding_System
             float xRatio = (float)this.Width / m_formSize.Width;
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
-            this.ChangeLogoEnable = false;
+            ChangeLogoCheck();
         }
 
         private void DisplayForm_Resize(object sender, EventArgs e)
@@ -162,6 +162,16 @@ namespace SJ_Bidding_System
                 if (password == "superwasir55667878")
                     this.ChangeLogoEnable = true;
             }
+        }
+
+        public void SetSession(string sessionStr)
+        {
+            sessionLabel.Text = String.Format(@"第{0}場", sessionStr);
+        }
+
+        public void SetProgress(int currentId, int totalCount)
+        {
+            progressLabel.Text = String.Format(@"{0}/{1}", currentId, totalCount);
         }
         #endregion
 
