@@ -7,6 +7,7 @@ __date__ = "$Date: 2004/04/14 02:38:47 $"
 
 from PythonCard import dialog, model, EXIF, graphic
 import pymongo, sys, time, gridfs
+from bson.objectid import ObjectId
 
 ATTR_MAP = {	# 賣家屬性
 							"Dealer":
@@ -232,6 +233,7 @@ class MyBackground( model.Background ):
 		# 取得資料庫相關資料表
 		self.__mongo_db = self.__mongo_client.bidding_data
 		self.__file_store = gridfs.GridFS( self.__mongo_db )
+		# print dir( self.__file_store )
 		
 		self.__dbtable_main					= self.__mongo_db.dealer_table
 		self.__dbtable_item					= self.__mongo_db.dealer_item_table
@@ -524,8 +526,10 @@ class MyBackground( model.Background ):
 				file_obj = open( fname, "wb" )
 				
 				file_id = dict_data[ pic_attr ]
+				file_id = ObjectId( file_id )
 				if self.__file_store.exists( file_id ):
-					file_obj_load = self.__file_store.get( dict_data[ pic_attr ] )
+					# print type( file_id ), file_id
+					file_obj_load = self.__file_store.get( file_id )
 					file_obj.write( file_obj_load.read() )
 					file_obj.close()
 					pic_loaded = True
@@ -714,6 +718,8 @@ class MyBackground( model.Background ):
 				try:
 					file_obj = open( canvas.path, "rb" )
 					file_id = self.__file_store.put( file_obj )
+					file_id = str( file_id )
+					# print file_id
 				except:
 					file_id = None
 			else:
