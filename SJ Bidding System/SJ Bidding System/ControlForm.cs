@@ -859,8 +859,8 @@ namespace SJ_Bidding_System
             {
                 otherScreen = Screen.AllScreens[1];
             }
-            m_playerForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
-            m_playerForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
+            //m_playerForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
+            //m_playerForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
             m_playerForm.WindowState = FormWindowState.Maximized;
             m_playerForm.Show();
         }

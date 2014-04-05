@@ -300,6 +300,7 @@ namespace Bidding
             foreach (Auction auc in auctions.Values)
             {
                 string auctioneer = auc.auctioneer == "" ? Auctioneer.S.ToString() : auc.auctioneer;
+                auctioneer = "S";
                 if (!auctionMappings.ContainsKey(auctioneer))
                 {
                     auctionMappings[auctioneer] = new List<string>();

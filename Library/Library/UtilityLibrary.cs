@@ -173,7 +173,7 @@ namespace UtilityLibrary
             else
             {
                 if (!isSilence)
-                    MessageBox.Show("請輸入有效數字" + input);
+                    MessageBox.Show("無效數字: " + input + "\n請輸入有效數字!");
 
                 return -1;
             }

@@ -68,8 +68,8 @@ namespace SetAuction
             }
             m_auctions = auctions.ToDictionary<Auction, string>(auc => auc.lot);
             LoadAuctionToListView();
-            InitAuctioneerComboBox();
-            unitComboBox.SelectedIndex = 0;
+            //InitAuctioneerComboBox();
+            unitComboBox.SelectedIndex = 2;
         }
 
         private void SetAuctionForm_Resize(object sender, EventArgs e)
@@ -121,11 +121,11 @@ namespace SetAuction
             lotTextBox.Text = lvi.Text;
             artistTextBox.Text = lvi.SubItems[1].Text;
             artworkTextBox.Text = lvi.SubItems[2].Text;
-            initialPriceTextBox.Text = int.Parse(lvi.SubItems[3].Text, System.Globalization.NumberStyles.Currency).ToString();
+            initialPriceTextBox.Text = lvi.SubItems[3].Text;
             m_addImgFP = Path.Combine(Application.StartupPath, m_auctions[auctionsListView.SelectedItems[0].Text].photoFilePath);
             photoTextBox.Text = Path.GetFileName(m_addImgFP);
-            int index = Utility.ToEnumInt<Auctioneer>(lvi.SubItems[4].Text);
-            auctioneerComboBox.SelectedIndex = index < 0 ? 0 : index;
+            //int index = Utility.ToEnumInt<Auctioneer>(lvi.SubItems[4].Text);
+            //auctioneerComboBox.SelectedIndex = index < 0 ? 0 : index;
         }
 
         private void lotTextBox_TextChanged(object sender, EventArgs e)
@@ -188,8 +188,8 @@ namespace SetAuction
                 return;
             }
 
-            int initPrice = int.Parse(initialPriceTextBox.Text, System.Globalization.NumberStyles.Currency);
-            if (initPrice * m_units[unitComboBox.SelectedIndex] < 1000)
+            int initPrice = int.Parse(initialPriceTextBox.Text) * m_units[unitComboBox.SelectedIndex];
+            if (initPrice < 1000)
             {
                 MessageBox.Show("起拍價小於1000，請重新輸入!");
                 initialPriceTextBox.Text = "";
@@ -200,7 +200,7 @@ namespace SetAuction
             auction.lot = lotTextBox.Text;
             auction.artist = artistTextBox.Text;
             auction.artwork = artworkTextBox.Text;
-            auction.initialPrice = initPrice * m_units[unitComboBox.SelectedIndex];
+            auction.initialPrice = initPrice;
             //auction.auctioneer = Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex);
             CopyPhotoToAuctionsFolder(ref auction);
             string fp = Path.Combine(Application.StartupPath, auction.photoFilePath);
@@ -213,8 +213,8 @@ namespace SetAuction
 
             auctionsListView.BeginUpdate();
             AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
-               initPrice.ToString("c0"),
-               Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex));
+               initialPriceTextBox.Text/*,
+            Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex)*/);
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
@@ -235,8 +235,8 @@ namespace SetAuction
                 return;
             }
 
-            int initPrice = int.Parse(initialPriceTextBox.Text, System.Globalization.NumberStyles.Currency);
-            if (initPrice * m_units[unitComboBox.SelectedIndex] < 1000)
+            int initPrice = int.Parse(initialPriceTextBox.Text) * m_units[unitComboBox.SelectedIndex];
+            if (initPrice < 1000)
             {
                 MessageBox.Show("起拍價小於1000，請重新輸入!");
                 initialPriceTextBox.Text = "";
@@ -254,8 +254,8 @@ namespace SetAuction
             auctionsListView.Items[id].Text = auc.lot = lotTextBox.Text;
             auctionsListView.Items[id].SubItems[1].Text = auc.artist = artistTextBox.Text;
             auctionsListView.Items[id].SubItems[2].Text = auc.artwork = artworkTextBox.Text;
-            auc.initialPrice = int.Parse(initialPriceTextBox.Text);
-            auctionsListView.Items[id].SubItems[3].Text = initPrice.ToString("c0");
+            auc.initialPrice = initPrice;
+            auctionsListView.Items[id].SubItems[3].Text = initialPriceTextBox.Text;
             //auctionsListView.Items[id].SubItems[4].Text = auc.auctioneer = Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex);
             CopyPhotoToAuctionsFolder(ref auc);
             m_auctions.Remove(lot);
@@ -336,12 +336,14 @@ namespace SetAuction
 
         private void unitComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            float scale = m_units[m_lastUnitIndex] / (float)m_units[unitComboBox.SelectedIndex];
+            float scale = 1 / (float)m_units[unitComboBox.SelectedIndex];
             foreach (ListViewItem item in auctionsListView.Items)
             {
-                int initPrice = int.Parse(item.SubItems[3].Text, System.Globalization.NumberStyles.Currency);
-                int scalePrice = (int)(initPrice * scale);
-                item.SubItems[3].Text = scalePrice.ToString("c0");
+                string lot = item.Text;
+                int initPrice = m_auctions[lot].initialPrice;
+                float scalePrice = initPrice * scale;
+                string scalePriceStr = scalePrice.ToString("0.#");
+                item.SubItems[3].Text = scalePriceStr;
             }
             m_lastUnitIndex = unitComboBox.SelectedIndex;
         }
@@ -371,22 +373,22 @@ namespace SetAuction
                 m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
                 m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
-                    auction.initialPrice.ToString("c0"), auction.auctioneer);
+                    auction.initialPrice.ToString()/*, auction.auctioneer*/);
             }
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
         }
 
-        private void AddItemToListView(int imgId, string text, string subItem1, string subItem2, string subItem3, string subItem4)
+        private void AddItemToListView(int imgId, string lot, string artist, string artwork, string initPrice/*, string subItem4*/)
         {
             ListViewItem newLvi = new ListViewItem();
             newLvi.ImageIndex = imgId;
-            newLvi.Text = text;
-            newLvi.SubItems.Add(subItem1);
-            newLvi.SubItems.Add(subItem2);
-            newLvi.SubItems.Add(subItem3);
-            newLvi.SubItems.Add(subItem4);
+            newLvi.Text = lot;
+            newLvi.SubItems.Add(artist);
+            newLvi.SubItems.Add(artwork);
+            newLvi.SubItems.Add(initPrice);
+            //newLvi.SubItems.Add(subItem4);
             auctionsListView.Items.Add(newLvi);
         }
 

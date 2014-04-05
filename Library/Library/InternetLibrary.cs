@@ -114,7 +114,7 @@ namespace InternetLibrary
 
         public DealerItemEntity()
         {
-            _id = ReservePrice = BuildImg = SrcDealer = ItemPS = Remain = ItemNum = LotNO = PackImg = ItemName = Spec = "";
+            _id = ReservePrice = /*BuildImg =*/ SrcDealer = ItemPS = Remain = ItemNum = LotNO = /*PackImg =*/ ItemName = Spec = "";
         }
     }
 

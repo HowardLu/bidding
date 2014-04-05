@@ -33,8 +33,8 @@
             this.artistColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.artworkColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.initialPriceColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.companyColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.viewsGroupBox = new System.Windows.Forms.GroupBox();
+            this.unitLabel = new System.Windows.Forms.Label();
             this.unitComboBox = new System.Windows.Forms.ComboBox();
             this.tileRadioButton = new System.Windows.Forms.RadioButton();
             this.listRadioButton = new System.Windows.Forms.RadioButton();
@@ -59,7 +59,6 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.unitLabel = new System.Windows.Forms.Label();
             this.viewsGroupBox.SuspendLayout();
             this.setAuctionGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -73,8 +72,7 @@
             this.lotColumnHeader,
             this.artistColumnHeader,
             this.artworkColumnHeader,
-            this.initialPriceColumnHeader,
-            this.companyColumnHeader});
+            this.initialPriceColumnHeader});
             this.auctionsListView.FullRowSelect = true;
             this.auctionsListView.GridLines = true;
             this.auctionsListView.Location = new System.Drawing.Point(10, 10);
@@ -103,12 +101,7 @@
             // initialPriceColumnHeader
             // 
             this.initialPriceColumnHeader.Text = "起拍價";
-            this.initialPriceColumnHeader.Width = 105;
-            // 
-            // companyColumnHeader
-            // 
-            this.companyColumnHeader.Text = "公司";
-            this.companyColumnHeader.Width = 61;
+            this.initialPriceColumnHeader.Width = 166;
             // 
             // viewsGroupBox
             // 
@@ -126,6 +119,15 @@
             this.viewsGroupBox.TabIndex = 3;
             this.viewsGroupBox.TabStop = false;
             this.viewsGroupBox.Text = "顯示";
+            // 
+            // unitLabel
+            // 
+            this.unitLabel.AutoSize = true;
+            this.unitLabel.Location = new System.Drawing.Point(9, 149);
+            this.unitLabel.Name = "unitLabel";
+            this.unitLabel.Size = new System.Drawing.Size(29, 12);
+            this.unitLabel.TabIndex = 9;
+            this.unitLabel.Text = "單位";
             // 
             // unitComboBox
             // 
@@ -374,15 +376,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // unitLabel
-            // 
-            this.unitLabel.AutoSize = true;
-            this.unitLabel.Location = new System.Drawing.Point(9, 149);
-            this.unitLabel.Name = "unitLabel";
-            this.unitLabel.Size = new System.Drawing.Size(29, 12);
-            this.unitLabel.TabIndex = 9;
-            this.unitLabel.Text = "單位";
-            // 
             // SetAuctionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -435,7 +428,6 @@
         private System.Windows.Forms.TextBox photoTextBox;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label companyLabel;
-        private System.Windows.Forms.ColumnHeader companyColumnHeader;
         private System.Windows.Forms.ComboBox auctioneerComboBox;
         private System.Windows.Forms.ComboBox unitComboBox;
         private System.Windows.Forms.Label unitLabel;

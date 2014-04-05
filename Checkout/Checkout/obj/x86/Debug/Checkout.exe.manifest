@@ -49,19 +49,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>cYb1D6rm+RETBuQ2UGkSzr49rVY=</dsig:DigestValue>
+        <dsig:DigestValue>lp8M1Vyph9JSOUvu8z+fAstlbTA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Library.dll" size="34816">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Library.dll" size="34304">
       <assemblyIdentity name="Library" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>YIfibu2vo8Wbv+WzHqKaWYKa47o=</dsig:DigestValue>
+        <dsig:DigestValue>GGwGHH0MJtG728ediYDKZg1FsdQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
