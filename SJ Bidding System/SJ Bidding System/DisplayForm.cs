@@ -232,15 +232,15 @@ namespace SJ_Bidding_System
         {
             switch (auctioneer)
             {
-                case Auctioneer.S:
+                /*case Auctioneer.S:
                     logoPictureBox.Image = m_logo_S;
                     break;
-                /*case Auctioneer.A:
+                case Auctioneer.A:
                     logoPictureBox.Image = m_logo_A;
-                    break;
+                    break;*/
                 case Auctioneer.M:
                     logoPictureBox.Image = m_logo_M;
-                    break;*/
+                    break;
                 default:
                     break;
             }

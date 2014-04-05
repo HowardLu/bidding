@@ -43,6 +43,7 @@ namespace Bidding
             checkoutNumber = 0;
             checkoutTime = "";
             videoPath = "";
+            auctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
         }
 
         /// <summary>
@@ -297,10 +298,10 @@ namespace Bidding
                 auctionMappings = new Dictionary<string, List<string>>();
             }
 
+            string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
             foreach (Auction auc in auctions.Values)
             {
-                string auctioneer = auc.auctioneer == "" ? Auctioneer.S.ToString() : auc.auctioneer;
-                auctioneer = "S";
+                string auctioneer = auc.auctioneer == "" ? defaultAuctioneer : auc.auctioneer;
                 if (!auctionMappings.ContainsKey(auctioneer))
                 {
                     auctionMappings[auctioneer] = new List<string>();
@@ -369,7 +370,7 @@ namespace Bidding
 
     public enum Auctioneer
     {
-        S = 0,
+        M = 0,
         /*A,
         M,*/
         Count
@@ -377,7 +378,7 @@ namespace Bidding
 
     public enum AuctioneerName
     {
-        世家 = 0,
+        沐春堂 = 0,
         /*安德昇,
         沐春堂,*/
         Count

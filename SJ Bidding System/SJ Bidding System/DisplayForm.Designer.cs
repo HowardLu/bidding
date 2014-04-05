@@ -41,10 +41,10 @@
             this.hkPriceLabel = new System.Windows.Forms.Label();
             this.hkLabel = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
-            this.auctionPictureBox = new System.Windows.Forms.PictureBox();
             this.sessionLabel = new System.Windows.Forms.Label();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.progressLabel = new System.Windows.Forms.Label();
+            this.auctionPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -215,26 +215,6 @@
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 16;
             // 
-            // logoPictureBox
-            // 
-            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO_S_big;
-            this.logoPictureBox.Location = new System.Drawing.Point(47, 30);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(160, 162);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.logoPictureBox.TabIndex = 2;
-            this.logoPictureBox.TabStop = false;
-            // 
-            // auctionPictureBox
-            // 
-            this.auctionPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.auctionPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.auctionPictureBox.Name = "auctionPictureBox";
-            this.auctionPictureBox.Size = new System.Drawing.Size(1360, 1020);
-            this.auctionPictureBox.TabIndex = 12;
-            this.auctionPictureBox.TabStop = false;
-            // 
             // sessionLabel
             // 
             this.sessionLabel.AutoSize = true;
@@ -246,6 +226,17 @@
             this.sessionLabel.TabIndex = 3;
             this.sessionLabel.Text = "session";
             // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO_M;
+            this.logoPictureBox.Location = new System.Drawing.Point(47, 30);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(461, 87);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.logoPictureBox.TabIndex = 2;
+            this.logoPictureBox.TabStop = false;
+            // 
             // progressLabel
             // 
             this.progressLabel.AutoSize = true;
@@ -256,6 +247,15 @@
             this.progressLabel.Size = new System.Drawing.Size(57, 15);
             this.progressLabel.TabIndex = 4;
             this.progressLabel.Text = "progress";
+            // 
+            // auctionPictureBox
+            // 
+            this.auctionPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.auctionPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.auctionPictureBox.Name = "auctionPictureBox";
+            this.auctionPictureBox.Size = new System.Drawing.Size(1360, 1020);
+            this.auctionPictureBox.TabIndex = 12;
+            this.auctionPictureBox.TabStop = false;
             // 
             // DisplayForm
             // 
