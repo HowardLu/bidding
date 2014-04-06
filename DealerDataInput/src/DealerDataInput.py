@@ -21,6 +21,8 @@ ATTR_MAP = {	# 賣家屬性
 									"DIGIT_ATTR":
 										( "IfDealedInsuranceFee", "IfDealedServiceFee", "IfNDealedInsuranceFee", "IfNDealedServiceFee", "IfDealedPictureFee", "IfNDealedPictureFee", "FrameFee", "FireFee", "IdentifyFee"
 										),
+									"CONVERT_ATTR":
+										(),
 									"KEY_ATTR": "Name", "ListCom": "ListDealer", "CacheData": { "Main": {}, "Index": {} }
 								},
 							# 賣家商品屬性
@@ -34,6 +36,8 @@ ATTR_MAP = {	# 賣家屬性
 									"DIGIT_ATTR":
 										( "ItemNum", "ReservePrice"
 										),
+									"CONVERT_ATTR":
+										( "ReservePrice" ),
 									"KEY_ATTR": "_id", "ListCom": "ListItem", "CacheData": { "Main": {}, "Index": {} }
 								},
 						}
@@ -514,9 +518,17 @@ class MyBackground( model.Background ):
 		
 		# 文字部分
 		com = self.components
-		attr_list = ATTR_MAP[ "Item" ][ "ALL_ATTR" ]
+		
+		item_map = ATTR_MAP[ "Item" ]
+		attr_list = item_map[ "ALL_ATTR" ]
+		cnv_attr_list = item_map[ "CONVERT_ATTR" ]
 		for attr in attr_list:
-			getattr( com, "TextField" + attr ).text = dict_data[ attr ] if attr in dict_data else ""
+			text_show = dict_data[ attr ] if attr in dict_data else ""
+			# 格式轉換的部分 - 讀取
+			if attr in cnv_attr_list:
+				text_show = getattr( self, "on_item_attr_%s_read" % attr )( text_show )
+			
+			getattr( com, "TextField" + attr ).text = text_show
 			
 		# 圖片部分
 		for pic_attr in ITEM_COM_DATA.iterkeys():
@@ -685,6 +697,7 @@ class MyBackground( model.Background ):
 		attr_list = item_map[ "ALL_ATTR" ]
 		ne_attr_list = item_map[ "NONEMPTY_ATTR" ]
 		dig_attr_list = item_map[ "DIGIT_ATTR" ]
+		cnv_attr_list = item_map[ "CONVERT_ATTR" ]
 		
 		for attr in attr_list:
 			text_com = getattr( com, "TextField" + attr )
@@ -704,6 +717,10 @@ class MyBackground( model.Background ):
 				else:
 					self.__add_msg( Const[ "TEXT_CHK_FAIL_MUST_DIGIT" ] % attr_name )
 					return None
+			
+			# 格式轉換的部分 - 寫入
+			if attr in cnv_attr_list:
+				chk_text = getattr( self, "on_item_attr_%s_write" % attr )( chk_text )
 			
 			dict_data[ attr ] = chk_text
 		
@@ -825,7 +842,19 @@ class MyBackground( model.Background ):
 		result = dialog.singleChoiceDialog( self, "", Const[ "STATICTEXTDELIMAGETITLE" ], [ Const[ "STATICTEXTDEL" ], Const[ "STATICTEXTKEEP" ] ] )
 		if result.selection == Const[ "STATICTEXTDEL" ]:
 			self.__set_image( attr_name, "", 0 )
+	
+	# =====格式轉換function區=====格式轉換function區=====格式轉換function區=====格式轉換function區=====
+	def on_item_attr_ReservePrice_read( self, text ):
+		try:
+			text_rtn = str( float( text ) / 10000 )
+		except:
+			text_rtn = ""
 			
+		return text_rtn
+		
+	def on_item_attr_ReservePrice_write( self, text ):
+		return str( float( text ) * 10000 )
+		
 if __name__ == '__main__':
 	app = model.Application(MyBackground)
 	app.MainLoop()
