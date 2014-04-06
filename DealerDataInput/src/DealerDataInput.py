@@ -563,7 +563,7 @@ class MyBackground( model.Background ):
 	# 數字判定
 	def __str_digit_test( self, chk_text ):
 		try:
-			int( chk_text )
+			float( chk_text )
 			return_val = True
 		except:
 			# 空字串幫你強轉 貼心ㄅ
