@@ -453,8 +453,8 @@ namespace Accounting
             int finalPrice = auction.FinalPrice / m_unit;
             int guaranteeCost = int.Parse(bidder.GuaranteeCost) / m_unit;
             int returnGuaranteeNumber = auction.ReturnGuaranteeNumber / m_unit;
-            int reservePrice = 0;//int.Parse(dealerItem.ReservePrice);
-            reservePrice = int.TryParse(dealerItem.ReservePrice, out reservePrice) ? reservePrice / m_unit : 0;
+            float reservePrice = 0;//int.Parse(dealerItem.ReservePrice);
+            reservePrice = float.TryParse(dealerItem.ReservePrice, out reservePrice) ? reservePrice / m_unit : 0;
             int sellerAccountPayable = auction.SellerAccountPayable / m_unit;
 
             if (m_isSuperUser)
