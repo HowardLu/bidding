@@ -98,3 +98,28 @@ E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.cspro
 E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Interop.WMPLib.dll
 E:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\AxInterop.WMPLib.dll
 E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.PlayerForm.resources
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\Interop.WMPLib.dll
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\AxInterop.WMPLib.dll
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.csproj.ResolveComReference.cache
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.exe
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ Bidding System.pdb
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.exe
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\SJ Bidding System.pdb
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Library.dll
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.dll
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.dll
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Library.pdb
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.pdb
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Bson.xml
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.pdb
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\MongoDB.Driver.xml
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\Interop.WMPLib.dll
+D:\bidding\SJ Bidding System\SJ Bidding System\bin\Debug\AxInterop.WMPLib.dll
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\ResolveAssemblyReference.cache
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.DisplayForm.resources
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.ControlForm.resources
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.PlayerForm.resources
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Properties.Resources.resources
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1.tlog
+D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
+\\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Form2.resources
