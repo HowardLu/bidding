@@ -580,10 +580,10 @@ namespace Accounting
             {
                 for (int j = 0; j < dgv.ColumnCount; j++)
                 {
-                    if (!dgv.Columns[i].Visible)
+                    if (!dgv.Columns[j].Visible)
                         continue;
                     object value = dgv.Rows[i].Cells[j].Value;
-                    sheet.Cells[i + 2, j + 1] = value == null ? "" : value.ToString();
+                    sheet.Cells[i + 2, j + 1] = (value == null) ? "" : value.ToString();
                 }
             }
 
