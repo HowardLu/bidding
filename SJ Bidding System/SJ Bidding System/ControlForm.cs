@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define MUCHUNTANG
+#define SHIJIA
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -68,6 +71,11 @@ namespace SJ_Bidding_System
         /// <param name="e"></param>
         private void ControlForm_Load(object sender, EventArgs e)
         {
+#if MUCHUNTANG
+            this.Text = "台灣沐春堂拍賣系統";
+            this.logoPictureBox.Visible = false;
+#endif
+
             string settingsFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.settingsFN);
             Settings.Load(settingsFP);
 

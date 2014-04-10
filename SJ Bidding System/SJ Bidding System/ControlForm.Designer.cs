@@ -434,7 +434,6 @@
             this.logoPictureBox.Size = new System.Drawing.Size(100, 101);
             this.logoPictureBox.TabIndex = 10;
             this.logoPictureBox.TabStop = false;
-            this.logoPictureBox.Visible = false;
             // 
             // sessionLabel
             // 
@@ -497,7 +496,7 @@
             this.KeyPreview = true;
             this.Name = "ControlForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "台灣沐春堂拍賣系統";
+            this.Text = "台灣世家拍賣系統";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlForm_FormClosing);
             this.Load += new System.EventHandler(this.ControlForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ControlForm_KeyDown);

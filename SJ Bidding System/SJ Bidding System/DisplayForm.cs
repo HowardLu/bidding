@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define MUCHUNTANG
+#define SHIJIA
+
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Bidding;
@@ -104,6 +107,9 @@ namespace SJ_Bidding_System
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
             ChangeLogoCheck();
+#if (MUCHUNTANG)
+            this.logoPictureBox.Image = m_logo_M;
+#endif
         }
 
         private void DisplayForm_Resize(object sender, EventArgs e)
@@ -232,15 +238,20 @@ namespace SJ_Bidding_System
         {
             switch (auctioneer)
             {
-                /*case Auctioneer.S:
+#if (SHIJIA)
+                case Auctioneer.S:
                     logoPictureBox.Image = m_logo_S;
                     break;
-                case Auctioneer.A:
+#endif
+                /*case Auctioneer.A:
                     logoPictureBox.Image = m_logo_A;
                     break;*/
+#if (MUCHUNTANG)
                 case Auctioneer.M:
+
                     logoPictureBox.Image = m_logo_M;
                     break;
+#endif
                 default:
                     break;
             }

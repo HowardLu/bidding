@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define MUCHUNTANG
+#define SHIJIA
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -370,7 +373,12 @@ namespace Bidding
 
     public enum Auctioneer
     {
+#if (MUCHUNTANG)
         M = 0,
+#endif
+#if (SHIJIA)
+        S = 0,
+#endif      
         /*A,
         M,*/
         Count
@@ -378,7 +386,12 @@ namespace Bidding
 
     public enum AuctioneerName
     {
+#if (MUCHUNTANG)
         沐春堂 = 0,
+#endif
+#if (SHIJIA)
+        世家 = 0,
+#endif      
         /*安德昇,
         沐春堂,*/
         Count
