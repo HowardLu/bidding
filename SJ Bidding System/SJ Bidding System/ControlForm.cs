@@ -1,5 +1,5 @@
-﻿//#define MUCHUNTANG
-#define SHIJIA
+﻿#define MUCHUNTANG
+//#define SHIJIA
 
 using System;
 using System.Collections.Generic;
@@ -878,9 +878,9 @@ namespace SJ_Bidding_System
             if (Screen.AllScreens.Length > 1)
             {
                 otherScreen = Screen.AllScreens[1];
+                m_playerForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
+                m_playerForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
             }
-            //m_playerForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
-            //m_playerForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
             m_playerForm.WindowState = FormWindowState.Maximized;
             m_playerForm.Show();
         }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿#define MUCHUNTANG
+//#define SHIJIA
+
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -300,6 +303,9 @@ namespace Accounting
             }
 
             Login();
+#if MUCHUNTANG
+            m_isSuperUser = true;
+#endif
         }
 
         private void AddCol(string headerText, Color color, bool readOnly)
