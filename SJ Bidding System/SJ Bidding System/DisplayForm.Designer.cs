@@ -218,11 +218,11 @@
             // sessionLabel
             // 
             this.sessionLabel.AutoSize = true;
-            this.sessionLabel.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.sessionLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.sessionLabel.ForeColor = System.Drawing.Color.White;
-            this.sessionLabel.Location = new System.Drawing.Point(0, 0);
+            this.sessionLabel.Location = new System.Drawing.Point(-4, 0);
             this.sessionLabel.Name = "sessionLabel";
-            this.sessionLabel.Size = new System.Drawing.Size(52, 15);
+            this.sessionLabel.Size = new System.Drawing.Size(76, 22);
             this.sessionLabel.TabIndex = 3;
             this.sessionLabel.Text = "session";
             // 
@@ -240,11 +240,11 @@
             // progressLabel
             // 
             this.progressLabel.AutoSize = true;
-            this.progressLabel.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.progressLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.progressLabel.ForeColor = System.Drawing.Color.White;
-            this.progressLabel.Location = new System.Drawing.Point(744, 0);
+            this.progressLabel.Location = new System.Drawing.Point(713, 0);
             this.progressLabel.Name = "progressLabel";
-            this.progressLabel.Size = new System.Drawing.Size(57, 15);
+            this.progressLabel.Size = new System.Drawing.Size(86, 22);
             this.progressLabel.TabIndex = 4;
             this.progressLabel.Text = "progress";
             // 

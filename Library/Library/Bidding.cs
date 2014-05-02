@@ -1,5 +1,5 @@
-﻿#define MUCHUNTANG
-//#define SHIJIA
+﻿//#define MUCHUNTANG
+#define SHIJIA
 
 using System;
 using System.Collections.Generic;
@@ -169,8 +169,11 @@ namespace Bidding
             Dictionary<string, string> videoPaths = GetVideosFilePaths();
             for (int i = 0; i < filePaths.Length; i++)
             {
-                Auction auction = new Auction();
                 string fp = filePaths[i];
+                if (fp.Contains("Thumbs"))
+                    continue;
+
+                Auction auction = new Auction();
                 if (auction.GetInfoFromDictionary(ref aeDic, fp))
                 {
                     auction.photoFilePath = fp;
@@ -334,8 +337,8 @@ namespace Bidding
     {
         待歸還 = 0,
         已歸還,
-        拍出待取,
-        拍出未取
+        拍出未取,
+        拍出已取
     };
 
     public enum PayGuarantee
@@ -378,7 +381,7 @@ namespace Bidding
 #endif
 #if (SHIJIA)
         S = 0,
-#endif      
+#endif
         /*A,
         M,*/
         Count
@@ -391,7 +394,7 @@ namespace Bidding
 #endif
 #if (SHIJIA)
         世家 = 0,
-#endif      
+#endif
         /*安德昇,
         沐春堂,*/
         Count

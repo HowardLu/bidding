@@ -1,5 +1,5 @@
-﻿#define MUCHUNTANG
-//#define SHIJIA
+﻿//#define MUCHUNTANG
+#define SHIJIA
 
 using System;
 using System.Drawing;
@@ -37,6 +37,7 @@ namespace SJ_Bidding_System
         private ControlState m_artworkTextBoxState;
         private ControlState m_hkPriceLabelState;
         private ControlState m_hkLabelState;
+        private ControlState m_progressLabelState;
         private Bitmap m_logo_S = Properties.Resources.LOGO_S_big;
         private Bitmap m_logo_A = Properties.Resources.LOGO_A;
         private Bitmap m_logo_M = Properties.Resources.LOGO_M;
@@ -92,6 +93,8 @@ namespace SJ_Bidding_System
             m_hkPriceLabelState = new ControlState(hkPriceLabel.Location, hkPriceLabel.Size, hkPriceLabel.Font.Size, ref cHkPriceLabel);
             Control cHkLabel = (Control)hkLabel;
             m_hkLabelState = new ControlState(hkLabel.Location, hkLabel.Size, hkLabel.Font.Size, ref cHkLabel);
+            Control cProgressLabel = (Control)progressLabel;
+            m_progressLabelState = new ControlState(cProgressLabel.Location, cProgressLabel.Size, cProgressLabel.Font.Size, ref cProgressLabel);
             //label6.Font = new Font("HelveticaNeueLT Pro 45 Lt", 36);
         }
         #endregion
@@ -232,6 +235,7 @@ namespace SJ_Bidding_System
             m_artworkTextBoxState.ReArrange(xRatio, yRatio);
             m_hkPriceLabelState.ReArrange(xRatio, yRatio);
             m_hkLabelState.ReArrange(xRatio, yRatio);
+            m_progressLabelState.ReArrange(xRatio, yRatio);
         }
 
         private void SetLogo(Auctioneer auctioneer)

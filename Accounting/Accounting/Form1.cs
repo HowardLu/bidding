@@ -1,5 +1,5 @@
-﻿#define MUCHUNTANG
-//#define SHIJIA
+﻿//#define MUCHUNTANG
+#define SHIJIA
 
 using System;
 using System.Collections.Generic;
@@ -114,11 +114,11 @@ namespace Accounting
                         DataGridViewCell bscCell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
                         DataGridViewCell fpCell = this.dataGridView1.Rows[e.RowIndex].Cells[AuctionColumnHeader.成交價.ToString()] as DataGridViewCell;
 
-                        int hammerPrice = Utility.ParseToInt(hpCell.Value.ToString(), true);
+                        float hammerPrice = Utility.ParseToFloat(hpCell.Value.ToString(), true);
                         int newBuyerServiceCharge = Utility.ParseToInt(bscCell.Value.ToString(), false);
-                        int finalPrice = GetFinalPrice(hammerPrice, newBuyerServiceCharge);
+                        float finalPrice = GetFinalPrice(hammerPrice, newBuyerServiceCharge);
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.BuyerServiceCharge, newBuyerServiceCharge);
-                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.FinalPrice, finalPrice * m_unit);
+                        m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.FinalPrice, (int)(finalPrice * m_unit));
                         fpCell.Value = finalPrice;
                     }
                     break;
@@ -131,7 +131,7 @@ namespace Accounting
                 case "保證金繳納金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
-                        int guaranteeCost = Utility.ParseToInt(cell.Value.ToString(), false) * m_unit;
+                        int guaranteeCost = (int)(Utility.ParseToFloat(cell.Value.ToString(), false) * m_unit);
                         m_beInternet.UpdateField<string, string>(be => be.BidderID, bidderId, be => be.GuaranteeCost, guaranteeCost.ToString());
                     }
                     break;
@@ -144,7 +144,7 @@ namespace Accounting
                 case "保證金退還金額":
                     {
                         DataGridViewCell cell = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex] as DataGridViewCell;
-                        int returnGuaranteeNumber = Utility.ParseToInt(cell.Value.ToString(), false) * m_unit;
+                        int returnGuaranteeNumber = (int)(Utility.ParseToFloat(cell.Value.ToString(), false) * m_unit);
                         m_auctionsInternet.UpdateField<string, int>(ae => ae.AuctionId, auctionId, ae => ae.ReturnGuaranteeNumber, returnGuaranteeNumber);
                     }
                     break;
@@ -302,7 +302,9 @@ namespace Accounting
                 toolStripStatusLabel1.Text = "連線失敗!";
             }
 
+#if SHIJIA
             Login();
+#endif
 #if MUCHUNTANG
             m_isSuperUser = true;
 #endif
@@ -413,14 +415,20 @@ namespace Accounting
             if (auctionEntities != null)
             {
                 StringBuilder sb = new StringBuilder();
+                int newLineCount = 8;
+                int count = 0;
                 foreach (AuctionEntity auction in auctionEntities)
                 {
                     DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
-                    BidderEntity bidder = m_beInternet.FineOne<string>(be => be.BidderID, auction.BidderNumber);
+                    int bidderNum = Utility.ParseToInt(auction.BidderNumber, true);
+                    BidderEntity bidder = m_beInternet.FineOne<int>(be => be.BidderID_int, bidderNum);
                     if (dealerItem == null)
                     {
-                        sb.AppendLine(auction.AuctionId);
+                        sb.Append(auction.AuctionId);
                         dealerItem = new DealerItemEntity();
+                        count++;
+                        if (count % newLineCount == 0)
+                            sb.Append("\n");
                     }
                     if (bidder == null)
                     {
@@ -454,14 +462,14 @@ namespace Accounting
 
         private void AddDataRowToDataGridView(ref AuctionEntity auction, ref BidderEntity bidder, ref DealerItemEntity dealerItem)
         {
-            int hammerPrice = auction.HammerPrice / m_unit;
-            int buyerServiceCharge = auction.BuyerServiceCharge / m_unit;
-            int finalPrice = auction.FinalPrice / m_unit;
-            int guaranteeCost = int.Parse(bidder.GuaranteeCost) / m_unit;
-            int returnGuaranteeNumber = auction.ReturnGuaranteeNumber / m_unit;
+            float hammerPrice = auction.HammerPrice / m_unit;
+            int buyerServiceCharge = auction.BuyerServiceCharge;
+            float finalPrice = auction.FinalPrice / m_unit;
+            float guaranteeCost = int.Parse(bidder.GuaranteeCost) / m_unit;
+            float returnGuaranteeNumber = auction.ReturnGuaranteeNumber / m_unit;
             float reservePrice = 0;//int.Parse(dealerItem.ReservePrice);
             reservePrice = float.TryParse(dealerItem.ReservePrice, out reservePrice) ? reservePrice / m_unit : 0;
-            int sellerAccountPayable = auction.SellerAccountPayable / m_unit;
+            float sellerAccountPayable = auction.SellerAccountPayable / m_unit;
 
             if (m_isSuperUser)
             {
@@ -610,9 +618,9 @@ namespace Accounting
             m_excelApp = null;
         }
 
-        private int GetFinalPrice(int hammerPrice, int newBuyerServiceCharge)
+        private float GetFinalPrice(float hammerPrice, int newBuyerServiceCharge)
         {
-            int finalPrice = (int)(hammerPrice * (1.0f + newBuyerServiceCharge * 0.01d));
+            float finalPrice = (float)(hammerPrice * (1.0f + newBuyerServiceCharge * 0.01d));
             return finalPrice;
         }
 

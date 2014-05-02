@@ -1,5 +1,5 @@
-﻿#define MUCHUNTANG
-//#define SHIJIA
+﻿//#define MUCHUNTANG
+#define SHIJIA
 
 using System;
 using System.Collections.Generic;
