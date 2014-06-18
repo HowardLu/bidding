@@ -118,6 +118,39 @@ namespace InternetLibrary
         }
     }
 
+    public class DealerEntity
+    {
+        public string _id { get; set; }
+        public string IfDealedInsuranceFee { get; set; }
+        public string FrameFee { get; set; }
+        public string Fax { get; set; }
+        public string FireFee { get; set; }
+        public string Tel { get; set; }
+        public string Name { get; set; }
+        public string BankName { get; set; }
+        public string IdentifyFee { get; set; }
+        public string Country { get; set; }
+        public string Address { get; set; }
+        public string IfDealedPictureFee { get; set; }
+        public string BankAcc { get; set; }
+        public string IfNDealedPictureFee { get; set; }
+        public string IfNDealedInsuranceFee { get; set; }
+        public string CardID { get; set; }
+        public string IfDealedServiceFee { get; set; }
+        public string PostID { get; set; }
+        public string IfNDealedServiceFee { get; set; }
+        public string ContractID { get; set; }
+        public string ContractDate { get; set; }
+        public string CellPhone { get; set; }
+
+        public DealerEntity()
+        {
+            _id = IfDealedInsuranceFee = FrameFee = Fax = FireFee = Tel = Name = BankName = IdentifyFee = Country =
+                Address = IfDealedPictureFee = BankAcc = IfNDealedPictureFee = IfNDealedInsuranceFee =
+                CardID = IfDealedServiceFee = PostID = IfNDealedServiceFee = ContractID = "";
+        }
+    }
+
     public class MemberEntity
     {
         public ObjectId _id { get; set; }

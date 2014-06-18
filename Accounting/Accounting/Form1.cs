@@ -1,5 +1,5 @@
 ﻿//#define MUCHUNTANG
-#define SHIJIA
+//#define SHIJIA
 
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ using Bidding;
 using InternetLibrary;
 using Microsoft.Office.Interop.Excel;
 using UtilityLibrary;
+using System.Linq;
 
 namespace Accounting
 {
@@ -27,11 +28,13 @@ namespace Accounting
         //private String m_connectionStr = "mongodb://1.34.233.143:27017";
         private Internet<AuctionEntity> m_auctionsInternet;
         private Internet<DealerItemEntity> m_dealerItemInternet;
+        private Internet<DealerEntity> m_dealerInternet;
         private Internet<MemberEntity> m_memberInternet;
         private Internet<BidderEntity> m_beInternet;
         private bool m_isSuperUser = false;
         private _Application m_excelApp = null;
         private int m_unit = 10000;
+        private int m_lastUnit = 1;
         #endregion
 
         #region Properties
@@ -47,12 +50,21 @@ namespace Accounting
         #region Windows Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
+#if SHIJIA
+            this.unitComboBox.SelectedIndex = 2;
+#endif
+#if MUCHUNTANG
+            this.unitComboBox.SelectedIndex = 0;
+            m_unit = 1;
+#endif
+
             ConnectToServer();
             // LoadExcelTemplate();
             if (m_auctionsInternet != null && m_auctionsInternet.IsConnected)
             {
                 LoadCollectionToDataGridView();
             }
+            this.WindowState = FormWindowState.Maximized;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -219,6 +231,26 @@ namespace Accounting
                 this.checkedListBox1.SetItemChecked(i, cb.Checked);
             }
         }
+
+        private void unitComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            m_lastUnit = m_unit;
+            switch (this.unitComboBox.SelectedIndex)
+            {
+                case 0:
+                    m_unit = 1;
+                    break;
+                case 1:
+                    m_unit = 1000;
+                    break;
+                case 2:
+                    m_unit = 10000;
+                    break;
+                default:
+                    break;
+            }
+            RefreshDataAfterUnitChanged();
+        }
         #endregion
 
         #region Public Methods
@@ -290,6 +322,7 @@ namespace Accounting
                 return;
             m_auctionsInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             m_dealerItemInternet = new Internet<DealerItemEntity>(ip, "bidding_data", "dealer_item_table");
+            m_dealerInternet = new Internet<DealerEntity>(ip, "bidding_data", "dealer_table");
             m_memberInternet = new Internet<MemberEntity>(ip, "bidding_data", "member_table");
             m_beInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
 
@@ -338,20 +371,7 @@ namespace Accounting
         private void LoadCollectionToDataGridView()
         {
             List<AuctionEntity> auctions = m_auctionsInternet.GetCollectionList();
-            //if (auctions.Count == 0)
-            //{
-            //    AuctionEntity auction = new AuctionEntity();
-            //    auction.AuctionId = "111";
-            //    auction.Artwork = "國寶";
-            //    auction.BidderNumber = "100";
-            //    auction.StockState = "home";
-            //    auction.ReturnState = 1;
-            //    auction.ReturnGuaranteeState = 2;
-            //    auction.PayWayState = 3;
-            //    m_auctionsInternet.Insert(auction);
-            //}
-
-            dataGridView1.ReadOnly = false;
+            this.dataGridView1.ReadOnly = false;
 
             int columnCount = (int)AuctionColumnHeader.Count;
             for (int i = 0; i < columnCount; i++)
@@ -402,10 +422,12 @@ namespace Accounting
 
             List<AuctionEntity> auctionEntities = null;
             List<DealerItemEntity> dealerItemEntities = null;
+            Dictionary<string, DealerEntity> dealerEntities = null;
             try
             {
                 auctionEntities = m_auctionsInternet.GetCollectionList();
                 dealerItemEntities = m_dealerItemInternet.GetCollectionList();
+                dealerEntities = m_dealerInternet.GetCollectionList().ToDictionary(x => x.Name, x => x);
             }
             catch (Exception e)
             {
@@ -420,15 +442,20 @@ namespace Accounting
                 foreach (AuctionEntity auction in auctionEntities)
                 {
                     DealerItemEntity dealerItem = m_dealerItemInternet.FineOne((di => di.LotNO), auction.AuctionId);
+                    DealerEntity dealer = new DealerEntity();
                     int bidderNum = Utility.ParseToInt(auction.BidderNumber, true);
                     BidderEntity bidder = m_beInternet.FineOne<int>(be => be.BidderID_int, bidderNum);
                     if (dealerItem == null)
                     {
-                        sb.Append(auction.AuctionId);
+                        sb.Append(auction.AuctionId + " ");
                         dealerItem = new DealerItemEntity();
                         count++;
                         if (count % newLineCount == 0)
                             sb.Append("\n");
+                    }
+                    else
+                    {
+                        dealer = dealerEntities[dealerItem.SrcDealer];
                     }
                     if (bidder == null)
                     {
@@ -436,7 +463,7 @@ namespace Accounting
                     }
 
                     AuctionEntity auc = auction;
-                    AddDataRowToDataGridView(ref auc, ref bidder, ref dealerItem);
+                    AddDataRowToDataGridView(ref auc, ref bidder, ref dealerItem, ref dealer);
                 }
 
                 if (sb.Length > 0)
@@ -453,23 +480,34 @@ namespace Accounting
                     AuctionEntity auction = new AuctionEntity();
                     BidderEntity bidder = new BidderEntity();
                     DealerItemEntity dItem = dealerItem;
-                    AddDataRowToDataGridView(ref auction, ref bidder, ref dItem);
+                    DealerEntity dealer = new DealerEntity();
+                    if (dealerItem != null && dealerEntities.ContainsKey(dealerItem.SrcDealer))
+                        dealer = dealerEntities[dealerItem.SrcDealer];
+                    AddDataRowToDataGridView(ref auction, ref bidder, ref dItem, ref dealer);
                 }
             }
 
-            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+            //dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader);
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
         }
 
-        private void AddDataRowToDataGridView(ref AuctionEntity auction, ref BidderEntity bidder, ref DealerItemEntity dealerItem)
+        private void AddDataRowToDataGridView(ref AuctionEntity auction, ref BidderEntity bidder, ref DealerItemEntity dealerItem,
+                                              ref DealerEntity dealer)
         {
-            float hammerPrice = auction.HammerPrice / m_unit;
+            float hammerPrice = auction.HammerPrice / (float)m_unit;
             int buyerServiceCharge = auction.BuyerServiceCharge;
-            float finalPrice = auction.FinalPrice / m_unit;
-            float guaranteeCost = int.Parse(bidder.GuaranteeCost) / m_unit;
-            float returnGuaranteeNumber = auction.ReturnGuaranteeNumber / m_unit;
+            float finalPrice = auction.FinalPrice / (float)m_unit;
+            float guaranteeCost = int.Parse(bidder.GuaranteeCost) / (float)m_unit;
+            float returnGuaranteeNumber = auction.ReturnGuaranteeNumber / (float)m_unit;
             float reservePrice = 0;//int.Parse(dealerItem.ReservePrice);
             reservePrice = float.TryParse(dealerItem.ReservePrice, out reservePrice) ? reservePrice / m_unit : 0;
-            float sellerAccountPayable = auction.SellerAccountPayable / m_unit;
+            //float sellerAccountPayable = auction.SellerAccountPayable / m_unit;
+            int ifDealedInsuranceFee = (dealer == null) ? 0 : Utility.ParseToInt(dealer.IfDealedInsuranceFee, true);
+            int ifDealedServiceFee = (dealer == null) ? 0 : Utility.ParseToInt(dealer.IfDealedServiceFee, true);
+            int insuranceNService = ifDealedInsuranceFee + ifDealedServiceFee;
+            insuranceNService = insuranceNService > 0 ? insuranceNService : 0;
+            float sellerAccountPayable = hammerPrice * (100 - insuranceNService) * 0.01f;
 
             if (m_isSuperUser)
             {
@@ -477,10 +515,11 @@ namespace Accounting
                     dealerItem.Remain, dealerItem.SrcDealer, Utility.GetEnumString(typeof(ReturnState), auction.ReturnState),
                     hammerPrice, buyerServiceCharge, finalPrice, bidder.GuaranteeType, guaranteeCost,
                     Utility.GetEnumString(typeof(ReturnGuarantee), auction.ReturnGuaranteeState), returnGuaranteeNumber,
-                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState), auction.SellerServiceCharge,
-                    reservePrice, sellerAccountPayable);
+                    Utility.GetEnumString(typeof(PayGuarantee), auction.PayWayState),
+                    insuranceNService, reservePrice, sellerAccountPayable);
 
-                if (auction.HammerPrice < Utility.ParseToInt(dealerItem.ReservePrice, true))
+                if (auction.HammerPrice < Utility.ParseToFloat(dealerItem.ReservePrice, true) &&
+                    auction.BidderNumber != "" && auction.HammerPrice != 0)
                 {
                     dataGridView1.Rows[dataGridView1.Rows.Count - 1].ErrorText = "落槌價低於保留價!!!";
                 }
@@ -630,6 +669,34 @@ namespace Accounting
             for (int i = 0; i < cols.Count; i++)
             {
                 this.checkedListBox1.Items.Add(cols[i].Name, true);
+            }
+        }
+
+        private void RefreshDataAfterUnitChanged()
+        { 
+            for (int i = 0; i < this.dataGridView1.Columns.Count; i++)
+            {
+                for (int j = 0; j < this.dataGridView1.Rows.Count; j++)
+                {
+                    string colName = this.dataGridView1.Columns[i].Name;
+                    switch (colName)
+                    {
+                        case "落槌價":
+                        case "成交價":
+                        case "保證金繳納金額":
+                        case "保證金退還金額":
+                        case "保留價":
+                        case "應付賣家金額":
+                            {
+                                DataGridViewCell cell = this.dataGridView1.Rows[j].Cells[i] as DataGridViewCell;
+                                float oldValue = Utility.ParseToFloat(cell.Value.ToString(), false) * m_lastUnit;
+                                cell.Value = (object)(oldValue / m_unit);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
         #endregion
