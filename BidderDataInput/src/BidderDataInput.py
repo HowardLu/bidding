@@ -89,7 +89,7 @@ Const			= {	"STATICTEXTNAME":						"準買家姓名",
 							"FIX_BIDDER_DONE":					u"已成功修改[%s]的資料",
 							"NO_BIDDER_DATA":						"查無買家資料!! ID = %d",
 							"DEL_BIDDER_SUCCESS":				u"成功刪除了買家[%s]",
-							"WIN_TITLE_TEXT":						"台灣世家拍賣-競拍者資料建檔系統",
+							"WIN_TITLE_TEXT":						"競拍者資料建檔系統",
 							"SAVE_FILE_SUCCESS":				"資料檔已儲存",
 							"MAX_DIGIT_NOW":						"目前牌號最大位數為%d位",
 							"UNSAVED_MODS_TITLE":				"未儲存資料的處理方式",
@@ -407,12 +407,13 @@ class MyBackground( model.Background ):
 			
 		bidder_data[ "GuaranteeType" ] = com.ComboBoxGuaranteeType.text
 		
-		# 牌號過濾規則(不可有4, 7)
-		re_ob = re.compile( "[47]+" )
 		bidder_id_str = bidder_data[ "BidderID" ]
-		if re_ob.search( bidder_id_str ):
-			self.__add_msg( Const[ "BIDDER_ID_HAS_FOUR" ] )
-			return None
+		
+		# 牌號過濾規則(不可有4, 7)
+		# re_ob = re.compile( "[47]+" )
+		# if re_ob.search( bidder_id_str ):
+			# self.__add_msg( Const[ "BIDDER_ID_HAS_FOUR" ] )
+			# return None
 			
 		# 牌號必須是純數字
 		if not bidder_id_str.isdigit():
