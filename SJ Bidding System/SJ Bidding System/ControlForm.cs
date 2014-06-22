@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define MUCHUNTANG
+#define SHIJIA
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -32,6 +35,7 @@ namespace SJ_Bidding_System
         private Internet<AuctionEntity> m_aeInternet;
         private Internet<BidderEntity> m_beInternet;
         private PlayerForm m_playerForm;
+        private Form2 m_form2;
         #endregion
 
         #region Properties
@@ -67,6 +71,11 @@ namespace SJ_Bidding_System
         /// <param name="e"></param>
         private void ControlForm_Load(object sender, EventArgs e)
         {
+#if MUCHUNTANG
+            this.Text = "台灣沐春堂拍賣系統";
+            this.logoPictureBox.Visible = false;
+#endif
+
             string settingsFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.settingsFN);
             Settings.Load(settingsFP);
 
@@ -95,8 +104,8 @@ namespace SJ_Bidding_System
             usdTextBox.Text = ExchangeRate.ntdToUsdRate.ToString();
             hkTextBox.Text = ExchangeRate.ntdToHkRate.ToString();
 
-            LoadBiddingResult(Settings.biddingResultFP);
-            LoadBackupPath(Path.Combine(Path.GetDirectoryName(Settings.biddingResultFP), "backup_path.ini"));
+            //LoadBiddingResult(Settings.biddingResultFP);
+            //LoadBackupPath(Path.Combine(Path.GetDirectoryName(Settings.biddingResultFP), "backup_path.ini"));
         }
 
         /// <summary>
@@ -328,7 +337,7 @@ namespace SJ_Bidding_System
         /// <param name="e"></param>
         private void rmbTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (rmbTextBox.Text != "" && m_auctions.Count != 0)
+            if (rmbTextBox.Text != "" && m_auctions != null && m_auctions.Count != 0)
             {
                 if (float.TryParse(rmbTextBox.Text, out ExchangeRate.ntdToRmbRate))
                     m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
@@ -342,7 +351,7 @@ namespace SJ_Bidding_System
         /// <param name="e"></param>
         private void usdTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (usdTextBox.Text != "" && m_auctions.Count != 0)
+            if (usdTextBox.Text != "" && m_auctions != null && m_auctions.Count != 0)
             {
                 if (float.TryParse(usdTextBox.Text, out ExchangeRate.ntdToUsdRate))
                     m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
@@ -418,7 +427,7 @@ namespace SJ_Bidding_System
 
         private void hkTextBox_TextChanged(object sender, EventArgs e)
         {
-            if (hkTextBox.Text != "" && m_auctions.Count != 0)
+            if (hkTextBox.Text != "" && m_auctions != null && m_auctions.Count != 0)
             {
                 if (float.TryParse(hkTextBox.Text, out ExchangeRate.ntdToHkRate))
                     m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
@@ -529,6 +538,12 @@ namespace SJ_Bidding_System
                 SetAuctionOnForm(m_auctions[m_auctionIdNow]);
                 m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             }
+            else
+            {
+                MessageBox.Show(String.Format("請在Auctions/場次 {0} 儲存拍品圖片", sessionId.ToString()), "",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
             InitAuctionComboBox();
 
             if (m_auctions.Count != 0)
@@ -845,22 +860,27 @@ namespace SJ_Bidding_System
             ClosePlayerForm();
 
             if (videoPath == "")
+            {
+                //m_form2 = new Form2();
+                //m_form2.Show();
                 return;
+            }
 
             try
             {
                 m_playerForm = new PlayerForm(Path.Combine(Application.StartupPath, videoPath));
             }
             catch (Exception e)
-            { 
+            {
+                MessageBox.Show(e.ToString());
             }
             Screen otherScreen = Screen.FromControl(this);
             if (Screen.AllScreens.Length > 1)
             {
                 otherScreen = Screen.AllScreens[1];
+                m_playerForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
+                m_playerForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
             }
-            //m_playerForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
-            //m_playerForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
             m_playerForm.WindowState = FormWindowState.Maximized;
             m_playerForm.Show();
         }
@@ -878,7 +898,10 @@ namespace SJ_Bidding_System
         {
             sessionComboBox.Items.Clear();
             m_sessions = Auction.LoadSessions();
-            sessionComboBox.Items.AddRange(m_sessions.ToArray());
+            if (m_sessions.Count == 0)
+                MessageBox.Show("請在Auctions建立場次資料夾，\n例：1、2...", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            else
+                sessionComboBox.Items.AddRange(m_sessions.ToArray());
         }
         #endregion
     }

@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define MUCHUNTANG
+#define SHIJIA
+
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Bidding;
@@ -34,6 +37,7 @@ namespace SJ_Bidding_System
         private ControlState m_artworkTextBoxState;
         private ControlState m_hkPriceLabelState;
         private ControlState m_hkLabelState;
+        private ControlState m_progressLabelState;
         private Bitmap m_logo_S = Properties.Resources.LOGO_S_big;
         private Bitmap m_logo_A = Properties.Resources.LOGO_A;
         private Bitmap m_logo_M = Properties.Resources.LOGO_M;
@@ -89,6 +93,8 @@ namespace SJ_Bidding_System
             m_hkPriceLabelState = new ControlState(hkPriceLabel.Location, hkPriceLabel.Size, hkPriceLabel.Font.Size, ref cHkPriceLabel);
             Control cHkLabel = (Control)hkLabel;
             m_hkLabelState = new ControlState(hkLabel.Location, hkLabel.Size, hkLabel.Font.Size, ref cHkLabel);
+            Control cProgressLabel = (Control)progressLabel;
+            m_progressLabelState = new ControlState(cProgressLabel.Location, cProgressLabel.Size, cProgressLabel.Font.Size, ref cProgressLabel);
             //label6.Font = new Font("HelveticaNeueLT Pro 45 Lt", 36);
         }
         #endregion
@@ -104,6 +110,9 @@ namespace SJ_Bidding_System
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
             ChangeLogoCheck();
+#if (MUCHUNTANG)
+            this.logoPictureBox.Image = m_logo_M;
+#endif
         }
 
         private void DisplayForm_Resize(object sender, EventArgs e)
@@ -226,21 +235,27 @@ namespace SJ_Bidding_System
             m_artworkTextBoxState.ReArrange(xRatio, yRatio);
             m_hkPriceLabelState.ReArrange(xRatio, yRatio);
             m_hkLabelState.ReArrange(xRatio, yRatio);
+            m_progressLabelState.ReArrange(xRatio, yRatio);
         }
 
         private void SetLogo(Auctioneer auctioneer)
         {
             switch (auctioneer)
             {
+#if (SHIJIA)
                 case Auctioneer.S:
                     logoPictureBox.Image = m_logo_S;
                     break;
+#endif
                 /*case Auctioneer.A:
                     logoPictureBox.Image = m_logo_A;
-                    break;
-                case Auctioneer.M:
-                    logoPictureBox.Image = m_logo_M;
                     break;*/
+#if (MUCHUNTANG)
+                case Auctioneer.M:
+
+                    logoPictureBox.Image = m_logo_M;
+                    break;
+#endif
                 default:
                     break;
             }

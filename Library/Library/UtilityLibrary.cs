@@ -179,6 +179,22 @@ namespace UtilityLibrary
             }
         }
 
+        public static float ParseToFloat(string input, bool isSilence)
+        {
+            float number = 0;
+            if (float.TryParse(input, out number))
+            {
+                return number;
+            }
+            else
+            {
+                if (!isSilence)
+                    MessageBox.Show("無效數字: " + input + "\n請輸入有效數字!");
+
+                return -1;
+            }
+        }
+
         public static Bitmap OpenBitmap(string filePath)
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))

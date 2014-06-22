@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define MUCHUNTANG
+//#define SHIJIA
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -43,6 +46,7 @@ namespace Bidding
             checkoutNumber = 0;
             checkoutTime = "";
             videoPath = "";
+            auctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
         }
 
         /// <summary>
@@ -165,8 +169,11 @@ namespace Bidding
             Dictionary<string, string> videoPaths = GetVideosFilePaths();
             for (int i = 0; i < filePaths.Length; i++)
             {
-                Auction auction = new Auction();
                 string fp = filePaths[i];
+                if (fp.Contains("Thumbs"))
+                    continue;
+
+                Auction auction = new Auction();
                 if (auction.GetInfoFromDictionary(ref aeDic, fp))
                 {
                     auction.photoFilePath = fp;
@@ -297,10 +304,10 @@ namespace Bidding
                 auctionMappings = new Dictionary<string, List<string>>();
             }
 
+            string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
             foreach (Auction auc in auctions.Values)
             {
-                string auctioneer = auc.auctioneer == "" ? Auctioneer.S.ToString() : auc.auctioneer;
-                auctioneer = "S";
+                string auctioneer = auc.auctioneer == "" ? defaultAuctioneer : auc.auctioneer;
                 if (!auctionMappings.ContainsKey(auctioneer))
                 {
                     auctionMappings[auctioneer] = new List<string>();
@@ -330,8 +337,8 @@ namespace Bidding
     {
         待歸還 = 0,
         已歸還,
-        拍出待取,
-        拍出未取
+        拍出未取,
+        拍出已取
     };
 
     public enum PayGuarantee
@@ -369,7 +376,12 @@ namespace Bidding
 
     public enum Auctioneer
     {
+#if (MUCHUNTANG)
+        M = 0,
+#endif
+#if (SHIJIA)
         S = 0,
+#endif
         /*A,
         M,*/
         Count
@@ -377,7 +389,12 @@ namespace Bidding
 
     public enum AuctioneerName
     {
+#if (MUCHUNTANG)
+        沐春堂 = 0,
+#endif
+#if (SHIJIA)
         世家 = 0,
+#endif
         /*安德昇,
         沐春堂,*/
         Count

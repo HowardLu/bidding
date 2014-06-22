@@ -1,4 +1,7 @@
-﻿using System;
+﻿//#define MUCHUNTANG
+#define SHIJIA
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -33,7 +36,7 @@ namespace Checkout
         private string m_settingsFN = "settings.txt";
         private string m_yesStr = "是";
         private string m_noStr = "否";
-        private string m_cashFlowTemplateFN = "金流單.dot";
+        private string m_cashFlowTemplateFN = "金流單_";
         private int m_maxCheckoutNumber = 0;
         private Dictionary<int, string> m_checkoutTime;
         #endregion
@@ -73,6 +76,8 @@ namespace Checkout
             {
                 SetButtonsEnable(true);
             }
+            string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
+            m_cashFlowTemplateFN = m_cashFlowTemplateFN + defaultAuctioneer + ".dot";
         }
 
         private void CheckoutForm_Resize(object sender, System.EventArgs e)
@@ -295,7 +300,8 @@ namespace Checkout
             Dictionary<string, int> totalSums = new Dictionary<string, int>();
             if (isPrintOneByOneCheckBox.Checked)
             {
-                Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + Auctioneer.S.ToString() + ".dot";
+                string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
+                Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + defaultAuctioneer + ".dot";
                 foreach (Auction auc in m_bidder.auctions.Values)
                 {
                     auc.docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + auc.lot.ToString() + ".doc";
@@ -391,7 +397,9 @@ namespace Checkout
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 3).Range.Text = serviceSum[tableId].ToString("n0");
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
+#if (SHIJIA)
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
+#endif
                         totalSums.Add(time, amountDue);
                     }
 
@@ -440,7 +448,9 @@ namespace Checkout
             m_bidder.cashFlowDocName = m_bidder.no.ToString() + "_" + m_bidder.name + "_金流單.doc";
             m_bidder.cashFlowDoc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing, ref m_oMissing, ref m_oMissing);
             object oBookMark = "Today";
-            //m_bidder.cashFlowDoc.Bookmarks.get_Item(ref oBookMark).Range.Text = " " + DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
+#if (MUCHUNTANG)
+            m_bidder.cashFlowDoc.Bookmarks.get_Item(ref oBookMark).Range.Text = " " + DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
+#endif
             Microsoft.Office.Interop.Word.Table bidderDataTable = m_bidder.cashFlowDoc.Tables[1];
             bidderDataTable.Cell(1, 2).Range.Text = m_bidder.name;
             bidderDataTable.Cell(2, 2).Range.Text = m_bidder.phone;
@@ -452,16 +462,30 @@ namespace Checkout
 
             Microsoft.Office.Interop.Word.Table depositReceiveTable = m_bidder.cashFlowDoc.Tables[2];
             //depositReceiveTable.Cell(0, 2).Range.Text = Utility.GetEnumString(typeof(AuctioneerName), (int)m_bidder.auctioneer);
+#if (MUCHUNTANG)
+            depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeState.ToString();
+            depositReceiveTable.Cell(0, 6).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
+#endif
+#if (SHIJIA)
             depositReceiveTable.Cell(0, 2).Range.Text = m_bidder.payGuaranteeState.ToString();
             depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
+#endif
 
             Microsoft.Office.Interop.Word.Table totalDataTable = m_bidder.cashFlowDoc.Tables[3];
             int counter = 0;
+            string auctioneerStr = totalDataTable.Cell(2, 1).Range.Text;
             foreach (KeyValuePair<string, int> sum in totalSums)
             {
                 if (counter != totalSums.Count - 1)
                     totalDataTable.Rows.Add(totalDataTable.Rows[2 + counter]);
+
+#if (MUCHUNTANG)
+                totalDataTable.Cell(2 + counter, 1).Range.Text = auctioneerStr;
+#endif
+#if (SHIJIA)
                 totalDataTable.Cell(2 + counter, 1).Range.Text = sum.Key;
+#endif
+
                 totalDataTable.Cell(2 + counter, 2).Range.Text = sum.Value.ToString("n0");
                 counter++;
             }

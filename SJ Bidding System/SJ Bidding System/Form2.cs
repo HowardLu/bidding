@@ -1,21 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace SJ_Bidding_System
 {
-    public partial class PlayerForm : Form
+    public partial class Form2 : Form
     {
-        public string URL { get; set; }
-
-        public PlayerForm(string url)
+        public Form2()
         {
             InitializeComponent();
-            URL = url;
         }
 
-        private void PlayerForm_Load(object sender, EventArgs e)
+        private void Form2_Load(object sender, EventArgs e)
         {
-            this.axWindowsMediaPlayer1.URL = URL;// @"C:\Wildlife.wmv";
+            this.axWindowsMediaPlayer1.URL = @"C:\Wildlife.wmv";
             this.axWindowsMediaPlayer1.Ctlcontrols.play();
         }
 

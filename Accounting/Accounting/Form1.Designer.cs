@@ -38,6 +38,8 @@
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.checkAllCheckBox = new System.Windows.Forms.CheckBox();
+            this.unitLabel = new System.Windows.Forms.Label();
+            this.unitComboBox = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -144,11 +146,37 @@
             this.checkAllCheckBox.UseVisualStyleBackColor = true;
             this.checkAllCheckBox.CheckedChanged += new System.EventHandler(this.checkAllCheckBox_CheckedChanged);
             // 
+            // unitLabel
+            // 
+            this.unitLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.unitLabel.AutoSize = true;
+            this.unitLabel.Location = new System.Drawing.Point(1267, 492);
+            this.unitLabel.Name = "unitLabel";
+            this.unitLabel.Size = new System.Drawing.Size(32, 12);
+            this.unitLabel.TabIndex = 7;
+            this.unitLabel.Text = "單位:";
+            // 
+            // unitComboBox
+            // 
+            this.unitComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.unitComboBox.FormattingEnabled = true;
+            this.unitComboBox.Items.AddRange(new object[] {
+            "個",
+            "千",
+            "萬"});
+            this.unitComboBox.Location = new System.Drawing.Point(1305, 489);
+            this.unitComboBox.Name = "unitComboBox";
+            this.unitComboBox.Size = new System.Drawing.Size(75, 20);
+            this.unitComboBox.TabIndex = 8;
+            this.unitComboBox.SelectedIndexChanged += new System.EventHandler(this.unitComboBox_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1392, 662);
+            this.Controls.Add(this.unitComboBox);
+            this.Controls.Add(this.unitLabel);
             this.Controls.Add(this.checkAllCheckBox);
             this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.statusStrip1);
@@ -181,6 +209,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.CheckBox checkAllCheckBox;
+        private System.Windows.Forms.Label unitLabel;
+        private System.Windows.Forms.ComboBox unitComboBox;
 
 
     }
