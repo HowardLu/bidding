@@ -43,15 +43,15 @@
             this.prevsBtn = new System.Windows.Forms.Button();
             this.resetBtn = new System.Windows.Forms.Button();
             this.rateLabel = new System.Windows.Forms.Label();
-            this.rmbLabel = new System.Windows.Forms.Label();
-            this.usdLabel = new System.Windows.Forms.Label();
-            this.rmbTextBox = new System.Windows.Forms.TextBox();
-            this.usdTextBox = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.er1TextBox = new System.Windows.Forms.TextBox();
+            this.er2TextBox = new System.Windows.Forms.TextBox();
             this.auctionComboBox = new System.Windows.Forms.ComboBox();
             this.resetAllBtn = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.hkTextBox = new System.Windows.Forms.TextBox();
-            this.hkLabel = new System.Windows.Forms.Label();
+            this.er3TextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.winBidderTextBox = new System.Windows.Forms.TextBox();
             this.winBidderLabel = new System.Windows.Forms.Label();
             this.confirmBidderButton = new System.Windows.Forms.Button();
@@ -63,6 +63,12 @@
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.sessionLabel = new System.Windows.Forms.Label();
             this.sessionComboBox = new System.Windows.Forms.ComboBox();
+            this.er1NameTextBox = new System.Windows.Forms.TextBox();
+            this.er2NameTextBox = new System.Windows.Forms.TextBox();
+            this.er3NameTextBox = new System.Windows.Forms.TextBox();
+            this.currencyLabel = new System.Windows.Forms.Label();
+            this.mainCurrencyTextBox = new System.Windows.Forms.TextBox();
+            this.setPriceLevelButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -220,59 +226,59 @@
             // rateLabel
             // 
             this.rateLabel.AutoSize = true;
-            this.rateLabel.Font = new System.Drawing.Font("Microsoft JhengHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.rateLabel.Font = new System.Drawing.Font("Microsoft JhengHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.rateLabel.ForeColor = System.Drawing.Color.White;
-            this.rateLabel.Location = new System.Drawing.Point(78, 93);
+            this.rateLabel.Location = new System.Drawing.Point(70, 57);
             this.rateLabel.Name = "rateLabel";
-            this.rateLabel.Size = new System.Drawing.Size(122, 31);
+            this.rateLabel.Size = new System.Drawing.Size(95, 24);
             this.rateLabel.TabIndex = 21;
             this.rateLabel.Text = "當天匯率 :";
             // 
-            // rmbLabel
+            // label1
             // 
-            this.rmbLabel.AutoSize = true;
-            this.rmbLabel.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.rmbLabel.ForeColor = System.Drawing.Color.White;
-            this.rmbLabel.Location = new System.Drawing.Point(90, 126);
-            this.rmbLabel.Name = "rmbLabel";
-            this.rmbLabel.Size = new System.Drawing.Size(68, 27);
-            this.rmbLabel.TabIndex = 22;
-            this.rmbLabel.Text = "RMB :";
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(161, 86);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(22, 27);
+            this.label1.TabIndex = 22;
+            this.label1.Text = " :";
             // 
-            // usdLabel
+            // label2
             // 
-            this.usdLabel.AutoSize = true;
-            this.usdLabel.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.usdLabel.ForeColor = System.Drawing.Color.White;
-            this.usdLabel.Location = new System.Drawing.Point(288, 126);
-            this.usdLabel.Name = "usdLabel";
-            this.usdLabel.Size = new System.Drawing.Size(66, 27);
-            this.usdLabel.TabIndex = 23;
-            this.usdLabel.Text = "USD :";
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(161, 118);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(22, 27);
+            this.label2.TabIndex = 23;
+            this.label2.Text = " :";
             // 
-            // rmbTextBox
+            // er1TextBox
             // 
-            this.rmbTextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.rmbTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.rmbTextBox.ForeColor = System.Drawing.Color.White;
-            this.rmbTextBox.Location = new System.Drawing.Point(161, 124);
-            this.rmbTextBox.Name = "rmbTextBox";
-            this.rmbTextBox.Size = new System.Drawing.Size(121, 33);
-            this.rmbTextBox.TabIndex = 24;
-            this.rmbTextBox.TextChanged += new System.EventHandler(this.rmbTextBox_TextChanged);
-            this.rmbTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.rmbTextBox_KeyPress);
+            this.er1TextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.er1TextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.er1TextBox.ForeColor = System.Drawing.Color.White;
+            this.er1TextBox.Location = new System.Drawing.Point(186, 86);
+            this.er1TextBox.Name = "er1TextBox";
+            this.er1TextBox.Size = new System.Drawing.Size(121, 27);
+            this.er1TextBox.TabIndex = 24;
+            this.er1TextBox.TextChanged += new System.EventHandler(this.er1TextBox_TextChanged);
+            this.er1TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.er1TextBox_KeyPress);
             // 
-            // usdTextBox
+            // er2TextBox
             // 
-            this.usdTextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.usdTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.usdTextBox.ForeColor = System.Drawing.Color.White;
-            this.usdTextBox.Location = new System.Drawing.Point(358, 124);
-            this.usdTextBox.Name = "usdTextBox";
-            this.usdTextBox.Size = new System.Drawing.Size(121, 33);
-            this.usdTextBox.TabIndex = 25;
-            this.usdTextBox.TextChanged += new System.EventHandler(this.usdTextBox_TextChanged);
-            this.usdTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.usdTextBox_KeyPress);
+            this.er2TextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.er2TextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.er2TextBox.ForeColor = System.Drawing.Color.White;
+            this.er2TextBox.Location = new System.Drawing.Point(186, 118);
+            this.er2TextBox.Name = "er2TextBox";
+            this.er2TextBox.Size = new System.Drawing.Size(121, 27);
+            this.er2TextBox.TabIndex = 25;
+            this.er2TextBox.TextChanged += new System.EventHandler(this.er2TextBox_TextChanged);
+            this.er2TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.usdTextBox_KeyPress);
             // 
             // auctionComboBox
             // 
@@ -300,28 +306,28 @@
             this.timer1.Interval = 500;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // hkTextBox
+            // er3TextBox
             // 
-            this.hkTextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
-            this.hkTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.hkTextBox.ForeColor = System.Drawing.Color.White;
-            this.hkTextBox.Location = new System.Drawing.Point(555, 124);
-            this.hkTextBox.Name = "hkTextBox";
-            this.hkTextBox.Size = new System.Drawing.Size(121, 33);
-            this.hkTextBox.TabIndex = 29;
-            this.hkTextBox.TextChanged += new System.EventHandler(this.hkTextBox_TextChanged);
-            this.hkTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.hkTextBox_KeyPress);
+            this.er3TextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.er3TextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.er3TextBox.ForeColor = System.Drawing.Color.White;
+            this.er3TextBox.Location = new System.Drawing.Point(187, 150);
+            this.er3TextBox.Name = "er3TextBox";
+            this.er3TextBox.Size = new System.Drawing.Size(121, 27);
+            this.er3TextBox.TabIndex = 29;
+            this.er3TextBox.TextChanged += new System.EventHandler(this.er3TextBox_TextChanged);
+            this.er3TextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.hkTextBox_KeyPress);
             // 
-            // hkLabel
+            // label3
             // 
-            this.hkLabel.AutoSize = true;
-            this.hkLabel.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.hkLabel.ForeColor = System.Drawing.Color.White;
-            this.hkLabel.Location = new System.Drawing.Point(485, 126);
-            this.hkLabel.Name = "hkLabel";
-            this.hkLabel.Size = new System.Drawing.Size(67, 27);
-            this.hkLabel.TabIndex = 28;
-            this.hkLabel.Text = "HKD :";
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(161, 150);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(22, 27);
+            this.label3.TabIndex = 28;
+            this.label3.Text = " :";
             // 
             // winBidderTextBox
             // 
@@ -454,11 +460,88 @@
             this.sessionComboBox.TabIndex = 38;
             this.sessionComboBox.SelectedIndexChanged += new System.EventHandler(this.sessionComboBox_SelectedIndexChanged);
             // 
+            // er1NameTextBox
+            // 
+            this.er1NameTextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.er1NameTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.er1NameTextBox.ForeColor = System.Drawing.Color.White;
+            this.er1NameTextBox.Location = new System.Drawing.Point(92, 86);
+            this.er1NameTextBox.Name = "er1NameTextBox";
+            this.er1NameTextBox.Size = new System.Drawing.Size(65, 27);
+            this.er1NameTextBox.TabIndex = 39;
+            this.er1NameTextBox.Text = "RMB";
+            this.er1NameTextBox.TextChanged += new System.EventHandler(this.er1NameTextBox_TextChanged);
+            // 
+            // er2NameTextBox
+            // 
+            this.er2NameTextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.er2NameTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.er2NameTextBox.ForeColor = System.Drawing.Color.White;
+            this.er2NameTextBox.Location = new System.Drawing.Point(92, 118);
+            this.er2NameTextBox.Name = "er2NameTextBox";
+            this.er2NameTextBox.Size = new System.Drawing.Size(65, 27);
+            this.er2NameTextBox.TabIndex = 40;
+            this.er2NameTextBox.Text = "USD";
+            this.er2NameTextBox.TextChanged += new System.EventHandler(this.er2NameTextBox_TextChanged);
+            // 
+            // er3NameTextBox
+            // 
+            this.er3NameTextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.er3NameTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.er3NameTextBox.ForeColor = System.Drawing.Color.White;
+            this.er3NameTextBox.Location = new System.Drawing.Point(92, 150);
+            this.er3NameTextBox.Name = "er3NameTextBox";
+            this.er3NameTextBox.Size = new System.Drawing.Size(65, 27);
+            this.er3NameTextBox.TabIndex = 41;
+            this.er3NameTextBox.Text = "HKD";
+            this.er3NameTextBox.TextChanged += new System.EventHandler(this.er3NameTextBox_TextChanged);
+            // 
+            // currencyLabel
+            // 
+            this.currencyLabel.AutoSize = true;
+            this.currencyLabel.Font = new System.Drawing.Font("Microsoft JhengHei", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.currencyLabel.ForeColor = System.Drawing.Color.White;
+            this.currencyLabel.Location = new System.Drawing.Point(352, 57);
+            this.currencyLabel.Name = "currencyLabel";
+            this.currencyLabel.Size = new System.Drawing.Size(95, 24);
+            this.currencyLabel.TabIndex = 42;
+            this.currencyLabel.Text = "主要貨幣 :";
+            // 
+            // mainCurrencyTextBox
+            // 
+            this.mainCurrencyTextBox.BackColor = System.Drawing.SystemColors.WindowFrame;
+            this.mainCurrencyTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.mainCurrencyTextBox.ForeColor = System.Drawing.Color.White;
+            this.mainCurrencyTextBox.Location = new System.Drawing.Point(373, 86);
+            this.mainCurrencyTextBox.Name = "mainCurrencyTextBox";
+            this.mainCurrencyTextBox.Size = new System.Drawing.Size(65, 27);
+            this.mainCurrencyTextBox.TabIndex = 43;
+            this.mainCurrencyTextBox.Text = "NTD";
+            this.mainCurrencyTextBox.TextChanged += new System.EventHandler(this.currencyTextBox_TextChanged);
+            // 
+            // setPriceLevelButton
+            // 
+            this.setPriceLevelButton.BackColor = System.Drawing.Color.White;
+            this.setPriceLevelButton.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.setPriceLevelButton.Location = new System.Drawing.Point(479, 85);
+            this.setPriceLevelButton.Name = "setPriceLevelButton";
+            this.setPriceLevelButton.Size = new System.Drawing.Size(85, 27);
+            this.setPriceLevelButton.TabIndex = 44;
+            this.setPriceLevelButton.Text = "設定跳階";
+            this.setPriceLevelButton.UseVisualStyleBackColor = false;
+            this.setPriceLevelButton.Click += new System.EventHandler(this.setPriceLevelButton_Click);
+            // 
             // ControlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1016, 730);
+            this.Controls.Add(this.setPriceLevelButton);
+            this.Controls.Add(this.mainCurrencyTextBox);
+            this.Controls.Add(this.currencyLabel);
+            this.Controls.Add(this.er3NameTextBox);
+            this.Controls.Add(this.er2NameTextBox);
+            this.Controls.Add(this.er1NameTextBox);
             this.Controls.Add(this.sessionComboBox);
             this.Controls.Add(this.sessionLabel);
             this.Controls.Add(this.stopButton);
@@ -467,15 +550,15 @@
             this.Controls.Add(this.confirmBidderButton);
             this.Controls.Add(this.winBidderTextBox);
             this.Controls.Add(this.winBidderLabel);
-            this.Controls.Add(this.hkTextBox);
-            this.Controls.Add(this.hkLabel);
+            this.Controls.Add(this.er3TextBox);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.resetAllBtn);
             this.Controls.Add(this.nowPriceTextBox);
             this.Controls.Add(this.auctionComboBox);
-            this.Controls.Add(this.usdTextBox);
-            this.Controls.Add(this.rmbTextBox);
-            this.Controls.Add(this.usdLabel);
-            this.Controls.Add(this.rmbLabel);
+            this.Controls.Add(this.er2TextBox);
+            this.Controls.Add(this.er1TextBox);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.rateLabel);
             this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.nextBtn);
@@ -526,15 +609,15 @@
         private System.Windows.Forms.Button nextBtn;
         private System.Windows.Forms.Button resetBtn;
         private System.Windows.Forms.Label rateLabel;
-        private System.Windows.Forms.Label rmbLabel;
-        private System.Windows.Forms.Label usdLabel;
-        private System.Windows.Forms.TextBox rmbTextBox;
-        private System.Windows.Forms.TextBox usdTextBox;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox er1TextBox;
+        private System.Windows.Forms.TextBox er2TextBox;
         private System.Windows.Forms.ComboBox auctionComboBox;
         private System.Windows.Forms.Button resetAllBtn;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.TextBox hkTextBox;
-        private System.Windows.Forms.Label hkLabel;
+        private System.Windows.Forms.TextBox er3TextBox;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox winBidderTextBox;
         private System.Windows.Forms.Label winBidderLabel;
         private System.Windows.Forms.Button confirmBidderButton;
@@ -543,6 +626,12 @@
         private System.Windows.Forms.Button stopButton;
         private System.Windows.Forms.Label sessionLabel;
         private System.Windows.Forms.ComboBox sessionComboBox;
+        private System.Windows.Forms.TextBox er1NameTextBox;
+        private System.Windows.Forms.TextBox er2NameTextBox;
+        private System.Windows.Forms.TextBox er3NameTextBox;
+        private System.Windows.Forms.Label currencyLabel;
+        private System.Windows.Forms.TextBox mainCurrencyTextBox;
+        private System.Windows.Forms.Button setPriceLevelButton;
     }
 }
 

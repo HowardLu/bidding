@@ -1,1 +1,3 @@
-Server BidderDataServer\exe
+er0 5
+er1 40
+er2 30

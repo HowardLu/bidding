@@ -31,15 +31,15 @@
             this.lotLabel = new System.Windows.Forms.Label();
             this.lotNumLabel = new System.Windows.Forms.Label();
             this.artistLabel = new System.Windows.Forms.Label();
-            this.rmbLabel = new System.Windows.Forms.Label();
-            this.ntdLabel = new System.Windows.Forms.Label();
-            this.usdLabel = new System.Windows.Forms.Label();
-            this.ntdPriceLabel = new System.Windows.Forms.Label();
-            this.rmbPriceLabel = new System.Windows.Forms.Label();
-            this.usdPriceLabel = new System.Windows.Forms.Label();
+            this.er1NameLabel = new System.Windows.Forms.Label();
+            this.mainCurNameLabel = new System.Windows.Forms.Label();
+            this.er2NameLabel = new System.Windows.Forms.Label();
+            this.mainPriceLabel = new System.Windows.Forms.Label();
+            this.er1PriceLabel = new System.Windows.Forms.Label();
+            this.er2PriceLabel = new System.Windows.Forms.Label();
             this.artworkTextBox = new System.Windows.Forms.TextBox();
-            this.hkPriceLabel = new System.Windows.Forms.Label();
-            this.hkLabel = new System.Windows.Forms.Label();
+            this.er3PriceLabel = new System.Windows.Forms.Label();
+            this.er3NameLabel = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.sessionLabel = new System.Windows.Forms.Label();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
@@ -86,74 +86,74 @@
             this.artistLabel.TabIndex = 4;
             this.artistLabel.Text = "作者作者作者作者";
             // 
-            // rmbLabel
+            // er1NameLabel
             // 
-            this.rmbLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.rmbLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rmbLabel.ForeColor = System.Drawing.Color.White;
-            this.rmbLabel.Location = new System.Drawing.Point(60, 771);
-            this.rmbLabel.Name = "rmbLabel";
-            this.rmbLabel.Size = new System.Drawing.Size(162, 66);
-            this.rmbLabel.TabIndex = 6;
-            this.rmbLabel.Text = "RMB";
+            this.er1NameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.er1NameLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.er1NameLabel.ForeColor = System.Drawing.Color.White;
+            this.er1NameLabel.Location = new System.Drawing.Point(60, 771);
+            this.er1NameLabel.Name = "er1NameLabel";
+            this.er1NameLabel.Size = new System.Drawing.Size(162, 66);
+            this.er1NameLabel.TabIndex = 6;
+            this.er1NameLabel.Text = "RMB";
             // 
-            // ntdLabel
+            // mainNameLabel
             // 
-            this.ntdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.ntdLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ntdLabel.ForeColor = System.Drawing.Color.White;
-            this.ntdLabel.Location = new System.Drawing.Point(60, 646);
-            this.ntdLabel.Name = "ntdLabel";
-            this.ntdLabel.Size = new System.Drawing.Size(160, 66);
-            this.ntdLabel.TabIndex = 7;
-            this.ntdLabel.Text = "NTD";
+            this.mainCurNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainCurNameLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainCurNameLabel.ForeColor = System.Drawing.Color.White;
+            this.mainCurNameLabel.Location = new System.Drawing.Point(60, 646);
+            this.mainCurNameLabel.Name = "mainNameLabel";
+            this.mainCurNameLabel.Size = new System.Drawing.Size(160, 66);
+            this.mainCurNameLabel.TabIndex = 7;
+            this.mainCurNameLabel.Text = "NTD";
             // 
-            // usdLabel
+            // er2NameLabel
             // 
-            this.usdLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.usdLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.usdLabel.ForeColor = System.Drawing.Color.White;
-            this.usdLabel.Location = new System.Drawing.Point(60, 841);
-            this.usdLabel.Name = "usdLabel";
-            this.usdLabel.Size = new System.Drawing.Size(160, 66);
-            this.usdLabel.TabIndex = 8;
-            this.usdLabel.Text = "USD";
+            this.er2NameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.er2NameLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.er2NameLabel.ForeColor = System.Drawing.Color.White;
+            this.er2NameLabel.Location = new System.Drawing.Point(60, 841);
+            this.er2NameLabel.Name = "er2NameLabel";
+            this.er2NameLabel.Size = new System.Drawing.Size(160, 66);
+            this.er2NameLabel.TabIndex = 8;
+            this.er2NameLabel.Text = "USD";
             // 
-            // ntdPriceLabel
+            // mainPriceLabel
             // 
-            this.ntdPriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.ntdPriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ntdPriceLabel.ForeColor = System.Drawing.Color.White;
-            this.ntdPriceLabel.Location = new System.Drawing.Point(210, 646);
-            this.ntdPriceLabel.Name = "ntdPriceLabel";
-            this.ntdPriceLabel.Size = new System.Drawing.Size(350, 69);
-            this.ntdPriceLabel.TabIndex = 9;
-            this.ntdPriceLabel.Text = "999,999,000";
-            this.ntdPriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.mainPriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainPriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainPriceLabel.ForeColor = System.Drawing.Color.White;
+            this.mainPriceLabel.Location = new System.Drawing.Point(210, 646);
+            this.mainPriceLabel.Name = "mainPriceLabel";
+            this.mainPriceLabel.Size = new System.Drawing.Size(350, 69);
+            this.mainPriceLabel.TabIndex = 9;
+            this.mainPriceLabel.Text = "999,999,000";
+            this.mainPriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // rmbPriceLabel
+            // er1PriceLabel
             // 
-            this.rmbPriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.rmbPriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rmbPriceLabel.ForeColor = System.Drawing.Color.White;
-            this.rmbPriceLabel.Location = new System.Drawing.Point(210, 771);
-            this.rmbPriceLabel.Name = "rmbPriceLabel";
-            this.rmbPriceLabel.Size = new System.Drawing.Size(350, 66);
-            this.rmbPriceLabel.TabIndex = 10;
-            this.rmbPriceLabel.Text = "123456789";
-            this.rmbPriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.er1PriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.er1PriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.er1PriceLabel.ForeColor = System.Drawing.Color.White;
+            this.er1PriceLabel.Location = new System.Drawing.Point(210, 771);
+            this.er1PriceLabel.Name = "er1PriceLabel";
+            this.er1PriceLabel.Size = new System.Drawing.Size(350, 66);
+            this.er1PriceLabel.TabIndex = 10;
+            this.er1PriceLabel.Text = "123456789";
+            this.er1PriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // usdPriceLabel
+            // er2PriceLabel
             // 
-            this.usdPriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.usdPriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.usdPriceLabel.ForeColor = System.Drawing.Color.White;
-            this.usdPriceLabel.Location = new System.Drawing.Point(210, 841);
-            this.usdPriceLabel.Name = "usdPriceLabel";
-            this.usdPriceLabel.Size = new System.Drawing.Size(350, 66);
-            this.usdPriceLabel.TabIndex = 11;
-            this.usdPriceLabel.Text = "123456789";
-            this.usdPriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.er2PriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.er2PriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.er2PriceLabel.ForeColor = System.Drawing.Color.White;
+            this.er2PriceLabel.Location = new System.Drawing.Point(210, 841);
+            this.er2PriceLabel.Name = "er2PriceLabel";
+            this.er2PriceLabel.Size = new System.Drawing.Size(350, 66);
+            this.er2PriceLabel.TabIndex = 11;
+            this.er2PriceLabel.Text = "123456789";
+            this.er2PriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // artworkTextBox
             // 
@@ -171,28 +171,28 @@
             this.artworkTextBox.TabIndex = 13;
             this.artworkTextBox.Text = "作品作品作品作品作品作品作品作品作品作品\r\n";
             // 
-            // hkPriceLabel
+            // er3PriceLabel
             // 
-            this.hkPriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.hkPriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.hkPriceLabel.ForeColor = System.Drawing.Color.White;
-            this.hkPriceLabel.Location = new System.Drawing.Point(210, 911);
-            this.hkPriceLabel.Name = "hkPriceLabel";
-            this.hkPriceLabel.Size = new System.Drawing.Size(350, 66);
-            this.hkPriceLabel.TabIndex = 15;
-            this.hkPriceLabel.Text = "123456789";
-            this.hkPriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.er3PriceLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.er3PriceLabel.Font = new System.Drawing.Font("Arial", 42F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.er3PriceLabel.ForeColor = System.Drawing.Color.White;
+            this.er3PriceLabel.Location = new System.Drawing.Point(210, 911);
+            this.er3PriceLabel.Name = "er3PriceLabel";
+            this.er3PriceLabel.Size = new System.Drawing.Size(350, 66);
+            this.er3PriceLabel.TabIndex = 15;
+            this.er3PriceLabel.Text = "123456789";
+            this.er3PriceLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // hkLabel
+            // er3NameLabel
             // 
-            this.hkLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.hkLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.hkLabel.ForeColor = System.Drawing.Color.White;
-            this.hkLabel.Location = new System.Drawing.Point(60, 911);
-            this.hkLabel.Name = "hkLabel";
-            this.hkLabel.Size = new System.Drawing.Size(160, 66);
-            this.hkLabel.TabIndex = 14;
-            this.hkLabel.Text = "HKD";
+            this.er3NameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.er3NameLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.er3NameLabel.ForeColor = System.Drawing.Color.White;
+            this.er3NameLabel.Location = new System.Drawing.Point(60, 911);
+            this.er3NameLabel.Name = "er3NameLabel";
+            this.er3NameLabel.Size = new System.Drawing.Size(160, 66);
+            this.er3NameLabel.TabIndex = 14;
+            this.er3NameLabel.Text = "HKD";
             // 
             // splitContainer1
             // 
@@ -263,15 +263,15 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1360, 1020);
             this.Controls.Add(this.lotLabel);
-            this.Controls.Add(this.hkLabel);
-            this.Controls.Add(this.rmbLabel);
-            this.Controls.Add(this.usdLabel);
-            this.Controls.Add(this.ntdLabel);
-            this.Controls.Add(this.hkPriceLabel);
+            this.Controls.Add(this.er3NameLabel);
+            this.Controls.Add(this.er1NameLabel);
+            this.Controls.Add(this.er2NameLabel);
+            this.Controls.Add(this.mainCurNameLabel);
+            this.Controls.Add(this.er3PriceLabel);
             this.Controls.Add(this.artworkTextBox);
-            this.Controls.Add(this.usdPriceLabel);
-            this.Controls.Add(this.rmbPriceLabel);
-            this.Controls.Add(this.ntdPriceLabel);
+            this.Controls.Add(this.er2PriceLabel);
+            this.Controls.Add(this.er1PriceLabel);
+            this.Controls.Add(this.mainPriceLabel);
             this.Controls.Add(this.artistLabel);
             this.Controls.Add(this.lotNumLabel);
             this.Controls.Add(this.splitContainer1);
@@ -302,16 +302,16 @@
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label lotNumLabel;
         private System.Windows.Forms.Label artistLabel;
-        private System.Windows.Forms.Label rmbLabel;
-        private System.Windows.Forms.Label ntdLabel;
-        private System.Windows.Forms.Label usdLabel;
-        private System.Windows.Forms.Label ntdPriceLabel;
-        private System.Windows.Forms.Label rmbPriceLabel;
-        private System.Windows.Forms.Label usdPriceLabel;
+        private System.Windows.Forms.Label er1NameLabel;
+        private System.Windows.Forms.Label mainCurNameLabel;
+        private System.Windows.Forms.Label er2NameLabel;
+        private System.Windows.Forms.Label mainPriceLabel;
+        private System.Windows.Forms.Label er1PriceLabel;
+        private System.Windows.Forms.Label er2PriceLabel;
         private System.Windows.Forms.PictureBox auctionPictureBox;
         private System.Windows.Forms.TextBox artworkTextBox;
-        private System.Windows.Forms.Label hkPriceLabel;
-        private System.Windows.Forms.Label hkLabel;
+        private System.Windows.Forms.Label er3PriceLabel;
+        private System.Windows.Forms.Label er3NameLabel;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Label sessionLabel;
         private System.Windows.Forms.Label progressLabel;

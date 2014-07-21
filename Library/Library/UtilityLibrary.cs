@@ -11,9 +11,8 @@ namespace UtilityLibrary
     /// </summary>
     public static class ExchangeRate
     {
-        public static float ntdToRmbRate = 0.1f;
-        public static float ntdToUsdRate = 0.1f;
-        public static float ntdToHkRate = 0.1f;
+        public static int count = 3;
+        public static float[] mainToExchangeRate = new float[count];
 
         /// <summary>
         /// Load exchange rate.
@@ -26,20 +25,14 @@ namespace UtilityLibrary
 
             using (StreamReader sr = new StreamReader(fn))
             {
-                string line = sr.ReadLine();
-                if (line != null && line.Substring(0, 3) == "rmb")
+                string line = "";
+                for (int i = 0; i < count; i++)
                 {
-                    float.TryParse(line.Remove(0, 4), out ntdToRmbRate);
-                }
-                line = sr.ReadLine();
-                if (line != null && line.Substring(0, 3) == "usd")
-                {
-                    float.TryParse(line.Remove(0, 4), out ntdToUsdRate);
-                }
-                line = sr.ReadLine();
-                if (line != null && line.Substring(0, 2) == "hk")
-                {
-                    float.TryParse(line.Remove(0, 3), out ntdToHkRate);
+                    line = sr.ReadLine();
+                    if (line != null)
+                    {
+                        float.TryParse(line.Remove(0, 4), out mainToExchangeRate[i]);   // "xxx "
+                    }
                 }
             }
         }
@@ -48,47 +41,31 @@ namespace UtilityLibrary
         /// Save exchange rate at fn.
         /// </summary>
         /// <param name="fn">file name</param>
-        public static void Save(string fn)
+        public static void Save(string fn, ref string[] rates)
         {
             using (StreamWriter sw = new StreamWriter(fn))
             {
-                sw.WriteLine("rmb {0}", ntdToRmbRate);
-                sw.WriteLine("usd {0}", ntdToUsdRate);
-                sw.WriteLine("hk {0}", ntdToHkRate);
+                for (int i = 0; i < count; i++)
+                {
+                    sw.WriteLine("er{0} {1}", i, rates[i]);
+                }
             }
         }
 
         /// <summary>
         /// Convert NTD to RMB.
         /// </summary>
-        /// <param name="ntd">NTD to convert</param>
+        /// <param name="mainNum">NTD to convert</param>
         /// <returns>RMB</returns>
-        public static int NtdToRmb(int ntd)
+        public static int MainToCurrency(int mainNum, int rateId)
         {
-            int rmb = (int)Math.Round((decimal)(ntd * ntdToRmbRate / 100), MidpointRounding.AwayFromZero) * 100;
-            return rmb;
+            int numByNewCurrency = (int)Math.Round((decimal)(mainNum * mainToExchangeRate[rateId] / 10), MidpointRounding.AwayFromZero) * 10;   // 四捨五入個位
+            return numByNewCurrency;
         }
 
-        /// <summary>
-        /// Convert NTD to USD.
-        /// </summary>
-        /// <param name="ntd">NTD to convert</param>
-        /// <returns>USD</returns>
-        public static int NtdToUsd(int ntd)
+        public static float Revert(float rate)
         {
-            int usd = (int)Math.Round((decimal)(ntd * ntdToUsdRate / 10), MidpointRounding.AwayFromZero) * 10;
-            return usd;
-        }
-
-        /// <summary>
-        /// Convert NTD to HK.
-        /// </summary>
-        /// <param name="ntd">NTD to convert</param>
-        /// <returns>HK</returns>
-        public static int NtdToHk(int ntd)
-        {
-            int hk = (int)Math.Round((decimal)(ntd * ntdToHkRate / 10), MidpointRounding.AwayFromZero) * 10;
-            return hk;
+            return 1f / rate;
         }
     }
 
@@ -177,6 +154,21 @@ namespace UtilityLibrary
 
                 return -1;
             }
+        }
+
+        public static int ParseCurrencyToInt(string input, bool isSilence)
+        {
+            int result = -1;
+            try
+            {
+                result = int.Parse(input, System.Globalization.NumberStyles.Currency);
+            }
+            catch (Exception e)
+            {
+                if (!isSilence)
+                    MessageBox.Show("無效數字: " + input + "\n請輸入有效數字!");
+            }
+            return result;
         }
 
         public static float ParseToFloat(string input, bool isSilence)

@@ -1,5 +1,5 @@
 ﻿//#define MUCHUNTANG
-#define SHIJIA
+//#define SHIJIA
 
 using System;
 using System.Drawing;
@@ -28,15 +28,15 @@ namespace SJ_Bidding_System
         private ControlState m_logoPictureBoxState;
         private ControlState m_lotNumLabelState;
         private ControlState m_artistLabelState;
-        private ControlState m_rmbLabelState;
-        private ControlState m_ntdLabelState;
-        private ControlState m_usdLabelState;
-        private ControlState m_ntdPriceLabelState;
-        private ControlState m_rmbPriceLabelState;
-        private ControlState m_usdPriceLabelState;
+        private ControlState m_mainCurNameLabelState;
+        private ControlState m_mainPriceLabelState;
+        private ControlState m_er1LabelState;
+        private ControlState m_er2LabelState;
+        private ControlState m_er3LabelState;
+        private ControlState m_er1PriceLabelState;
+        private ControlState m_er2PriceLabelState;
+        private ControlState m_er3PriceLabelState;
         private ControlState m_artworkTextBoxState;
-        private ControlState m_hkPriceLabelState;
-        private ControlState m_hkLabelState;
         private ControlState m_progressLabelState;
         private Bitmap m_logo_S = Properties.Resources.LOGO_S_big;
         private Bitmap m_logo_A = Properties.Resources.LOGO_A;
@@ -55,15 +55,15 @@ namespace SJ_Bidding_System
             splitContainer1.Panel1.Controls.Add(logoPictureBox);
             splitContainer1.Panel1.Controls.Add(lotNumLabel);
             splitContainer1.Panel1.Controls.Add(artistLabel);
-            splitContainer1.Panel1.Controls.Add(rmbLabel);
-            splitContainer1.Panel1.Controls.Add(ntdLabel);
-            splitContainer1.Panel1.Controls.Add(usdLabel);
-            splitContainer1.Panel1.Controls.Add(ntdPriceLabel);
-            splitContainer1.Panel1.Controls.Add(rmbPriceLabel);
-            splitContainer1.Panel1.Controls.Add(usdPriceLabel);
+            splitContainer1.Panel1.Controls.Add(er1NameLabel);
+            splitContainer1.Panel1.Controls.Add(mainCurNameLabel);
+            splitContainer1.Panel1.Controls.Add(er2NameLabel);
+            splitContainer1.Panel1.Controls.Add(mainPriceLabel);
+            splitContainer1.Panel1.Controls.Add(er1PriceLabel);
+            splitContainer1.Panel1.Controls.Add(er2PriceLabel);
             splitContainer1.Panel1.Controls.Add(artworkTextBox);
-            splitContainer1.Panel1.Controls.Add(hkPriceLabel);
-            splitContainer1.Panel1.Controls.Add(hkLabel);
+            splitContainer1.Panel1.Controls.Add(er3PriceLabel);
+            splitContainer1.Panel1.Controls.Add(er3NameLabel);
             splitContainer1.Panel2.Controls.Add(auctionPictureBox);
 
             m_formSize = this.Size;
@@ -75,24 +75,24 @@ namespace SJ_Bidding_System
             m_lotNumLabelState = new ControlState(lotNumLabel.Location, lotNumLabel.Size, lotNumLabel.Font.Size, ref cLotNumLabel);
             Control cArtistLabel = (Control)artistLabel;
             m_artistLabelState = new ControlState(artistLabel.Location, artistLabel.Size, artistLabel.Font.Size, ref cArtistLabel);
-            Control cRmbLabel = (Control)rmbLabel;
-            m_rmbLabelState = new ControlState(rmbLabel.Location, rmbLabel.Size, rmbLabel.Font.Size, ref cRmbLabel);
-            Control cNtdLabel = (Control)ntdLabel;
-            m_ntdLabelState = new ControlState(ntdLabel.Location, ntdLabel.Size, ntdLabel.Font.Size, ref cNtdLabel);
-            Control cUsdLabel = (Control)usdLabel;
-            m_usdLabelState = new ControlState(usdLabel.Location, usdLabel.Size, usdLabel.Font.Size, ref cUsdLabel);
-            Control cNtdPriceLabel = (Control)ntdPriceLabel;
-            m_ntdPriceLabelState = new ControlState(ntdPriceLabel.Location, ntdPriceLabel.Size, ntdPriceLabel.Font.Size, ref cNtdPriceLabel);
-            Control cRmbPriceLabel = (Control)rmbPriceLabel;
-            m_rmbPriceLabelState = new ControlState(rmbPriceLabel.Location, rmbPriceLabel.Size, rmbPriceLabel.Font.Size, ref cRmbPriceLabel);
-            Control cUsdPriceLabel = (Control)usdPriceLabel;
-            m_usdPriceLabelState = new ControlState(usdPriceLabel.Location, usdPriceLabel.Size, usdPriceLabel.Font.Size, ref cUsdPriceLabel);
+            Control cMainCurNameLabel = (Control)mainCurNameLabel;
+            m_mainCurNameLabelState = new ControlState(mainCurNameLabel.Location, mainCurNameLabel.Size, mainCurNameLabel.Font.Size, ref cMainCurNameLabel);
+            Control cMainPriceLabel = (Control)mainPriceLabel;
+            m_mainPriceLabelState = new ControlState(mainPriceLabel.Location, mainPriceLabel.Size, mainPriceLabel.Font.Size, ref cMainPriceLabel);
+            Control cEr1Label = (Control)er1NameLabel;
+            m_er1LabelState = new ControlState(er1NameLabel.Location, er1NameLabel.Size, er1NameLabel.Font.Size, ref cEr1Label);
+            Control cEr2Label = (Control)er2NameLabel;
+            m_er2LabelState = new ControlState(er2NameLabel.Location, er2NameLabel.Size, er2NameLabel.Font.Size, ref cEr2Label);
+            Control cEr3Label = (Control)er3NameLabel;
+            m_er3LabelState = new ControlState(er3NameLabel.Location, er3NameLabel.Size, er3NameLabel.Font.Size, ref cEr3Label);
+            Control cEr1PriceLabel = (Control)er1PriceLabel;
+            m_er1PriceLabelState = new ControlState(er1PriceLabel.Location, er1PriceLabel.Size, er1PriceLabel.Font.Size, ref cEr1PriceLabel);
+            Control cEr2PriceLabel = (Control)er2PriceLabel;
+            m_er2PriceLabelState = new ControlState(er2PriceLabel.Location, er2PriceLabel.Size, er2PriceLabel.Font.Size, ref cEr2PriceLabel);
+            Control cEr3PriceLabel = (Control)er3PriceLabel;
+            m_er3PriceLabelState = new ControlState(er3PriceLabel.Location, er3PriceLabel.Size, er3PriceLabel.Font.Size, ref cEr3PriceLabel);
             Control cArtworkTextBox = (Control)artworkTextBox;
             m_artworkTextBoxState = new ControlState(artworkTextBox.Location, artworkTextBox.Size, artworkTextBox.Font.Size, ref cArtworkTextBox);
-            Control cHkPriceLabel = (Control)hkPriceLabel;
-            m_hkPriceLabelState = new ControlState(hkPriceLabel.Location, hkPriceLabel.Size, hkPriceLabel.Font.Size, ref cHkPriceLabel);
-            Control cHkLabel = (Control)hkLabel;
-            m_hkLabelState = new ControlState(hkLabel.Location, hkLabel.Size, hkLabel.Font.Size, ref cHkLabel);
             Control cProgressLabel = (Control)progressLabel;
             m_progressLabelState = new ControlState(cProgressLabel.Location, cProgressLabel.Size, cProgressLabel.Font.Size, ref cProgressLabel);
             //label6.Font = new Font("HelveticaNeueLT Pro 45 Lt", 36);
@@ -152,13 +152,13 @@ namespace SJ_Bidding_System
         /// <summary>
         /// Set new price on display form.
         /// </summary>
-        /// <param name="newNtd">new ntd price now</param>
-        public void SetNewPrice(int newNtd)
+        /// <param name="newMainPrice">new ntd price now</param>
+        public void SetNewPrice(int newMainPrice)
         {
-            ntdPriceLabel.Text = newNtd.ToString("c");
-            rmbPriceLabel.Text = ExchangeRate.NtdToRmb(newNtd).ToString("c");
-            usdPriceLabel.Text = ExchangeRate.NtdToUsd(newNtd).ToString("c");
-            hkPriceLabel.Text = ExchangeRate.NtdToHk(newNtd).ToString("c");
+            mainPriceLabel.Text = newMainPrice.ToString("c");
+            er1PriceLabel.Text = ExchangeRate.MainToCurrency(newMainPrice, 0).ToString("c");
+            er2PriceLabel.Text = ExchangeRate.MainToCurrency(newMainPrice, 1).ToString("c");
+            er3PriceLabel.Text = ExchangeRate.MainToCurrency(newMainPrice, 2).ToString("c");
         }
 
         public void ChangeLogoCheck()
@@ -181,6 +181,25 @@ namespace SJ_Bidding_System
         public void SetProgress(int currentId, int totalCount)
         {
             progressLabel.Text = String.Format(@"{0}/{1}", currentId, totalCount);
+        }
+
+        public void SetRateName(int rateId, string name)
+        {
+            switch (rateId)
+            {
+                case 0:
+                    er1NameLabel.Text = name;
+                    break;
+                case 1:
+                    er2NameLabel.Text = name;
+                    break;
+                case 2:
+                    er3NameLabel.Text = name;
+                    break;
+                default:
+                    mainCurNameLabel.Text = name;
+                    break;
+            }
         }
         #endregion
 
@@ -226,15 +245,15 @@ namespace SJ_Bidding_System
             m_logoPictureBoxState.ReArrange(xRatio, yRatio);
             m_lotNumLabelState.ReArrange(xRatio, yRatio);
             m_artistLabelState.ReArrange(xRatio, yRatio);
-            m_rmbLabelState.ReArrange(xRatio, yRatio);
-            m_ntdLabelState.ReArrange(xRatio, yRatio);
-            m_usdLabelState.ReArrange(xRatio, yRatio);
-            m_ntdPriceLabelState.ReArrange(xRatio, yRatio);
-            m_rmbPriceLabelState.ReArrange(xRatio, yRatio);
-            m_usdPriceLabelState.ReArrange(xRatio, yRatio);
+            m_er1LabelState.ReArrange(xRatio, yRatio);
+            m_mainCurNameLabelState.ReArrange(xRatio, yRatio);
+            m_er2LabelState.ReArrange(xRatio, yRatio);
+            m_mainPriceLabelState.ReArrange(xRatio, yRatio);
+            m_er1PriceLabelState.ReArrange(xRatio, yRatio);
+            m_er2PriceLabelState.ReArrange(xRatio, yRatio);
             m_artworkTextBoxState.ReArrange(xRatio, yRatio);
-            m_hkPriceLabelState.ReArrange(xRatio, yRatio);
-            m_hkLabelState.ReArrange(xRatio, yRatio);
+            m_er3PriceLabelState.ReArrange(xRatio, yRatio);
+            m_er3LabelState.ReArrange(xRatio, yRatio);
             m_progressLabelState.ReArrange(xRatio, yRatio);
         }
 
@@ -242,7 +261,7 @@ namespace SJ_Bidding_System
         {
             switch (auctioneer)
             {
-#if (SHIJIA)
+#if SHIJIA
                 case Auctioneer.S:
                     logoPictureBox.Image = m_logo_S;
                     break;
@@ -250,7 +269,7 @@ namespace SJ_Bidding_System
                 /*case Auctioneer.A:
                     logoPictureBox.Image = m_logo_A;
                     break;*/
-#if (MUCHUNTANG)
+#if MUCHUNTANG
                 case Auctioneer.M:
 
                     logoPictureBox.Image = m_logo_M;
@@ -261,7 +280,7 @@ namespace SJ_Bidding_System
             }
         }
 
-        public string ShowDialog(string text, string caption)
+        private string ShowDialog(string text, string caption)
         {
             Form prompt = new Form();
             prompt.Width = 500;

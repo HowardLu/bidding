@@ -1,5 +1,5 @@
 ﻿//#define MUCHUNTANG
-#define SHIJIA
+//#define SHIJIA
 
 using System;
 using System.Collections.Generic;
@@ -28,14 +28,14 @@ namespace SJ_Bidding_System
         private List<string> m_sessions;
         private List<Auction> m_auctions;
         private int m_auctionIdNow = 0;
-        private List<PriceLevel> m_priceLevels;
+        //private List<PriceLevel> m_priceLevels;
         private string m_inputNumbers = "";
         //private Thread m_loadPhotoThread;
         //private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
         private Internet<BidderEntity> m_beInternet;
         private PlayerForm m_playerForm;
-        private Form2 m_form2;
+        //private Form2 m_form2;
         #endregion
 
         #region Properties
@@ -87,7 +87,7 @@ namespace SJ_Bidding_System
             if (Utility.IsFileExist(serverExePath))
                 m_server = System.Diagnostics.Process.Start(pStartInfo);*/
 
-            LoadPriceLevel(Settings.priceLevelFP);
+            PriceLevels.Load(Settings.priceLevelFP);
 
             InitDisplayForm();
 
@@ -100,12 +100,15 @@ namespace SJ_Bidding_System
             nowPriceTextBox.Focus();
 
             ExchangeRate.Load(Settings.exchangeRateFP);
-            rmbTextBox.Text = ExchangeRate.ntdToRmbRate.ToString();
-            usdTextBox.Text = ExchangeRate.ntdToUsdRate.ToString();
-            hkTextBox.Text = ExchangeRate.ntdToHkRate.ToString();
+            er1TextBox.Text = ExchangeRate.mainToExchangeRate[0].ToString();
+            er2TextBox.Text = ExchangeRate.mainToExchangeRate[1].ToString();
+            er3TextBox.Text = ExchangeRate.mainToExchangeRate[2].ToString();
 
             //LoadBiddingResult(Settings.biddingResultFP);
             //LoadBackupPath(Path.Combine(Path.GetDirectoryName(Settings.biddingResultFP), "backup_path.ini"));
+
+            SetPriceLevelForm setPLForm = new SetPriceLevelForm();
+            setPLForm.Show();
         }
 
         /// <summary>
@@ -160,10 +163,10 @@ namespace SJ_Bidding_System
             if (m_auctions.Count == 0)
                 return;
 
-            for (int i = 0; i < m_priceLevels.Count; i++)
+            int nowPrice = m_auctions[m_auctionIdNow].nowPrice;
+            for (int i = 0; i < PriceLevels.levels.Count; i++)
             {
-                PriceLevel pl = m_priceLevels[i];
-                int nowPrice = m_auctions[m_auctionIdNow].nowPrice;
+                PriceLevel pl = PriceLevels.levels[i];
                 if (nowPrice < pl.up && nowPrice >= pl.down)
                 {
                     int newPrice = 0;
@@ -207,6 +210,7 @@ namespace SJ_Bidding_System
                     }
                 }
             }
+            MessageBox.Show("跳階設定有誤，請檢查跳階!");
         }
 
         /// <summary>
@@ -263,7 +267,11 @@ namespace SJ_Bidding_System
         private void ControlForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             //SavePrices(Path.Combine(Application.StartupPath, Settings.saveFolder, Settings.pricesFN));
-            ExchangeRate.Save(Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN));
+            string erFilePath = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN);
+            string[] rates = { er1TextBox.Text, er2TextBox.Text, er3TextBox.Text };
+            ExchangeRate.Save(erFilePath, ref rates);
+            PriceLevels.Save();
+
             //DoSaveBiddingResult(Settings.biddingResultFP);
             /*if (!m_server.HasExited)
                 m_server.CloseMainWindow();*/
@@ -285,7 +293,7 @@ namespace SJ_Bidding_System
                 nowPriceTextBox.Text = m_auctions[m_auctionIdNow].nowPrice.ToString("c");
             }
 
-            if (rmbTextBox.Focused || usdTextBox.Focused || hkTextBox.Focused || increaseByLevelBtn.Focused || resetBtn.Focused ||
+            if (er1TextBox.Focused || er2TextBox.Focused || er3TextBox.Focused || increaseByLevelBtn.Focused || resetBtn.Focused ||
                 auctionComboBox.Focused || winBidderTextBox.Focused)
                 return;
 
@@ -331,34 +339,6 @@ namespace SJ_Bidding_System
         }
 
         /// <summary>
-        /// Event handler when user input rmb exchange rate.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void rmbTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (rmbTextBox.Text != "" && m_auctions != null && m_auctions.Count != 0)
-            {
-                if (float.TryParse(rmbTextBox.Text, out ExchangeRate.ntdToRmbRate))
-                    m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
-            }
-        }
-
-        /// <summary>
-        /// Event handler when user input usd exchange rate.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void usdTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (usdTextBox.Text != "" && m_auctions != null && m_auctions.Count != 0)
-            {
-                if (float.TryParse(usdTextBox.Text, out ExchangeRate.ntdToUsdRate))
-                    m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
-            }
-        }
-
-        /// <summary>
         /// Avoid original Textbox input handle.
         /// </summary>
         /// <param name="sender"></param>
@@ -366,40 +346,6 @@ namespace SJ_Bidding_System
         private void nowPriceTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
-        }
-
-        /// <summary>
-        /// Restrict rmbTextBox to accept only digit and control and punctuation.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void rmbTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar) || Char.IsPunctuation(e.KeyChar))
-            {
-                e.Handled = false;
-            }
-            else
-            {
-                e.Handled = true;
-            }
-        }
-
-        /// <summary>
-        /// Restrict usdTextBox to accept only digit and control and punctuation.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void usdTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar) || Char.IsPunctuation(e.KeyChar))
-            {
-                e.Handled = false;
-            }
-            else
-            {
-                e.Handled = true;
-            }
         }
 
         /// <summary>
@@ -411,27 +357,6 @@ namespace SJ_Bidding_System
         {
             nowPriceTextBox.BackColor = Color.Black;
             timer1.Stop();
-        }
-
-        private void hkTextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (Char.IsDigit(e.KeyChar) || Char.IsControl(e.KeyChar) || Char.IsPunctuation(e.KeyChar))
-            {
-                e.Handled = false;
-            }
-            else
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void hkTextBox_TextChanged(object sender, EventArgs e)
-        {
-            if (hkTextBox.Text != "" && m_auctions != null && m_auctions.Count != 0)
-            {
-                if (float.TryParse(hkTextBox.Text, out ExchangeRate.ntdToHkRate))
-                    m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
-            }
         }
 
         private void confirmBidderButton_Click(object sender, EventArgs e)
@@ -495,6 +420,82 @@ namespace SJ_Bidding_System
             LoadAuctionsFromSession(sessionSelected);  // load auctions from session.
             m_displayForm.SetSession(sessionSelected);
             m_displayForm.SetProgress(1, m_auctions.Count);
+        }
+
+        /// <summary>
+        /// Restrict rmbTextBox to accept only digit and control and punctuation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void er1TextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = CheckRateInput(e.KeyChar);
+        }
+
+        /// <summary>
+        /// Restrict usdTextBox to accept only digit and control and punctuation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void usdTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = CheckRateInput(e.KeyChar);
+        }
+
+        private void hkTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = CheckRateInput(e.KeyChar);
+        }
+
+        /// <summary>
+        /// Event handler when user input rmb exchange rate.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void er1TextBox_TextChanged(object sender, EventArgs e)
+        {
+            RateChanged(er1TextBox.Text, 0);
+        }
+
+        /// <summary>
+        /// Event handler when user input usd exchange rate.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void er2TextBox_TextChanged(object sender, EventArgs e)
+        {
+            RateChanged(er2TextBox.Text, 1);
+        }
+
+        private void er3TextBox_TextChanged(object sender, EventArgs e)
+        {
+            RateChanged(er3TextBox.Text, 2);
+        }
+
+        private void er1NameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            m_displayForm.SetRateName(0, er1NameTextBox.Text);
+        }
+
+        private void er2NameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            m_displayForm.SetRateName(1, er2NameTextBox.Text);
+        }
+
+        private void er3NameTextBox_TextChanged(object sender, EventArgs e)
+        {
+            m_displayForm.SetRateName(2, er3NameTextBox.Text);
+        }
+
+        private void currencyTextBox_TextChanged(object sender, EventArgs e)
+        {
+            m_displayForm.SetRateName(-1, mainCurrencyTextBox.Text);
+        }
+
+        private void setPriceLevelButton_Click(object sender, EventArgs e)
+        {
+            SetPriceLevelForm setPLForm = new SetPriceLevelForm();
+            setPLForm.Show();
         }
         #endregion
 
@@ -662,45 +663,6 @@ namespace SJ_Bidding_System
                 for (int i = 0; i < m_auctions.Count; i++)
                 {
                     sw.WriteLine("{0} {1}", m_auctions[i].lot, m_auctions[i].nowPrice / Settings.unit);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Load price level.
-        /// </summary>
-        /// <param name="fn">price level file name</param>
-        private void LoadPriceLevel(string fn)
-        {
-            if (!Utility.IsFileExist(fn, false))
-                return;
-
-            m_priceLevels = new List<PriceLevel>();
-            using (StreamReader sr = new StreamReader(fn))
-            {
-                int count = int.Parse(sr.ReadLine().Remove(0, "Down Up Increment---".Length));
-                for (int i = 0; i < count; i++)
-                {
-                    string[] data = sr.ReadLine().Split(' ');
-                    PriceLevel pl = new PriceLevel();
-                    pl.down = int.Parse(data[0]) * Settings.unit;
-                    pl.up = int.Parse(data[1]) * Settings.unit;
-                    string[] s = data[2].Split(',');
-                    pl.increments = new List<int>();
-                    for (int j = 0; j < s.Length; j++)
-                    {
-                        float level = 0.0f;
-                        if (float.TryParse(s[j], out level))
-                        {
-                            pl.increments.Add(Convert.ToInt32(level * Settings.unit));
-                        }
-                        else
-                        {
-                            MessageBox.Show(fn + "格式錯誤");
-                            return;
-                        }
-                    }
-                    m_priceLevels.Add(pl);
                 }
             }
         }
@@ -902,6 +864,27 @@ namespace SJ_Bidding_System
                 MessageBox.Show("請在Auctions建立場次資料夾，\n例：1、2...", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else
                 sessionComboBox.Items.AddRange(m_sessions.ToArray());
+        }
+
+        private bool CheckRateInput(char keyChar)
+        {
+            if (Char.IsDigit(keyChar) || Char.IsControl(keyChar) || Char.IsPunctuation(keyChar))
+                return false;
+            else
+                return true;
+        }
+
+        private void RateChanged(string rateText, int rateId)
+        {
+            float rate = 0f;
+            if (rateText != "" && m_auctions != null && m_auctions.Count != 0)
+            {
+                if (float.TryParse(rateText, out rate))
+                {
+                    ExchangeRate.mainToExchangeRate[rateId] = ExchangeRate.Revert(rate);
+                    m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
+                }
+            }
         }
         #endregion
     }

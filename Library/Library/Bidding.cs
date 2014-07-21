@@ -232,6 +232,92 @@ namespace Bidding
         public int down;
         public int up;
         public System.Collections.Generic.List<int> increments;
+
+        public PriceLevel(int down, int up)
+        {
+            this.down = down;
+            this.up = up;
+            this.increments = new List<int>();
+        }
+    }
+
+    public static class PriceLevels
+    {
+        public static System.Collections.Generic.List<PriceLevel> levels;
+
+        private static string filePath;
+
+        /// <summary>
+        /// Load price level.
+        /// </summary>
+        /// <param name="fn">price level file name</param>
+        public static void Load(string fn)
+        {
+            if (!Utility.IsFileExist(fn, false))
+                return;
+
+            filePath = fn;
+            levels = new List<PriceLevel>();
+            using (StreamReader sr = new StreamReader(fn))
+            {
+                int count = int.Parse(sr.ReadLine().Remove(0, "Down Up Increment---".Length));
+                for (int i = 0; i < count; i++)
+                {
+                    string[] data = sr.ReadLine().Split(' ');
+                    int down = int.Parse(data[0]) * Settings.unit;
+                    int up = int.Parse(data[1]) * Settings.unit;
+                    PriceLevel pl = new PriceLevel(down, up);
+                    string[] s = data[2].Split(',');
+                    //pl.increments = new List<int>();
+                    for (int j = 0; j < s.Length; j++)
+                    {
+                        float level = 0.0f;
+                        if (float.TryParse(s[j], out level))
+                        {
+                            pl.increments.Add(Convert.ToInt32(level * Settings.unit));
+                        }
+                        else
+                        {
+                            System.Windows.Forms.MessageBox.Show(fn + "格式錯誤");
+                            return;
+                        }
+                    }
+                    levels.Add(pl);
+                }
+            }
+        }
+
+        public static void Save()
+        {
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                int count = levels.Count;
+                sw.WriteLine("Down Up Increment---{0}", count);
+                for (int i = 0; i < count; i++)
+                {
+                    PriceLevel pl = levels[i];
+                    int up = pl.up / Settings.unit;
+                    int down = pl.down / Settings.unit;
+                    string levelStr = "";
+                    if (pl.increments.Count == 1)
+                    {
+                        levelStr = (pl.increments[0] / Settings.unit).ToString();
+                    }
+                    else
+                    {
+                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                        for (int j = 0; j < pl.increments.Count; j++)
+                        {
+                            sb.Append(pl.increments[j] / Settings.unit);
+                            if (j != pl.increments.Count - 1)
+                                sb.Append(',');
+                        }
+                        levelStr = sb.ToString();
+                    }
+                    sw.WriteLine("{0} {1} {2}", down, up, levelStr);
+                }
+            }
+        }
     }
 
     public class PaymentDoc
