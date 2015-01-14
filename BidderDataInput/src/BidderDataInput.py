@@ -26,7 +26,7 @@ DB_CFG_PORT	= 27017
 GUARANTEE_INIT	= 0
 
 # 寫死的login account
-DB_LOGIN_ACC = { "showmethemoney": None, "superjunior": "S", "moomoomoo": "M", "mranderson": "A" }
+DB_LOGIN_ACC = { "showmethemoney": None, "superjunior": "S", "igsigs": "N" }
 
 # 無效牌號
 INVALID_ID	= -1
