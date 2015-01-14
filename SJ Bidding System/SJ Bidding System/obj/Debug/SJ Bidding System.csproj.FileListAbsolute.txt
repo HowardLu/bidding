@@ -124,3 +124,5 @@ D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.read.1
 D:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\GenerateResource.write.1.tlog
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Form2.resources
 \\tsclient\D\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetPriceLevelForm.resources
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.Form2.resources
+E:\bidding\SJ Bidding System\SJ Bidding System\obj\Debug\SJ_Bidding_System.SetPriceLevelForm.resources

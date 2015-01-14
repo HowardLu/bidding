@@ -877,12 +877,20 @@ namespace SJ_Bidding_System
         private void RateChanged(string rateText, int rateId)
         {
             float rate = 0f;
-            if (rateText != "" && m_auctions != null && m_auctions.Count != 0)
+            if ("0" == rateText)
             {
-                if (float.TryParse(rateText, out rate))
+                m_displayForm.ShowExchangeRate(rateId, false);
+            }
+            else
+            {
+                m_displayForm.ShowExchangeRate(rateId, true);
+                if (rateText != "" && m_auctions != null && m_auctions.Count != 0)
                 {
-                    ExchangeRate.mainToExchangeRate[rateId] = ExchangeRate.Revert(rate);
-                    m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
+                    if (float.TryParse(rateText, out rate))
+                    {
+                        ExchangeRate.mainToExchangeRate[rateId] = ExchangeRate.Revert(rate);
+                        m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
+                    }
                 }
             }
         }

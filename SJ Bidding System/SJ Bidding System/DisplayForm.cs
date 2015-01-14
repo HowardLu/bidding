@@ -201,6 +201,33 @@ namespace SJ_Bidding_System
                     break;
             }
         }
+
+        public void ShowExchangeRate(int erId, bool isShow)
+        {
+            switch (erId)
+            {
+                case 0:
+                    {
+                        er1NameLabel.Visible = isShow;
+                        er1PriceLabel.Visible = isShow;
+                    }
+                    break;
+                case 1:
+                    {
+                        er2NameLabel.Visible = isShow;
+                        er2PriceLabel.Visible = isShow;
+                    }
+                    break;
+                case 2:
+                    {
+                        er3NameLabel.Visible = isShow;
+                        er3PriceLabel.Visible = isShow;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
         #endregion
 
         #region Protected Methods

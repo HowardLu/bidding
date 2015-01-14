@@ -215,7 +215,7 @@
             this.isPrintOneByOneCheckBox.Name = "isPrintOneByOneCheckBox";
             this.isPrintOneByOneCheckBox.Size = new System.Drawing.Size(72, 16);
             this.isPrintOneByOneCheckBox.TabIndex = 10;
-            this.isPrintOneByOneCheckBox.Text = "單張列印";
+            this.isPrintOneByOneCheckBox.Text = "單項列印";
             this.isPrintOneByOneCheckBox.UseVisualStyleBackColor = true;
             // 
             // CheckoutForm
