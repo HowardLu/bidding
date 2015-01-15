@@ -310,8 +310,7 @@ namespace Accounting
             if (account.Length == 0)
                 return;
 
-            MemberEntity me = m_memberInternet.FineOne<string>(m => m.Account, account);
-            if (me != null)
+            if ("Ma Lei" == account)
                 m_isSuperUser = true;
         }
 
@@ -455,7 +454,10 @@ namespace Accounting
                     }
                     else
                     {
-                        dealer = dealerEntities[dealerItem.SrcDealer];
+                        if (dealerEntities.ContainsKey(dealerItem.SrcDealer))
+                            dealer = dealerEntities[dealerItem.SrcDealer];
+                        else
+                            MessageBox.Show("賣家設定中找不到此賣家:\n\n" + dealerItem.SrcDealer);
                     }
                     if (bidder == null)
                     {
