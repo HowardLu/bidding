@@ -29,6 +29,12 @@ namespace SetAuction
         private Internet<AuctionEntity> m_aeInternet;
         private int m_lastUnitIndex = 0;
         private int[] m_units = { 1, 1000, 10000 };
+#if SHIJIA
+        private int m_initPriceThreshold = 1000;
+#endif
+#if IGS
+        private int m_initPriceThreshold = 0;
+#endif
         #endregion
 
         #region Properties
@@ -189,9 +195,9 @@ namespace SetAuction
             }
 
             int initPrice = int.Parse(initialPriceTextBox.Text) * m_units[unitComboBox.SelectedIndex];
-            if (initPrice < 1000)
+            if (initPrice < m_initPriceThreshold)
             {
-                MessageBox.Show("起拍價小於1000，請重新輸入!");
+                MessageBox.Show(String.Format("起拍價小於{0}，請重新輸入!", m_initPriceThreshold));
                 initialPriceTextBox.Text = "";
                 return;
             }
@@ -236,9 +242,9 @@ namespace SetAuction
             }
 
             int initPrice = int.Parse(initialPriceTextBox.Text) * m_units[unitComboBox.SelectedIndex];
-            if (initPrice < 1000)
+            if (initPrice < m_initPriceThreshold)
             {
-                MessageBox.Show("起拍價小於1000，請重新輸入!");
+                MessageBox.Show(String.Format("起拍價小於{0}，請重新輸入!", m_initPriceThreshold));
                 initialPriceTextBox.Text = "";
                 return;
             }
@@ -366,12 +372,15 @@ namespace SetAuction
             auctionsListView.BeginUpdate();
             foreach (Auction auction in m_auctions.Values)
             {
-                if (auction.photo == null)
+                Bitmap bmp = Utility.OpenBitmap(auction.photoFilePath);
+                m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
+                m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
+                /*if (auction.photo == null)
                 {
                     auction.photo = Utility.OpenBitmap(auction.photoFilePath);
                 }
                 m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
-                m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
+                m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));*/
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
                     auction.initialPrice.ToString()/*, auction.auctioneer*/);
             }
