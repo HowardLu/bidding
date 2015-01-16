@@ -473,6 +473,9 @@ namespace Bidding
 #if (SHIJIA)
         S = 0,
 #endif
+#if (IGS)
+        N = 0,
+#endif
         /*A,
         M,*/
         Count
@@ -485,6 +488,9 @@ namespace Bidding
 #endif
 #if (SHIJIA)
         世家 = 0,
+#endif
+#if (IGS)
+        新象 = 0,
 #endif
         /*安德昇,
         沐春堂,*/
