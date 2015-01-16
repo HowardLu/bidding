@@ -41,6 +41,7 @@ namespace SJ_Bidding_System
         private Bitmap m_logo_S = Properties.Resources.LOGO_S_big;
         private Bitmap m_logo_A = Properties.Resources.LOGO_A;
         private Bitmap m_logo_M = Properties.Resources.LOGO_M;
+        private Bitmap m_logo_N = Properties.Resources.LOGO_N;
         #endregion
 
         #region Properties
@@ -113,6 +114,10 @@ namespace SJ_Bidding_System
 #if (MUCHUNTANG)
             this.logoPictureBox.Image = m_logo_M;
 #endif
+#if (IGS)
+            if (ChangeLogoEnable)
+                this.logoPictureBox.Image = m_logo_N;
+#endif
         }
 
         private void DisplayForm_Resize(object sender, EventArgs e)
@@ -145,8 +150,8 @@ namespace SJ_Bidding_System
             else
                 auctionPictureBox.Image = Properties.Resources.loading;
 
-            if (ChangeLogoEnable)
-                SetLogo(Utility.ToEnum<Auctioneer>(auction.auctioneer));
+            //if (ChangeLogoEnable)
+                //SetLogo(Utility.ToEnum<Auctioneer>(auction.auctioneer));
         }
 
         /// <summary>
@@ -165,10 +170,11 @@ namespace SJ_Bidding_System
         {
             this.ChangeLogoEnable = false;
             string today = DateTime.Now.ToShortDateString();
-            if (today == @"2013/12/21" || today == @"2013/12/22")
+            if (today == @"2013/12/21" || today == @"2013/12/22" ||
+                today == @"2015/1/18")
             {
                 string password = ShowDialog("", "請輸入啟動密碼");
-                if (password == "superwasir55667878")
+                if (password == "superwaser55667878")
                     this.ChangeLogoEnable = true;
             }
         }

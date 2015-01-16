@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;SHIJIA</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;IGS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -153,7 +153,9 @@
     <None Include="Resources\Knob Forward.png" />
     <None Include="Resources\Knob Left.png" />
     <Content Include="Resources\loading.gif" />
+    <None Include="Resources\LOGO.jpg" />
     <Content Include="Resources\LOGO_A.jpg" />
+    <None Include="Resources\LOGO_big.jpg" />
     <Content Include="Resources\LOGO_M.jpg" />
     <None Include="Resources\LOGO_S.bmp" />
     <None Include="Resources\LOGO_S_big.bmp" />

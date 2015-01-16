@@ -107,8 +107,8 @@ namespace SJ_Bidding_System
             //LoadBiddingResult(Settings.biddingResultFP);
             //LoadBackupPath(Path.Combine(Path.GetDirectoryName(Settings.biddingResultFP), "backup_path.ini"));
 
-            SetPriceLevelForm setPLForm = new SetPriceLevelForm();
-            setPLForm.Show();
+            //SetPriceLevelForm setPLForm = new SetPriceLevelForm();
+            //setPLForm.Show();
         }
 
         /// <summary>

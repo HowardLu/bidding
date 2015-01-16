@@ -130,7 +130,12 @@ namespace Bidding
             }*/
 
             // 20131219 new 
+#if SHIJIA
             serviceCharge = Convert.ToInt32(hammerPrice * 0.2f);
+#endif
+#if IGS
+            serviceCharge = Convert.ToInt32(hammerPrice * 0.15f);
+#endif
             total = hammerPrice + serviceCharge;
         }
 

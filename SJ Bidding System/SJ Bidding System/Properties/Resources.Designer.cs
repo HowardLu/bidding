@@ -123,6 +123,13 @@ namespace SJ_Bidding_System.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap LOGO_N {
+            get {
+                object obj = ResourceManager.GetObject("LOGO_N", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap LOGO_S {
             get {
                 object obj = ResourceManager.GetObject("LOGO_S", resourceCulture);
