@@ -61,6 +61,11 @@ namespace SetAuction
                 Application.Exit();
                 return;
             }
+            if (!Utility.IsDirectoryExist(Settings.auctionFolder, false))
+            {
+                Utility.CreateDirectory(Settings.auctionFolder);
+            }
+
             m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             List<Auction> auctions = null;
             try

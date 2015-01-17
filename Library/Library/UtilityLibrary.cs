@@ -102,6 +102,19 @@ namespace UtilityLibrary
             pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
         }
 
+        public static bool CreateDirectory(string directoryName)
+        {
+            try
+            {
+                Directory.CreateDirectory(directoryName);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public static bool IsDirectoryExist(string directoryPath, bool isSilence)
         {
             if (!Directory.Exists(directoryPath))
