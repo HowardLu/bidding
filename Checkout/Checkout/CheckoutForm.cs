@@ -375,6 +375,8 @@ namespace Checkout
                     int[] aucCount = new int[tableCount];
                     //List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer); 
                     List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions("S"); // dirty way 20150118
+                    if(auctionsOfAuctioneer == null)
+                        auctionsOfAuctioneer = m_bidder.GetAuctions("N"); // dirty way 20150118
                     if (auctionsOfAuctioneer != null)
                     {
                         foreach (Auction auc in auctionsOfAuctioneer)
