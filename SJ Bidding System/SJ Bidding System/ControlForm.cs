@@ -173,9 +173,10 @@ namespace SJ_Bidding_System
                     if (pl.increments.Count > 1)
                     {
                         int down = pl.down;
-                        int interval = (int)Math.Pow(10, (pl.down.ToString().Length - 1));
+                        /*int interval = (int)Math.Pow(10, (pl.down.ToString().Length - 1));
                         if (interval < Settings.unit)
-                            interval = Settings.unit;
+                            interval = Settings.unit;*/
+                        int interval = pl.increments[pl.increments.Count - 1];
                         while (true)
                         {
                             for (int j = 0; j < pl.increments.Count; j++)
