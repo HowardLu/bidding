@@ -405,6 +405,9 @@ namespace Bidding
                 }
                 auctionMappings[auctioneer].Add(auc.lot);
             }
+#if IGS
+            auctionMappings["N"] = auctionMappings["S"];
+#endif
         }
 
         public List<Auction> GetAuctions(string auctioneer)
