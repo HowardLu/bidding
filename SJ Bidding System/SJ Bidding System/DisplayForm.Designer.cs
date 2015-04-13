@@ -42,8 +42,8 @@
             this.er3NameLabel = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.sessionLabel = new System.Windows.Forms.Label();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.progressLabel = new System.Windows.Forms.Label();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.auctionPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -97,13 +97,13 @@
             this.er1NameLabel.TabIndex = 6;
             this.er1NameLabel.Text = "RMB";
             // 
-            // mainNameLabel
+            // mainCurNameLabel
             // 
             this.mainCurNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.mainCurNameLabel.Font = new System.Drawing.Font("Arial", 44.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mainCurNameLabel.ForeColor = System.Drawing.Color.White;
             this.mainCurNameLabel.Location = new System.Drawing.Point(60, 646);
-            this.mainCurNameLabel.Name = "mainNameLabel";
+            this.mainCurNameLabel.Name = "mainCurNameLabel";
             this.mainCurNameLabel.Size = new System.Drawing.Size(160, 66);
             this.mainCurNameLabel.TabIndex = 7;
             this.mainCurNameLabel.Text = "NTD";
@@ -226,17 +226,6 @@
             this.sessionLabel.TabIndex = 3;
             this.sessionLabel.Text = "session";
             // 
-            // logoPictureBox
-            // 
-            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO_S_big;
-            this.logoPictureBox.Location = new System.Drawing.Point(47, 30);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(160, 162);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.logoPictureBox.TabIndex = 2;
-            this.logoPictureBox.TabStop = false;
-            // 
             // progressLabel
             // 
             this.progressLabel.AutoSize = true;
@@ -247,6 +236,17 @@
             this.progressLabel.Size = new System.Drawing.Size(86, 22);
             this.progressLabel.TabIndex = 4;
             this.progressLabel.Text = "progress";
+            // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.SJ_JAPAN_LOGO;
+            this.logoPictureBox.Location = new System.Drawing.Point(47, 30);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(160, 170);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.logoPictureBox.TabIndex = 2;
+            this.logoPictureBox.TabStop = false;
             // 
             // auctionPictureBox
             // 

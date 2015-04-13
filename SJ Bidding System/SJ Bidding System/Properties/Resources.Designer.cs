@@ -143,5 +143,12 @@ namespace SJ_Bidding_System.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap SJ_JAPAN_LOGO {
+            get {
+                object obj = ResourceManager.GetObject("SJ_JAPAN_LOGO", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
