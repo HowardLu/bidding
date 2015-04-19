@@ -1,5 +1,6 @@
 ﻿//#define MUCHUNTANG
 //#define SHIJIA
+#define SJ_FOR_JP
 
 using System;
 using System.Collections.Generic;
@@ -77,7 +78,11 @@ namespace Checkout
                 SetButtonsEnable(true);
             }
             string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
+#if SJ_FOR_JP
+            m_cashFlowTemplateFN = m_cashFlowTemplateFN + "SFJ" + ".dot";
+#else
             m_cashFlowTemplateFN = m_cashFlowTemplateFN + defaultAuctioneer + ".dot";
+#endif
         }
 
         private void CheckoutForm_Resize(object sender, System.EventArgs e)
@@ -313,8 +318,10 @@ namespace Checkout
                     Microsoft.Office.Interop.Word.Table auctionTable = auc.paymentDoc.Tables[2];
 
                     auctionTable.Rows.Add(auctionTable.Rows[2]);
+#if (!SJ_FOR_JP)
                     FillAuctionRow(auctionTable, 2, auc.lot.ToString(), auc.artwork, auc.hammerPrice.ToString("n0"),
                         auc.serviceCharge.ToString("n0"), auc.total.ToString("n0"));
+#endif
 
                     int creditCardFee = auc.isUseCreditCard ? Convert.ToInt32(auc.total * 0.035f) : 0;
                     //int tax = Convert.ToInt32(auc.total * 0.05f);
@@ -344,7 +351,11 @@ namespace Checkout
                 for (int i = 0; i < (int)Auctioneer.Count; i++)
                 {
                     string auctioneer = Utility.GetEnumString(typeof(Auctioneer), i);
+#if SJ_FOR_JP
+                    Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + "SFJ" + ".dot";
+#else
                     Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + auctioneer + ".dot";
+#endif
                     string docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + auctioneer + ".doc";
 
                     Microsoft.Office.Interop.Word._Document doc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing,
@@ -371,6 +382,10 @@ namespace Checkout
 
                     int[] hammerSum = new int[tableCount];
                     int[] serviceSum = new int[tableCount];
+#if SJ_FOR_JP
+                    int[] taxSum = new int[tableCount];
+                    const float taxRate = 0.08f;
+#endif
                     int[] sums = new int[tableCount];
                     int[] aucCount = new int[tableCount];
                     //List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer); 
@@ -383,12 +398,23 @@ namespace Checkout
                         {
                             int tableId = auc.checkoutNumber > 0 ? auc.checkoutNumber - 1 : 0;
                             aucTables[tableId].Rows.Add(aucTables[tableId].Rows[2 + aucCount[tableId]]);
+#if SJ_FOR_JP
+                            int tax = Convert.ToInt32(auc.serviceCharge * taxRate);
+                            FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot, auc.artwork, auc.hammerPrice,
+                                auc.serviceCharge, tax, auc.total + tax);
+#else
                             FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot.ToString(), auc.artwork, auc.hammerPrice.ToString("n0"),
                                 auc.serviceCharge.ToString("n0"), auc.total.ToString("n0"));
+#endif
                             aucCount[tableId] += 1;
                             hammerSum[tableId] += auc.hammerPrice;
                             serviceSum[tableId] += auc.serviceCharge;
+#if SJ_FOR_JP
+                            taxSum[tableId] += tax;
+                            sums[tableId] += (auc.total + tax);
+#else
                             sums[tableId] += auc.total;
+#endif
                         }
                     }
 
@@ -398,7 +424,13 @@ namespace Checkout
                         string time = GetCheckoutTime(tableId);
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 2).Range.Text = hammerSum[tableId].ToString("n0");
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 3).Range.Text = serviceSum[tableId].ToString("n0");
+#if SJ_FOR_JP
+                        aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = taxSum[tableId].ToString("n0");
+                        aucTables[tableId].Cell(aucCount[tableId] + 3, 5).Range.Text = sums[tableId].ToString("n0");
+#else
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
+#endif
+
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
 #if (SHIJIA)
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
@@ -434,7 +466,27 @@ namespace Checkout
             bidderDataTable.Cell(4, 2).Range.Text = m_bidder.addr;
             bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
         }
-
+#if SJ_FOR_JP
+        private void FillAuctionRow
+        (
+            Microsoft.Office.Interop.Word.Table auctionTable,
+            int rowId,
+            string lot,
+            string name,
+            int hammerPrice,
+            int serviceCharge,
+            int tax,
+            int total
+        )
+        {
+            auctionTable.Cell(rowId, 1).Range.Text = lot;
+            auctionTable.Cell(rowId, 2).Range.Text = name;
+            auctionTable.Cell(rowId, 3).Range.Text = hammerPrice.ToString("n0");
+            auctionTable.Cell(rowId, 4).Range.Text = serviceCharge.ToString("n0");
+            auctionTable.Cell(rowId, 5).Range.Text = tax.ToString("n0");
+            auctionTable.Cell(rowId, 6).Range.Text = total.ToString("n0");
+        }
+#else
         private void FillAuctionRow(Microsoft.Office.Interop.Word.Table auctionTable, int rowId, string lot, string name, string hammerPrice,
             string serviceCharge, string total)
         {
@@ -444,6 +496,7 @@ namespace Checkout
             auctionTable.Cell(rowId, 4).Range.Text = serviceCharge;
             auctionTable.Cell(rowId, 5).Range.Text = total;
         }
+#endif
 
         private void SetCashFlowDoc(ref Dictionary<string, int> totalSums)
         {
