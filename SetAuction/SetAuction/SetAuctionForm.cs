@@ -262,6 +262,12 @@ namespace SetAuction
 
             Auction auc = m_auctions[lot];
             int id = auctionsListView.SelectedIndices[0];
+            if (auc.lot != lotTextBox.Text && null != m_aeInternet.FineOne<string>(ae => ae.AuctionId, lotTextBox.Text))
+            {
+                MessageBox.Show("已有拍品" + lotTextBox.Text + "，請重新輸入!");
+                lotTextBox.Text = auc.lot;
+                return;
+            }
             auctionsListView.Items[id].Text = auc.lot = lotTextBox.Text;
             auctionsListView.Items[id].SubItems[1].Text = auc.artist = artistTextBox.Text;
             auctionsListView.Items[id].SubItems[2].Text = auc.artwork = artworkTextBox.Text;
