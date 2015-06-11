@@ -17,6 +17,8 @@ namespace Bidding
     /// </summary>
     public class Auction
     {
+        public static float ServiceChargeRate = 0.2f;
+        public static float CreditCardRate = 0.08f;
         public string lot;
         public string artist;
         public string artwork;
@@ -131,7 +133,7 @@ namespace Bidding
 
             // 20131219 new 
 #if SHIJIA
-            serviceCharge = Convert.ToInt32(hammerPrice * 0.2f);
+            serviceCharge = Convert.ToInt32(hammerPrice * ServiceChargeRate);
 #endif
 #if IGS
             serviceCharge = Convert.ToInt32(hammerPrice * 0.15f);
@@ -442,7 +444,8 @@ namespace Bidding
         美金現鈔,
         信用卡,
         銀聯卡,
-        VIP
+        VIP,
+        日幣現鈔
     };
 
     public enum ReturnGuarantee
@@ -453,7 +456,8 @@ namespace Bidding
         信用卡,
         銀聯卡,
         轉貨款,
-        VIP
+        VIP,
+        日幣現鈔
     };
 
     public enum PayWay
@@ -465,7 +469,8 @@ namespace Bidding
         銀聯卡,
         轉帳北京人民幣,
         轉帳北京美金,
-        保證金抵付
+        保證金抵付,
+        日幣現鈔
     };
 
     public enum Auctioneer

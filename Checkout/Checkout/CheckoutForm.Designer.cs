@@ -47,6 +47,10 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.isPrintOneByOneCheckBox = new System.Windows.Forms.CheckBox();
+            this.serviceChargeRateLabel = new System.Windows.Forms.Label();
+            this.serviceChargeRateTextBox = new System.Windows.Forms.TextBox();
+            this.creditCardRateTextBox = new System.Windows.Forms.TextBox();
+            this.creditCardRateLabel = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,9 +133,9 @@
             this.auctionsListView.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.auctionsListView.FullRowSelect = true;
             this.auctionsListView.GridLines = true;
-            this.auctionsListView.Location = new System.Drawing.Point(15, 48);
+            this.auctionsListView.Location = new System.Drawing.Point(15, 55);
             this.auctionsListView.Name = "auctionsListView";
-            this.auctionsListView.Size = new System.Drawing.Size(664, 500);
+            this.auctionsListView.Size = new System.Drawing.Size(664, 511);
             this.auctionsListView.TabIndex = 5;
             this.auctionsListView.UseCompatibleStateImageBehavior = false;
             this.auctionsListView.View = System.Windows.Forms.View.Details;
@@ -188,14 +192,13 @@
             this.isUseCardButton.TabIndex = 8;
             this.isUseCardButton.Text = "是/否刷卡";
             this.isUseCardButton.UseVisualStyleBackColor = true;
-            this.isUseCardButton.Visible = false;
             this.isUseCardButton.Click += new System.EventHandler(this.isUseCardButton_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 560);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 571);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(692, 22);
             this.statusStrip1.TabIndex = 9;
@@ -211,18 +214,59 @@
             // 
             this.isPrintOneByOneCheckBox.AutoSize = true;
             this.isPrintOneByOneCheckBox.Enabled = false;
-            this.isPrintOneByOneCheckBox.Location = new System.Drawing.Point(512, 8);
+            this.isPrintOneByOneCheckBox.Location = new System.Drawing.Point(607, 28);
             this.isPrintOneByOneCheckBox.Name = "isPrintOneByOneCheckBox";
             this.isPrintOneByOneCheckBox.Size = new System.Drawing.Size(72, 16);
             this.isPrintOneByOneCheckBox.TabIndex = 10;
             this.isPrintOneByOneCheckBox.Text = "單項列印";
             this.isPrintOneByOneCheckBox.UseVisualStyleBackColor = true;
+            this.isPrintOneByOneCheckBox.Visible = false;
+            // 
+            // serviceChargeRateLabel
+            // 
+            this.serviceChargeRateLabel.AutoSize = true;
+            this.serviceChargeRateLabel.Location = new System.Drawing.Point(284, 36);
+            this.serviceChargeRateLabel.Name = "serviceChargeRateLabel";
+            this.serviceChargeRateLabel.Size = new System.Drawing.Size(58, 12);
+            this.serviceChargeRateLabel.TabIndex = 11;
+            this.serviceChargeRateLabel.Text = "服務費(%)";
+            // 
+            // serviceChargeRateTextBox
+            // 
+            this.serviceChargeRateTextBox.Location = new System.Drawing.Point(343, 31);
+            this.serviceChargeRateTextBox.Name = "serviceChargeRateTextBox";
+            this.serviceChargeRateTextBox.Size = new System.Drawing.Size(36, 22);
+            this.serviceChargeRateTextBox.TabIndex = 12;
+            this.serviceChargeRateTextBox.Text = "20";
+            this.serviceChargeRateTextBox.TextChanged += new System.EventHandler(this.serviceChargeRateTextBox_TextChanged);
+            // 
+            // creditCardRateTextBox
+            // 
+            this.creditCardRateTextBox.Location = new System.Drawing.Point(489, 31);
+            this.creditCardRateTextBox.Name = "creditCardRateTextBox";
+            this.creditCardRateTextBox.Size = new System.Drawing.Size(36, 22);
+            this.creditCardRateTextBox.TabIndex = 14;
+            this.creditCardRateTextBox.Text = "8";
+            this.creditCardRateTextBox.TextChanged += new System.EventHandler(this.creditCardRateTextBox_TextChanged);
+            // 
+            // creditCardRateLabel
+            // 
+            this.creditCardRateLabel.AutoSize = true;
+            this.creditCardRateLabel.Location = new System.Drawing.Point(394, 36);
+            this.creditCardRateLabel.Name = "creditCardRateLabel";
+            this.creditCardRateLabel.Size = new System.Drawing.Size(94, 12);
+            this.creditCardRateLabel.TabIndex = 13;
+            this.creditCardRateLabel.Text = "信用卡手續費(%)";
             // 
             // CheckoutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 582);
+            this.ClientSize = new System.Drawing.Size(692, 593);
+            this.Controls.Add(this.creditCardRateTextBox);
+            this.Controls.Add(this.creditCardRateLabel);
+            this.Controls.Add(this.serviceChargeRateTextBox);
+            this.Controls.Add(this.serviceChargeRateLabel);
             this.Controls.Add(this.isPrintOneByOneCheckBox);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.isUseCardButton);
@@ -265,6 +309,10 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.CheckBox isPrintOneByOneCheckBox;
+        private System.Windows.Forms.Label serviceChargeRateLabel;
+        private System.Windows.Forms.TextBox serviceChargeRateTextBox;
+        private System.Windows.Forms.TextBox creditCardRateTextBox;
+        private System.Windows.Forms.Label creditCardRateLabel;
     }
 }
 

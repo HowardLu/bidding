@@ -40,6 +40,9 @@ namespace Checkout
         private string m_cashFlowTemplateFN = "金流單_";
         private int m_maxCheckoutNumber = 0;
         private Dictionary<int, string> m_checkoutTime;
+#if SJ_FOR_JP
+        private const float m_taxRate = 0.08f;
+#endif
         #endregion
 
         #region Properties
@@ -143,6 +146,7 @@ namespace Checkout
                 saveButton.Enabled = true;
                 printButton.Enabled = true;
                 isUseCardButton.Enabled = true;
+                serviceChargeRateTextBox.Enabled = false;
             }
         }
 
@@ -277,17 +281,45 @@ namespace Checkout
             {
                 if (lvi.SubItems[5].Text == m_noStr)
                 {
-                    m_bidder.auctions[lvi.Text].isUseCreditCard = true;
+                    Auction auc = m_bidder.auctions[lvi.Text];
+                    auc.isUseCreditCard = true;
+                    auc.total = auc.hammerPrice + auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
+                    lvi.SubItems[4].Text = auc.total.ToString("n0");
                     lvi.SubItems[5].Text = m_yesStr;
                     lvi.BackColor = Color.LightCyan;
                 }
                 else
                 {
-                    m_bidder.auctions[lvi.Text].isUseCreditCard = false;
+                    Auction auc = m_bidder.auctions[lvi.Text];
+                    auc.isUseCreditCard = false;
+                    auc.total = auc.hammerPrice + auc.serviceCharge;
+                    lvi.SubItems[4].Text = auc.total.ToString("n0");
                     lvi.SubItems[5].Text = m_noStr;
                     lvi.BackColor = System.Drawing.SystemColors.Window;
                 }
             }
+        }
+
+        private void serviceChargeRateTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int serviceChargeRate = Utility.ParseToInt(serviceChargeRateTextBox.Text, false);
+            if (-1 == serviceChargeRate)
+            {
+                serviceChargeRateTextBox.Text = "20";
+                return;
+            }
+            Auction.ServiceChargeRate = (float)serviceChargeRate / 100.0f;
+        }
+
+        private void creditCardRateTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int creditCardRate = Utility.ParseToInt(creditCardRateTextBox.Text, false);
+            if (-1 == creditCardRate)
+            {
+                creditCardRateTextBox.Text = "8";
+                return;
+            }
+            Auction.CreditCardRate = (float)creditCardRate / 100.0f;
         }
         #endregion
 
@@ -384,13 +416,12 @@ namespace Checkout
                     int[] serviceSum = new int[tableCount];
 #if SJ_FOR_JP
                     int[] taxSum = new int[tableCount];
-                    const float taxRate = 0.08f;
 #endif
                     int[] sums = new int[tableCount];
                     int[] aucCount = new int[tableCount];
                     //List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer); 
                     List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions("S"); // dirty way 20150118
-                    if(auctionsOfAuctioneer == null)
+                    if (auctionsOfAuctioneer == null)
                         auctionsOfAuctioneer = m_bidder.GetAuctions("N"); // dirty way 20150118
                     if (auctionsOfAuctioneer != null)
                     {
@@ -399,7 +430,15 @@ namespace Checkout
                             int tableId = auc.checkoutNumber > 0 ? auc.checkoutNumber - 1 : 0;
                             aucTables[tableId].Rows.Add(aucTables[tableId].Rows[2 + aucCount[tableId]]);
 #if SJ_FOR_JP
-                            int tax = Convert.ToInt32(auc.serviceCharge * taxRate);
+                            int tax = 0;
+                            if (auc.isUseCreditCard)
+                            {
+                                tax = Convert.ToInt32((auc.serviceCharge + auc.hammerPrice * Auction.CreditCardRate) * m_taxRate);
+                            }
+                            else
+                            {
+                                tax = Convert.ToInt32(auc.serviceCharge * m_taxRate);
+                            }
                             FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot, auc.artwork, auc.hammerPrice,
                                 auc.serviceCharge, tax, auc.total + tax);
 #else
@@ -644,6 +683,7 @@ namespace Checkout
                     m_bidder.cashFlowDoc.SaveAs(filePath);
                 }
             }
+            toolStripStatusLabel1.Text = "Saved!";
         }
 
         private void CloseDocAndWord()
