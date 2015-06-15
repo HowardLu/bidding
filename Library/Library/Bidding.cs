@@ -9,6 +9,7 @@ using System.Linq;
 using InternetLibrary;
 using Microsoft.Office.Interop.Word;
 using UtilityLibrary;
+using System.Windows.Forms;
 
 namespace Bidding
 {
@@ -168,7 +169,7 @@ namespace Bidding
 
         public static void LoadAuctions(string sessionId, ref List<Auction> auctions, ref Internet<AuctionEntity> aeInternet, bool isSilence)
         {
-            Dictionary<string, AuctionEntity> aeDic = aeInternet.GetCollectionList().ToDictionary<AuctionEntity, string>(ae => ae.AuctionId);
+            Dictionary<string, AuctionEntity> aeDic = ToDictionary(ref aeInternet);
             auctions = new List<Auction>();
             List<string> illegalFiles = new List<string>();
             string dir = Path.Combine(Settings.auctionFolder, sessionId);
@@ -228,6 +229,33 @@ namespace Bidding
                 }
             }
             return videoPaths;
+        }
+
+        private static Dictionary<string, AuctionEntity> ToDictionary(ref Internet<AuctionEntity> aeInternet)
+        {
+            Dictionary<string, AuctionEntity> aucs = new Dictionary<string, AuctionEntity>();
+            List<AuctionEntity> auctionEnts = aeInternet.GetCollectionList();
+            foreach (AuctionEntity auc in auctionEnts)
+            {
+                if (!aucs.ContainsKey(auc.AuctionId))
+                {
+                    aucs.Add(auc.AuctionId, auc);
+                }
+                else
+                {
+                    if (DialogResult.OK == MessageBox.Show(String.Format("重複LOT: {0} 是否刪除舊的?", auc.AuctionId),
+                        "Warning", MessageBoxButtons.OKCancel))
+                    {
+                        aeInternet.RemoveOne<string>(ae => ae.AuctionId, auc.AuctionId);
+                        aucs[auc.AuctionId] = auc;
+                    }
+                    else
+                    {
+                        System.Windows.Forms.Application.Exit();
+                    }
+                }
+            }
+            return aucs;
         }
     }
 

@@ -297,6 +297,12 @@ namespace InternetLibrary
             m_collection.Remove(query);
         }
 
+        public void RemoveOne<TKey>(Expression<Func<TEntity, TKey>> keyExpression, TKey key)
+        {
+            IMongoQuery query = Query<TEntity>.EQ(keyExpression, key);
+            m_collection.Remove(query, RemoveFlags.Single);
+        }
+
         public List<TEntity> GetCollectionList()
         {
             if (m_collectionList == null)
