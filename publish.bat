@@ -7,5 +7,5 @@ xcopy /s /e /i /y BidderDataInput\exe %BIDDINGDIR%\BidderDataInput
 xcopy /s /e /i /y Checkout\Checkout\bin\Debug %BIDDINGDIR%\Checkout
 xcopy /s /e /i /y DealerDataInput\exe %BIDDINGDIR%\DealerDataInput
 xcopy /s /e /i /y SetAuction\SetAuction\bin\Debug %BIDDINGDIR%\SetAuction
-xcopy /s /e /i /y "SJ Bidding System\SJ Bidding System\bin\Debug" %BIDDINGDIR%"\SJ Bidding System"
+xcopy /s /e /i /y Bidding\Bidding\bin\Debug %BIDDINGDIR%"\Bidding"
 pause
