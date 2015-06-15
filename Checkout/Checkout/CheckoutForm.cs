@@ -194,6 +194,9 @@ namespace Checkout
             {
                 foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
+#if SJ_FOR_JP
+                    PrintDoc(paymentDoc.Value.doc, 3);
+#else
                     if (!m_bidder.auctionMappings.ContainsKey(paymentDoc.Key))
                         continue;   // dont print the doc that buy nothing.
 
@@ -205,6 +208,7 @@ namespace Checkout
                     {
                         PrintDoc(paymentDoc.Value.doc, 1);
                     }
+#endif
                 }
             }
 
@@ -279,24 +283,25 @@ namespace Checkout
         {
             foreach (ListViewItem lvi in auctionsListView.SelectedItems)
             {
+                Auction auc = m_bidder.auctions[lvi.Text];
                 if (lvi.SubItems[5].Text == m_noStr)
                 {
-                    Auction auc = m_bidder.auctions[lvi.Text];
                     auc.isUseCreditCard = true;
-                    auc.total = auc.hammerPrice + auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
-                    lvi.SubItems[4].Text = auc.total.ToString("n0");
+                    auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
+                    auc.total = auc.hammerPrice + auc.serviceCharge;
                     lvi.SubItems[5].Text = m_yesStr;
                     lvi.BackColor = Color.LightCyan;
                 }
                 else
                 {
-                    Auction auc = m_bidder.auctions[lvi.Text];
                     auc.isUseCreditCard = false;
+                    auc.serviceCharge = Convert.ToInt32(Auction.ServiceChargeRate * (float)auc.hammerPrice);
                     auc.total = auc.hammerPrice + auc.serviceCharge;
-                    lvi.SubItems[4].Text = auc.total.ToString("n0");
                     lvi.SubItems[5].Text = m_noStr;
                     lvi.BackColor = System.Drawing.SystemColors.Window;
                 }
+                lvi.SubItems[3].Text = auc.serviceCharge.ToString("n0");
+                lvi.SubItems[4].Text = auc.total.ToString("n0");
             }
         }
 
@@ -377,7 +382,7 @@ namespace Checkout
                         auctionTable.Cell(5, 2).Range.Text = "NTD " + amountDue.ToString("n0");
                     }
                 }
-            }
+            }   // end of isPrintOneByOneCheckBox.Checked == true
             else
             {
                 for (int i = 0; i < (int)Auctioneer.Count; i++)
@@ -431,16 +436,10 @@ namespace Checkout
                             aucTables[tableId].Rows.Add(aucTables[tableId].Rows[2 + aucCount[tableId]]);
 #if SJ_FOR_JP
                             int tax = 0;
-                            if (auc.isUseCreditCard)
-                            {
-                                tax = Convert.ToInt32((auc.serviceCharge + auc.hammerPrice * Auction.CreditCardRate) * m_taxRate);
-                            }
-                            else
-                            {
-                                tax = Convert.ToInt32(auc.serviceCharge * m_taxRate);
-                            }
+                            tax = Convert.ToInt32(auc.serviceCharge * m_taxRate);
                             FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot, auc.artwork, auc.hammerPrice,
                                 auc.serviceCharge, tax, auc.total + tax);
+
 #else
                             FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot.ToString(), auc.artwork, auc.hammerPrice.ToString("n0"),
                                 auc.serviceCharge.ToString("n0"), auc.total.ToString("n0"));
@@ -469,8 +468,11 @@ namespace Checkout
 #else
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
 #endif
-
+#if SJ_FOR_JP
+                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "JPY " + amountDue.ToString("n0");
+#else
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
+#endif
 #if (SHIJIA)
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
 #endif
