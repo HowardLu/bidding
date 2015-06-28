@@ -1,6 +1,6 @@
 ﻿//#define MUCHUNTANG
 //#define SHIJIA
-#define SJ_FOR_JP
+//#define SJ_FOR_JP
 
 using System;
 using System.Collections.Generic;
@@ -194,9 +194,8 @@ namespace Checkout
             {
                 foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
-#if SJ_FOR_JP
                     PrintDoc(paymentDoc.Value.doc, 3);
-#else
+/*
                     if (!m_bidder.auctionMappings.ContainsKey(paymentDoc.Key))
                         continue;   // dont print the doc that buy nothing.
 
@@ -208,12 +207,11 @@ namespace Checkout
                     {
                         PrintDoc(paymentDoc.Value.doc, 1);
                     }
-#endif
+*/
                 }
             }
 
             PrintDoc(m_bidder.cashFlowDoc, 1);
-
             CloseDocAndWord();
         }
 
@@ -255,8 +253,6 @@ namespace Checkout
 
             // Call the sort method to manually sort.
             auctionsListView.Sort();
-            // Set the ListViewItemSorter property to a new ListViewItemComparer
-            // object.
             this.auctionsListView.ListViewItemSorter = new ListViewItemComparer(e.Column, auctionsListView.Sorting);
         }
 
@@ -361,7 +357,6 @@ namespace Checkout
 #endif
 
                     int creditCardFee = auc.isUseCreditCard ? Convert.ToInt32(auc.total * 0.035f) : 0;
-                    //int tax = Convert.ToInt32(auc.total * 0.05f);
                     int amountDue = auc.isUseCreditCard ? auc.total + creditCardFee /*+ tax*/ : auc.total /*+ tax*/;
 
                     auctionTable.Cell(4, 2).Range.Text = auc.hammerPrice.ToString("n0");
@@ -370,15 +365,11 @@ namespace Checkout
                     if (auc.isUseCreditCard)
                     {
                         auctionTable.Cell(5, 2).Range.Text = "NTD " + creditCardFee.ToString("n0");
-                        //auctionTable.Cell(6, 2).Range.Text = "NTD " + tax.ToString("n0");
-                        //auctionTable.Cell(7, 2).Range.Text = "NTD " + amountDue.ToString("n0");
                         auctionTable.Cell(6, 2).Range.Text = "NTD " + amountDue.ToString("n0");
                     }
                     else
                     {
                         auctionTable.Rows[5].Delete();
-                        //auctionTable.Cell(5, 2).Range.Text = "NTD " + tax.ToString("n0");
-                        //auctionTable.Cell(6, 2).Range.Text = "NTD " + amountDue.ToString("n0");
                         auctionTable.Cell(5, 2).Range.Text = "NTD " + amountDue.ToString("n0");
                     }
                 }
@@ -473,7 +464,7 @@ namespace Checkout
 #else
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
 #endif
-#if (SHIJIA)
+#if SHIJIA || IGS
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
 #endif
                         totalSums.Add(time, amountDue);
@@ -545,7 +536,7 @@ namespace Checkout
             m_bidder.cashFlowDocName = m_bidder.no.ToString() + "_" + m_bidder.name + "_金流單.doc";
             m_bidder.cashFlowDoc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing, ref m_oMissing, ref m_oMissing);
             object oBookMark = "Today";
-#if (MUCHUNTANG)
+#if MUCHUNTANG || IGS
             m_bidder.cashFlowDoc.Bookmarks.get_Item(ref oBookMark).Range.Text = " " + DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
 #endif
             Microsoft.Office.Interop.Word.Table bidderDataTable = m_bidder.cashFlowDoc.Tables[1];
@@ -558,12 +549,11 @@ namespace Checkout
             bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
 
             Microsoft.Office.Interop.Word.Table depositReceiveTable = m_bidder.cashFlowDoc.Tables[2];
-            //depositReceiveTable.Cell(0, 2).Range.Text = Utility.GetEnumString(typeof(AuctioneerName), (int)m_bidder.auctioneer);
-#if (MUCHUNTANG)
+#if MUCHUNTANG
             depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeState.ToString();
             depositReceiveTable.Cell(0, 6).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
 #endif
-#if (SHIJIA)
+#if SHIJIA || IGS
             depositReceiveTable.Cell(0, 2).Range.Text = m_bidder.payGuaranteeState.ToString();
             depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
 #endif
@@ -576,10 +566,10 @@ namespace Checkout
                 if (counter != totalSums.Count - 1)
                     totalDataTable.Rows.Add(totalDataTable.Rows[2 + counter]);
 
-#if (MUCHUNTANG)
+#if MUCHUNTANG
                 totalDataTable.Cell(2 + counter, 1).Range.Text = auctioneerStr;
 #endif
-#if (SHIJIA)
+#if SHIJIA || IGS
                 totalDataTable.Cell(2 + counter, 1).Range.Text = sum.Key;
 #endif
 
@@ -648,7 +638,7 @@ namespace Checkout
             SetDataInDoc();
 
             string folder = Path.Combine(System.Windows.Forms.Application.StartupPath,
-                m_bidder.no.ToString() + "_" + m_bidder.name);
+                m_bidder.no.ToString());
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
 

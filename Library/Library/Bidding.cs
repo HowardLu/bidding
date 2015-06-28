@@ -132,13 +132,7 @@ namespace Bidding
                 total = hammerPrice + serviceCharge;
             }*/
 
-            // 20131219 new 
-#if SHIJIA
             serviceCharge = Convert.ToInt32(hammerPrice * ServiceChargeRate);
-#endif
-#if IGS
-            serviceCharge = Convert.ToInt32(hammerPrice * 0.15f);
-#endif
             total = hammerPrice + serviceCharge;
         }
 
@@ -436,7 +430,9 @@ namespace Bidding
                 auctionMappings[auctioneer].Add(auc.lot);
             }
 #if IGS
-            auctionMappings["N"] = auctionMappings["S"];
+            if (auctionMappings.ContainsKey("N") && 0 == auctionMappings["N"].Count &&
+                auctionMappings.ContainsKey("S"))
+                auctionMappings["N"] = auctionMappings["S"];
 #endif
         }
 
@@ -503,13 +499,13 @@ namespace Bidding
 
     public enum Auctioneer
     {
-#if (MUCHUNTANG)
+#if MUCHUNTANG
         M = 0,
 #endif
-#if (SHIJIA)
+#if SHIJIA
         S = 0,
 #endif
-#if (IGS)
+#if IGS
         N = 0,
 #endif
         /*A,
@@ -519,13 +515,13 @@ namespace Bidding
 
     public enum AuctioneerName
     {
-#if (MUCHUNTANG)
+#if MUCHUNTANG
         沐春堂 = 0,
 #endif
-#if (SHIJIA)
+#if SHIJIA
         世家 = 0,
 #endif
-#if (IGS)
+#if IGS
         新象 = 0,
 #endif
         /*安德昇,

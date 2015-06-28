@@ -42,8 +42,8 @@
             this.er3NameLabel = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.sessionLabel = new System.Windows.Forms.Label();
-            this.progressLabel = new System.Windows.Forms.Label();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.progressLabel = new System.Windows.Forms.Label();
             this.auctionPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -226,17 +226,6 @@
             this.sessionLabel.TabIndex = 3;
             this.sessionLabel.Text = "session";
             // 
-            // progressLabel
-            // 
-            this.progressLabel.AutoSize = true;
-            this.progressLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.progressLabel.ForeColor = System.Drawing.Color.White;
-            this.progressLabel.Location = new System.Drawing.Point(713, 0);
-            this.progressLabel.Name = "progressLabel";
-            this.progressLabel.Size = new System.Drawing.Size(86, 22);
-            this.progressLabel.TabIndex = 4;
-            this.progressLabel.Text = "progress";
-            // 
             // logoPictureBox
             // 
             this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
@@ -247,6 +236,17 @@
             this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.logoPictureBox.TabIndex = 2;
             this.logoPictureBox.TabStop = false;
+            // 
+            // progressLabel
+            // 
+            this.progressLabel.AutoSize = true;
+            this.progressLabel.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.progressLabel.ForeColor = System.Drawing.Color.White;
+            this.progressLabel.Location = new System.Drawing.Point(713, 0);
+            this.progressLabel.Name = "progressLabel";
+            this.progressLabel.Size = new System.Drawing.Size(86, 22);
+            this.progressLabel.TabIndex = 4;
+            this.progressLabel.Text = "progress";
             // 
             // auctionPictureBox
             // 

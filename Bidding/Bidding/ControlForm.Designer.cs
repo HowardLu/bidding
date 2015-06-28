@@ -435,9 +435,10 @@
             // logoPictureBox
             // 
             this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO_S;
-            this.logoPictureBox.Location = new System.Drawing.Point(892, 24);
+            this.logoPictureBox.Location = new System.Drawing.Point(861, 24);
             this.logoPictureBox.Name = "logoPictureBox";
             this.logoPictureBox.Size = new System.Drawing.Size(100, 101);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.logoPictureBox.TabIndex = 10;
             this.logoPictureBox.TabStop = false;
             // 

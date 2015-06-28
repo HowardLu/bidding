@@ -75,6 +75,10 @@ namespace SJ_Bidding_System
             this.Text = "台灣沐春堂拍賣系統";
             this.logoPictureBox.Visible = false;
 #endif
+#if IGS
+            this.Text = "新象拍賣系統";
+            this.logoPictureBox.Image = Properties.Resources.LOGO_N;
+#endif
 
             string settingsFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.settingsFN);
             Settings.Load(settingsFP);

@@ -1,5 +1,6 @@
 ﻿//#define MUCHUNTANG
 //#define SHIJIA
+//#define IGS
 
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace Accounting
         #region Windows Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
-#if SHIJIA
+#if SHIJIA || IGS
             this.unitComboBox.SelectedIndex = 2;
 #endif
 #if MUCHUNTANG
@@ -309,8 +310,12 @@ namespace Accounting
             string account = Utility.InputBox("", "請輸入帳號:", "", -1, -1);
             if (account.Length == 0)
                 return;
-
+#if SHIJIA
             if ("Ma Lei" == account)
+#endif
+#if IGS
+            if ("newaspect" == account)
+#endif
                 m_isSuperUser = true;
         }
 
@@ -334,7 +339,7 @@ namespace Accounting
                 toolStripStatusLabel1.Text = "連線失敗!";
             }
 
-#if SHIJIA
+#if SHIJIA || IGS
             Login();
 #endif
 #if MUCHUNTANG

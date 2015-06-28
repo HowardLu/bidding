@@ -41,7 +41,7 @@ namespace SJ_Bidding_System
         private Bitmap m_logo_S = Properties.Resources.LOGO_S_big;
         private Bitmap m_logo_A = Properties.Resources.LOGO_A;
         private Bitmap m_logo_M = Properties.Resources.LOGO_M;
-        private Bitmap m_logo_N = Properties.Resources.LOGO_N;
+        private Bitmap m_logo_N = Properties.Resources.LOGO_N_big;
         #endregion
 
         #region Properties
@@ -111,12 +111,11 @@ namespace SJ_Bidding_System
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
             ChangeLogoCheck();
-#if (MUCHUNTANG)
+#if MUCHUNTANG
             this.logoPictureBox.Image = m_logo_M;
 #endif
-#if (IGS)
-            if (ChangeLogoEnable)
-                this.logoPictureBox.Image = m_logo_N;
+#if IGS
+            this.logoPictureBox.Image = m_logo_N;
 #endif
         }
 
@@ -306,6 +305,12 @@ namespace SJ_Bidding_System
                 case Auctioneer.M:
 
                     logoPictureBox.Image = m_logo_M;
+                    break;
+#endif
+#if IGS
+                case Auctioneer.N:
+
+                    logoPictureBox.Image = m_logo_N;
                     break;
 #endif
                 default:

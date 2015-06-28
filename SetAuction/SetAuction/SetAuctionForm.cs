@@ -301,8 +301,6 @@ namespace SetAuction
                 foreach (ListViewItem lvi in auctionsListView.SelectedItems)
                 {
                     string lot = lvi.Text;
-                    /*if (File.Exists(m_auctions[lot].photofilePath))
-                        File.Delete(m_auctions[lot].photofilePath);*/
                     m_auctions.Remove(lot);
                     m_aeInternet.Remove<string>(ae => ae.AuctionId, lot);
                     auctionsListView.Items.Remove(lvi);
@@ -386,12 +384,6 @@ namespace SetAuction
                 Bitmap bmp = Utility.OpenBitmap(auction.photoFilePath);
                 m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
                 m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
-                /*if (auction.photo == null)
-                {
-                    auction.photo = Utility.OpenBitmap(auction.photoFilePath);
-                }
-                m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
-                m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));*/
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
                     auction.initialPrice.ToString()/*, auction.auctioneer*/);
             }
@@ -408,7 +400,6 @@ namespace SetAuction
             newLvi.SubItems.Add(artist);
             newLvi.SubItems.Add(artwork);
             newLvi.SubItems.Add(initPrice);
-            //newLvi.SubItems.Add(subItem4);
             auctionsListView.Items.Add(newLvi);
         }
 
@@ -420,7 +411,6 @@ namespace SetAuction
 
         private void CopyPhotoToAuctionsFolder(ref Auction auction)
         {
-            //string newFileName = auction.CreateFileName(Path.GetExtension(photoTextBox.Text));
             string newFileName = auction.lot + Path.GetExtension(photoTextBox.Text);
             auction.photoFilePath = Path.Combine(Settings.auctionFolder, newFileName);
             string newFilePath = Path.Combine(Application.StartupPath, auction.photoFilePath);
