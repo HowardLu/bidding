@@ -29,12 +29,12 @@ namespace SetAuction
         private Internet<AuctionEntity> m_aeInternet;
         private int m_lastUnitIndex = 0;
         private int[] m_units = { 1, 1000, 10000 };
-#if SHIJIA
-        private int m_initPriceThreshold = 1000;
-#endif
 #if IGS
         private int m_initPriceThreshold = 0;
+#else
+        private int m_initPriceThreshold = 1000;
 #endif
+        
         #endregion
 
         #region Properties
@@ -215,12 +215,13 @@ namespace SetAuction
             //auction.auctioneer = Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex);
             CopyPhotoToAuctionsFolder(ref auction);
             string fp = Path.Combine(Application.StartupPath, auction.photoFilePath);
-            auction.photo = Utility.OpenBitmap(fp);
             m_auctions.Add(auction.lot, auction);
             m_aeInternet.Insert(auction.ToAuctionEntity());
 
-            m_largeImgList.Images.Add(Utility.SizeImage(ref auction.photo, 100, 100));
-            m_smallImgList.Images.Add(Utility.SizeImage(ref auction.photo, 50, 50));
+            Bitmap bmp = Utility.OpenBitmap(fp);
+            m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
+            m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
+            bmp.Dispose();
 
             auctionsListView.BeginUpdate();
             AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
@@ -386,6 +387,7 @@ namespace SetAuction
                 m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
                     auction.initialPrice.ToString()/*, auction.auctioneer*/);
+                bmp.Dispose();
             }
             auctionsListView.LargeImageList = m_largeImgList;
             auctionsListView.SmallImageList = m_smallImgList;

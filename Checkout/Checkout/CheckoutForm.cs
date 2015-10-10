@@ -211,7 +211,9 @@ namespace Checkout
                 }
             }
 
+#if !MUCHUNTANG
             PrintDoc(m_bidder.cashFlowDoc, 1);
+#endif
             CloseDocAndWord();
         }
 
@@ -415,10 +417,7 @@ namespace Checkout
 #endif
                     int[] sums = new int[tableCount];
                     int[] aucCount = new int[tableCount];
-                    //List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer); 
-                    List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions("S"); // dirty way 20150118
-                    if (auctionsOfAuctioneer == null)
-                        auctionsOfAuctioneer = m_bidder.GetAuctions("N"); // dirty way 20150118
+                    List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer);
                     if (auctionsOfAuctioneer != null)
                     {
                         foreach (Auction auc in auctionsOfAuctioneer)
@@ -614,12 +613,49 @@ namespace Checkout
                     return;
                 }
 
-                string[] info = line.Split(' ');
-                m_serverIp = info[0];
-                if (!int.TryParse(info[1], out m_serverPort))
+                while (line != null)
                 {
-                    MessageBox.Show(fp + "檔格式錯誤!");
-                    return;
+                    string[] info = line.Split(' ');
+                    if (2 > info.Length)
+                    {
+                        MessageBox.Show(fp + "檔格式錯誤!");
+                        return;
+                    }
+                    switch (info[0])
+                    {
+                        case "port":
+                            if (!int.TryParse(info[1], out m_serverPort))
+                            {
+                                MessageBox.Show(fp + "檔格式錯誤!");
+                                return;
+                            }
+                            break;
+                        case "service_charge":
+                            {
+                                int sc;
+                                if (!int.TryParse(info[1], out sc))
+                                {
+                                    MessageBox.Show(fp + "檔格式錯誤!");
+                                    return;
+                                }
+                                serviceChargeRateTextBox.Text = sc.ToString();
+                            }
+                            break;
+                        case "card_fee":
+                            {
+                                int cf;
+                                if (!int.TryParse(info[1], out cf))
+                                {
+                                    MessageBox.Show(fp + "檔格式錯誤!");
+                                    return;
+                                }
+                                creditCardRateTextBox.Text = cf.ToString();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    line = sr.ReadLine();
                 }
             }
         }
@@ -629,7 +665,9 @@ namespace Checkout
             string fp = Path.Combine(System.Windows.Forms.Application.StartupPath, m_settingsFN);
             using (StreamWriter sw = new StreamWriter(fp))
             {
-                sw.WriteLine(m_serverIp + " " + m_serverPort);
+                sw.WriteLine("port" + " " + m_serverPort);
+                sw.WriteLine("service_charge" + " " + serviceChargeRateTextBox.Text);
+                sw.WriteLine("card_fee" + " " + creditCardRateTextBox.Text);
             }
         }
 

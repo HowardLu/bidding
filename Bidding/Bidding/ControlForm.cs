@@ -180,6 +180,8 @@ namespace SJ_Bidding_System
                         /*int interval = (int)Math.Pow(10, (pl.down.ToString().Length - 1));
                         if (interval < Settings.unit)
                             interval = Settings.unit;*/
+                        if (down >= pl.increments[0] && down <= pl.increments[pl.increments.Count - 1])
+                            down = 0;
                         int interval = pl.increments[pl.increments.Count - 1];
                         while (true)
                         {
@@ -884,7 +886,7 @@ namespace SJ_Bidding_System
             float rate = 0f;
             if ("0" == rateText)
             {
-                m_displayForm.ShowExchangeRate(rateId, false);
+                m_displayForm.ShowExchangeRate(rateId, true);
             }
             else
             {
