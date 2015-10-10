@@ -1,1 +1,3 @@
-127.0.0.1 27017
+port 27017
+service_charge 15
+card_fee 5
