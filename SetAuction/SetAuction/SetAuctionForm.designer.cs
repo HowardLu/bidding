@@ -59,6 +59,8 @@
             this.saveButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.sessionComboBox = new System.Windows.Forms.ComboBox();
+            this.sessionLabel = new System.Windows.Forms.Label();
             this.viewsGroupBox.SuspendLayout();
             this.setAuctionGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -376,18 +378,38 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // sessionComboBox
+            // 
+            this.sessionComboBox.FormattingEnabled = true;
+            this.sessionComboBox.Location = new System.Drawing.Point(691, 286);
+            this.sessionComboBox.Name = "sessionComboBox";
+            this.sessionComboBox.Size = new System.Drawing.Size(75, 20);
+            this.sessionComboBox.TabIndex = 40;
+            this.sessionComboBox.SelectedIndexChanged += new System.EventHandler(this.sessionComboBox_SelectedIndexChanged);
+            // 
+            // sessionLabel
+            // 
+            this.sessionLabel.AutoSize = true;
+            this.sessionLabel.ForeColor = System.Drawing.Color.Black;
+            this.sessionLabel.Location = new System.Drawing.Point(644, 289);
+            this.sessionLabel.Name = "sessionLabel";
+            this.sessionLabel.Size = new System.Drawing.Size(41, 12);
+            this.sessionLabel.TabIndex = 39;
+            this.sessionLabel.Text = "場次：";
+            // 
             // SetAuctionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(851, 562);
+            this.Controls.Add(this.sessionComboBox);
+            this.Controls.Add(this.sessionLabel);
             this.Controls.Add(this.setAuctionGroupBox);
             this.Controls.Add(this.viewsGroupBox);
             this.Controls.Add(this.auctionsListView);
             this.Name = "SetAuctionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "拍品設定";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SetAuctionForm_FormClosed);
             this.Load += new System.EventHandler(this.SetAuctionForm_Load);
             this.Resize += new System.EventHandler(this.SetAuctionForm_Resize);
             this.viewsGroupBox.ResumeLayout(false);
@@ -395,6 +417,7 @@
             this.setAuctionGroupBox.ResumeLayout(false);
             this.setAuctionGroupBox.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -431,5 +454,7 @@
         private System.Windows.Forms.ComboBox auctioneerComboBox;
         private System.Windows.Forms.ComboBox unitComboBox;
         private System.Windows.Forms.Label unitLabel;
+        private System.Windows.Forms.ComboBox sessionComboBox;
+        private System.Windows.Forms.Label sessionLabel;
     }
 }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SJ_Bidding_System
+namespace Bidding
 {
     public partial class Form2 : Form
     {

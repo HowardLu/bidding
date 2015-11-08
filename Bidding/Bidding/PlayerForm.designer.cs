@@ -1,4 +1,4 @@
-﻿namespace SJ_Bidding_System
+﻿namespace Bidding
 {
     partial class PlayerForm
     {
@@ -50,7 +50,7 @@
             this.ClientSize = new System.Drawing.Size(549, 453);
             this.Controls.Add(this.axWindowsMediaPlayer1);
             this.Name = "PlayerForm";
-            this.Text = "Form2";
+            this.Text = "PlayerForm";
             this.Load += new System.EventHandler(this.PlayerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.ResumeLayout(false);

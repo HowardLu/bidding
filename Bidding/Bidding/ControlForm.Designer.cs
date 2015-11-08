@@ -1,4 +1,4 @@
-﻿namespace SJ_Bidding_System
+﻿namespace Bidding
 {
     partial class ControlForm
     {
@@ -203,7 +203,7 @@
             this.prevsBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.prevsBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.prevsBtn.ForeColor = System.Drawing.Color.Transparent;
-            this.prevsBtn.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Left;
+            this.prevsBtn.Image = global::Bidding.Properties.Resources.Knob_Left;
             this.prevsBtn.Location = new System.Drawing.Point(491, 367);
             this.prevsBtn.Name = "prevsBtn";
             this.prevsBtn.Size = new System.Drawing.Size(32, 32);
@@ -381,7 +381,7 @@
             this.playButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.playButton.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Play_Green;
+            this.playButton.Image = global::Bidding.Properties.Resources.Knob_Play_Green;
             this.playButton.Location = new System.Drawing.Point(597, 552);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(32, 32);
@@ -397,7 +397,7 @@
             this.stopButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
             this.stopButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
             this.stopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stopButton.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Stop;
+            this.stopButton.Image = global::Bidding.Properties.Resources.Knob_Stop;
             this.stopButton.Location = new System.Drawing.Point(644, 552);
             this.stopButton.Name = "stopButton";
             this.stopButton.Size = new System.Drawing.Size(32, 32);
@@ -416,7 +416,7 @@
             this.nextBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.nextBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.nextBtn.ForeColor = System.Drawing.Color.Transparent;
-            this.nextBtn.Image = global::SJ_Bidding_System.Properties.Resources.Knob_Forward;
+            this.nextBtn.Image = global::Bidding.Properties.Resources.Knob_Forward;
             this.nextBtn.Location = new System.Drawing.Point(929, 367);
             this.nextBtn.Name = "nextBtn";
             this.nextBtn.Size = new System.Drawing.Size(32, 32);
@@ -434,7 +434,7 @@
             // 
             // logoPictureBox
             // 
-            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.LOGO_S;
+            this.logoPictureBox.Image = global::Bidding.Properties.Resources.LOGO_S;
             this.logoPictureBox.Location = new System.Drawing.Point(861, 24);
             this.logoPictureBox.Name = "logoPictureBox";
             this.logoPictureBox.Size = new System.Drawing.Size(100, 101);

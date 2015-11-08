@@ -1,15 +1,25 @@
-﻿//#define MUCHUNTANG
-//#define SHIJIA
+﻿//#define MCT
+//#define SJ
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using Bidding;
+using BiddingLibrary;
 using UtilityLibrary;
 
-namespace SJ_Bidding_System
+namespace Bidding
 {
-    public partial class DisplayForm : Form
+    /*public class DisplayFormBase : Form
+    {
+        public virtual void SetAuctionOnForm(Auction auction) { }
+        public virtual void SetNewPrice(int newMainPrice) { }
+        public virtual void SetSession(string sessionStr) { }
+        public virtual void SetProgress(int currentId, int totalCount) { }
+        public virtual void SetRateName(int rateId, string name) { }
+        public virtual void ShowExchangeRate(int erId, bool isShow) { }
+    }*/
+
+    public partial class DisplayForm : DisplayFormBase
     {
         //[DllImport("gdi32.dll")]
         //private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv, [In] ref uint pcFonts);
@@ -38,10 +48,10 @@ namespace SJ_Bidding_System
         private ControlState m_er3PriceLabelState;
         private ControlState m_artworkTextBoxState;
         private ControlState m_progressLabelState;
-        private Bitmap m_logo_S = Properties.Resources.LOGO_S_big;
-        private Bitmap m_logo_A = Properties.Resources.LOGO_A;
-        private Bitmap m_logo_M = Properties.Resources.LOGO_M;
-        private Bitmap m_logo_N = Properties.Resources.LOGO_N_big;
+        private Bitmap m_logo_S = Bidding.Properties.Resources.LOGO_S_big;
+        private Bitmap m_logo_A = Bidding.Properties.Resources.LOGO_A;
+        private Bitmap m_logo_M = Bidding.Properties.Resources.LOGO_M;
+        private Bitmap m_logo_N = Bidding.Properties.Resources.LOGO_N_big;
         #endregion
 
         #region Properties
@@ -111,12 +121,10 @@ namespace SJ_Bidding_System
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
             ChangeLogoCheck();
-#if MUCHUNTANG
-            this.logoPictureBox.Image = m_logo_M;
-#endif
-#if IGS
-            this.logoPictureBox.Image = m_logo_N;
-#endif
+            if (Auctioneer.M == Auction.DefaultAuctioneer)
+                this.logoPictureBox.Image = m_logo_M;
+            if (Auctioneer.N == Auction.DefaultAuctioneer)
+                this.logoPictureBox.Image = m_logo_N;
         }
 
         private void DisplayForm_Resize(object sender, EventArgs e)
@@ -138,7 +146,7 @@ namespace SJ_Bidding_System
         /// Set auction on this Form by Auction object.
         /// </summary>
         /// <param name="auction">Auction object</param>
-        public void SetAuctionOnForm(Auction auction)
+        public override void SetAuctionOnForm(Auction auction)
         {
             lotNumLabel.Text = auction.lot;
             artistLabel.Text = auction.artist;
@@ -147,17 +155,17 @@ namespace SJ_Bidding_System
             if (auction.photo != null)
                 Utility.SetImageNoStretch(ref auctionPictureBox, ref auction.photo);
             else
-                auctionPictureBox.Image = Properties.Resources.loading;
+                auctionPictureBox.Image = Bidding.Properties.Resources.loading;
 
             //if (ChangeLogoEnable)
-                //SetLogo(Utility.ToEnum<Auctioneer>(auction.auctioneer));
+            //SetLogo(Utility.ToEnum<Auctioneer>(auction.auctioneer));
         }
 
         /// <summary>
         /// Set new price on display form.
         /// </summary>
         /// <param name="newMainPrice">new ntd price now</param>
-        public void SetNewPrice(int newMainPrice)
+        public override void SetNewPrice(int newMainPrice)
         {
             mainPriceLabel.Text = newMainPrice.ToString("c");
             er1PriceLabel.Text = ExchangeRate.MainToCurrency(newMainPrice, 0).ToString("c");
@@ -165,30 +173,17 @@ namespace SJ_Bidding_System
             er3PriceLabel.Text = ExchangeRate.MainToCurrency(newMainPrice, 2).ToString("c");
         }
 
-        public void ChangeLogoCheck()
-        {
-            this.ChangeLogoEnable = false;
-            string today = DateTime.Now.ToShortDateString();
-            if (today == @"2013/12/21" || today == @"2013/12/22" ||
-                today == @"2015/1/18")
-            {
-                string password = ShowDialog("", "請輸入啟動密碼");
-                if (password == "superwaser55667878")
-                    this.ChangeLogoEnable = true;
-            }
-        }
-
-        public void SetSession(string sessionStr)
+        public override void SetSession(string sessionStr)
         {
             sessionLabel.Text = String.Format(@"第{0}場", sessionStr);
         }
 
-        public void SetProgress(int currentId, int totalCount)
+        public override void SetProgress(int currentId, int totalCount)
         {
             progressLabel.Text = String.Format(@"{0}/{1}", currentId, totalCount);
         }
 
-        public void SetRateName(int rateId, string name)
+        public override void SetRateName(int rateId, string name)
         {
             switch (rateId)
             {
@@ -207,7 +202,7 @@ namespace SJ_Bidding_System
             }
         }
 
-        public void ShowExchangeRate(int erId, bool isShow)
+        public override void ShowExchangeRate(int erId, bool isShow)
         {
             switch (erId)
             {
@@ -243,8 +238,8 @@ namespace SJ_Bidding_System
         {
             // Create the byte array and get its length
 
-            byte[] fontArray = SJ_Bidding_System.Properties.Resources.arial;
-            int dataLength = SJ_Bidding_System.Properties.Resources.arial.Length;
+            byte[] fontArray = BiddingSystem.Properties.Resources.arial;
+            int dataLength = BiddingSystem.Properties.Resources.arial.Length;
 
 
             // ASSIGN MEMORY AND COPY  BYTE[] ON THAT MEMORY ADDRESS
@@ -293,26 +288,19 @@ namespace SJ_Bidding_System
         {
             switch (auctioneer)
             {
-#if SHIJIA
                 case Auctioneer.S:
                     logoPictureBox.Image = m_logo_S;
                     break;
-#endif
                 /*case Auctioneer.A:
                     logoPictureBox.Image = m_logo_A;
                     break;*/
-#if MUCHUNTANG
                 case Auctioneer.M:
 
                     logoPictureBox.Image = m_logo_M;
                     break;
-#endif
-#if IGS
                 case Auctioneer.N:
-
                     logoPictureBox.Image = m_logo_N;
                     break;
-#endif
                 default:
                     break;
             }
@@ -335,6 +323,19 @@ namespace SJ_Bidding_System
             prompt.Controls.Add(textBox);
             prompt.ShowDialog();
             return textBox.Text;
+        }
+
+        private void ChangeLogoCheck()
+        {
+            this.ChangeLogoEnable = false;
+            string today = DateTime.Now.ToShortDateString();
+            if (today == @"2013/12/21" || today == @"2013/12/22" ||
+                today == @"2015/1/18")
+            {
+                string password = ShowDialog("", "請輸入啟動密碼");
+                if (password == "superwaser55667878")
+                    this.ChangeLogoEnable = true;
+            }
         }
         #endregion
     }

@@ -262,16 +262,17 @@ namespace UtilityLibrary
         {
             string lastInputIp = "127.0.0.1";
             string fileName = "ip_cache.txt";
-            if (IsFileExist(fileName, true))
+            string filePath = Path.Combine(Application.StartupPath, Settings.configFolder, fileName);
+            if (IsFileExist(filePath, true))
             {
-                using (StreamReader sr = new StreamReader(fileName))
+                using (StreamReader sr = new StreamReader(filePath))
                 {
                     lastInputIp = sr.ReadLine();
                 }
             }
 
             string ip = InputBox("", "請輸入Server IP:", lastInputIp, -1, -1);
-            using (StreamWriter sw = new StreamWriter(fileName, false))
+            using (StreamWriter sw = new StreamWriter(filePath, false))
             {
                 sw.WriteLine(ip);
             }
@@ -289,6 +290,7 @@ namespace UtilityLibrary
         public static string auctionFolder = "Auctions";
         public static string configFolder = "Config";
         public static string saveFolder = "Save";
+        public static string docTempFolder = "TempDoc";
         public static string pricesFN = "Prices.txt";
         public static string pricesFP = "Prices.txt";
         public static string priceLevelFN = "PriceLevel.txt";
@@ -301,77 +303,124 @@ namespace UtilityLibrary
         public static string backupFP = @"Z:\";
         public static string serverFN = "server.exe";
         public static string serverDir = @"BidderDataServer\exe";
+        public static int serverPort = 27017;
         public static int unit = 1000;
         public static string videoFolder = "Video";
-        //public static Point displayPos = Point.Empty;
-        //public static Size displaySize = Size.Empty;
+        public static Point displayPos = Point.Empty;
+        public static Size displaySize = Size.Empty;
+        public static int serviceChargeRate = 0;    // for Checkout
+        public static int creditCardRate = 0;   // for Checkout
 
-        public static void Load(string fn)
+        public static void Load()
         {
+            string settingsFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.settingsFN);
             pricesFP = Path.Combine(Application.StartupPath, Settings.saveFolder, Settings.pricesFN);
             priceLevelFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.priceLevelFN);
             exchangeRateFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN);
+            biddingResultFP = Path.Combine(Application.StartupPath, Settings.saveFolder, biddingResultFN);
 
-            if (!Utility.IsFileExist(fn, false))
+            if (!Utility.IsFileExist(settingsFP, false))
                 return;
 
-            string[] settingName = { "DisplayPos", "DisplaySize", "Server", "Unit" };
-            using (StreamReader sr = new StreamReader(fn))
+            using (StreamReader sr = new StreamReader(settingsFP))
             {
                 string line = sr.ReadLine();
                 if (line == null)
                 {
-                    MessageBox.Show(fn + "檔格式錯誤!");
+                    MessageBox.Show(settingsFP + "檔格式錯誤!");
                     return;
                 }
 
                 while (line != null)
                 {
                     string[] sections = line.Split(' ');
-                    string name = sections[0];
+                    string settingName = sections[0];
                     string data = sections[1];
-                    if (name == settingName[0])
+                    switch (settingName)
                     {
-                        string[] num = data.Split(',');
-                        int x = 0, y = 0;
-                        if (!int.TryParse(num[0], out x) || !int.TryParse(num[1], out y))
-                        {
-                            MessageBox.Show(fn + "檔格式錯誤!");
-                            return;
-                        }
-                        //displayPos = new Point(x, y);
+                        case "DisplayPos":
+                            {
+                                string[] num = data.Split(',');
+                                int x = 0, y = 0;
+                                if (!int.TryParse(num[0], out x) || !int.TryParse(num[1], out y))
+                                {
+                                    MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                    return;
+                                }
+                                displayPos = new Point(x, y);
+                            }
+                            break;
+                        case "DisplaySize":
+                            {
+                                string[] num = data.Split(',');
+                                int w = 0, h = 0;
+                                if (!int.TryParse(num[0], out w) || !int.TryParse(num[1], out h))
+                                {
+                                    MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                    return;
+                                }
+                                displaySize = new Size(w, h);
+                            }
+                            break;
+                        case "Server":
+                            {
+                                string path = Path.Combine(Application.StartupPath, data);
+                                if (Directory.Exists(path))
+                                    serverDir = path;
+                            }
+                            break;
+                        case "Unit":
+                            {
+                                int u = 0;
+                                if (!int.TryParse(data, out u))
+                                {
+                                    MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                    return;
+                                }
+                                unit = u;
+                            }
+                            break;
+                        case "port":
+                            if (!int.TryParse(data, out serverPort))
+                            {
+                                MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                return;
+                            }
+                            break;
+                        case "service_charge":
+                            {
+                                if (!int.TryParse(data, out serviceChargeRate))
+                                {
+                                    MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                    return;
+                                }
+                            }
+                            break;
+                        case "card_fee":
+                            {
+                                if (!int.TryParse(data, out creditCardRate))
+                                {
+                                    MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                    return;
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                    if (name == settingName[1])
-                    {
-                        string[] num = data.Split(',');
-                        int w = 0, h = 0;
-                        if (!int.TryParse(num[0], out w) || !int.TryParse(num[1], out h))
-                        {
-                            MessageBox.Show(fn + "檔格式錯誤!");
-                            return;
-                        }
-                        //displaySize = new Size(w, h);
-                    }
-                    if (name == settingName[2])
-                    {
-                        string path = Path.Combine(Application.StartupPath, data);
-                        if (Directory.Exists(path))
-                            serverDir = path;
-                        biddingResultFP = Path.Combine(serverDir, biddingResultFN);
-                    }
-                    if (name == settingName[3])
-                    {
-                        int u = 0;
-                        if (!int.TryParse(data, out u))
-                        {
-                            MessageBox.Show(fn + "檔格式錯誤!");
-                            return;
-                        }
-                        unit = u;
-                    }
-
                     line = sr.ReadLine();
                 }
+            }
+        }
+
+        public static void Save()
+        {
+            string fp = Path.Combine(System.Windows.Forms.Application.StartupPath, Settings.configFolder, settingsFN);
+            using (StreamWriter sw = new StreamWriter(fp))
+            {
+                sw.WriteLine("port" + " " + serverPort);
+                sw.WriteLine("service_charge" + " " + serviceChargeRate);
+                sw.WriteLine("card_fee" + " " + creditCardRate);
             }
         }
     }

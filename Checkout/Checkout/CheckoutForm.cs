@@ -1,5 +1,5 @@
-﻿//#define MUCHUNTANG
-//#define SHIJIA
+﻿//#define MCT
+//#define SJ
 //#define SJ_FOR_JP
 
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using Bidding;
+using BiddingLibrary;
 using InternetLibrary;
 using Microsoft.Office.Interop.Word;
 using UtilityLibrary;
@@ -29,20 +29,15 @@ namespace Checkout
         private Internet<AuctionEntity> m_auctionInternet;
         private Internet<BidderEntity> m_bidderInternet;
         private Object m_oMissing = System.Reflection.Missing.Value;
-        private string m_serverIp = @"127.0.0.1";
-        private int m_serverPort = 27017;
         private Size m_listViewSize;
         private int[] m_colWidths;
         private int m_sortColumnId = -1;
-        private string m_settingsFN = "settings.txt";
         private string m_yesStr = "是";
         private string m_noStr = "否";
         private string m_cashFlowTemplateFN = "CashFlowTemp_";
         private int m_maxCheckoutNumber = 0;
         private Dictionary<int, string> m_checkoutTime;
-#if SJ_FOR_JP
-        private const float m_taxRate = 0.08f;
-#endif
+        private float m_taxRate = 0f;
         #endregion
 
         #region Properties
@@ -63,29 +58,29 @@ namespace Checkout
         #region Windows Form Events
         private void CheckoutForm_Load(object sender, EventArgs e)
         {
-            string settingsFP = Path.Combine(System.Windows.Forms.Application.StartupPath, m_settingsFN);
-            if (Utility.IsFileExist(settingsFP, false))
-                LoadSettings(settingsFP);
-            m_serverIp = Utility.InputIp();
-            if (m_serverIp.Length == 0)
+            Settings.Load();
+            serviceChargeRateTextBox.Text = Settings.serviceChargeRate.ToString();
+            creditCardRateTextBox.Text = Settings.creditCardRate.ToString();
+            string ip = Utility.InputIp();
+            if (ip.Length == 0)
             {
                 MessageBox.Show("IP不可為空!!!");
                 return;
             }
-            m_auctionInternet = new Internet<AuctionEntity>(m_serverIp, "bidding_data", "auctions_table");
+            m_auctionInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
             m_auctionInternet.Connect();
-            m_bidderInternet = new Internet<BidderEntity>(m_serverIp, "bidding_data", "buyer_table");
+            m_bidderInternet = new Internet<BidderEntity>(ip, "bidding_data", "buyer_table");
             m_bidderInternet.Connect();
             if (m_auctionInternet.IsConnected && m_bidderInternet.IsConnected)
             {
                 SetButtonsEnable(true);
             }
-            string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
-#if SJ_FOR_JP
-            m_cashFlowTemplateFN = m_cashFlowTemplateFN + "SFJ" + ".dot";
-#else
+            string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
             m_cashFlowTemplateFN = m_cashFlowTemplateFN + defaultAuctioneer + ".dot";
-#endif
+            if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
+            {
+                m_taxRate = 0.08f;
+            }
         }
 
         private void CheckoutForm_Resize(object sender, System.EventArgs e)
@@ -100,8 +95,7 @@ namespace Checkout
         private void CheckoutForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             CloseDocAndWord();
-            //m_client.Close();
-            SaveSettings();
+            Settings.Save();
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -194,26 +188,27 @@ namespace Checkout
             {
                 foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
-                    PrintDoc(paymentDoc.Value.doc, 3);
-/*
-                    if (!m_bidder.auctionMappings.ContainsKey(paymentDoc.Key))
-                        continue;   // dont print the doc that buy nothing.
-
-                    if (m_bidder.auctionMappings[paymentDoc.Key].Count > 0)
-                    {
+                    if (null != paymentDoc.Value.doc)
                         PrintDoc(paymentDoc.Value.doc, 3);
-                    }
-                    else
-                    {
-                        PrintDoc(paymentDoc.Value.doc, 1);
-                    }
-*/
+                    /*
+                                        if (!m_bidder.auctionMappings.ContainsKey(paymentDoc.Key))
+                                            continue;   // dont print the doc that buy nothing.
+
+                                        if (m_bidder.auctionMappings[paymentDoc.Key].Count > 0)
+                                        {
+                                            PrintDoc(paymentDoc.Value.doc, 3);
+                                        }
+                                        else
+                                        {
+                                            PrintDoc(paymentDoc.Value.doc, 1);
+                                        }
+                    */
                 }
             }
 
-#if !MUCHUNTANG
-            PrintDoc(m_bidder.cashFlowDoc, 1);
-#endif
+            if (Auctioneer.M != Auction.DefaultAuctioneer)
+                PrintDoc(m_bidder.cashFlowDoc, 1);
+
             CloseDocAndWord();
         }
 
@@ -312,6 +307,7 @@ namespace Checkout
                 return;
             }
             Auction.ServiceChargeRate = (float)serviceChargeRate / 100.0f;
+            Settings.serviceChargeRate = serviceChargeRate;
         }
 
         private void creditCardRateTextBox_TextChanged(object sender, EventArgs e)
@@ -323,6 +319,7 @@ namespace Checkout
                 return;
             }
             Auction.CreditCardRate = (float)creditCardRate / 100.0f;
+            Settings.creditCardRate = creditCardRate;
         }
         #endregion
 
@@ -340,7 +337,7 @@ namespace Checkout
             Dictionary<string, int> totalSums = new Dictionary<string, int>();
             if (isPrintOneByOneCheckBox.Checked)
             {
-                string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), 0);
+                string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
                 Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + defaultAuctioneer + ".dot";
                 foreach (Auction auc in m_bidder.auctions.Values)
                 {
@@ -353,10 +350,8 @@ namespace Checkout
                     Microsoft.Office.Interop.Word.Table auctionTable = auc.paymentDoc.Tables[2];
 
                     auctionTable.Rows.Add(auctionTable.Rows[2]);
-#if (!SJ_FOR_JP)
-                    FillAuctionRow(auctionTable, 2, auc.lot.ToString(), auc.artwork, auc.hammerPrice.ToString("n0"),
-                        auc.serviceCharge.ToString("n0"), auc.total.ToString("n0"));
-#endif
+                    FillAuctionRow(auctionTable, 2, auc.lot.ToString(), auc.artwork, auc.hammerPrice,
+                        auc.serviceCharge, 0, auc.total);
 
                     int creditCardFee = auc.isUseCreditCard ? Convert.ToInt32(auc.total * 0.035f) : 0;
                     int amountDue = auc.isUseCreditCard ? auc.total + creditCardFee /*+ tax*/ : auc.total /*+ tax*/;
@@ -378,100 +373,89 @@ namespace Checkout
             }   // end of isPrintOneByOneCheckBox.Checked == true
             else
             {
-                for (int i = 0; i < (int)Auctioneer.Count; i++)
+                string auctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
+                Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
+                    Settings.docTempFolder + @"\" + m_paymentTemplateFN + auctioneer + ".dot";
+                string docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + auctioneer + ".doc";
+
+                Microsoft.Office.Interop.Word._Document doc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing,
+                                                                                        ref m_oMissing, ref m_oMissing);
+                Microsoft.Office.Interop.Word.Table bidderDataTable = doc.Tables[1];
+                FillBidderTable(bidderDataTable);
+
+                Microsoft.Office.Interop.Word.Table aucTableTmp = doc.Tables[2];
+                aucTableTmp.Range.Copy();
+                Microsoft.Office.Interop.Word.Range rng = aucTableTmp.Range;
+                rng.SetRange(aucTableTmp.Range.End+1, aucTableTmp.Range.End+1);
+                //rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreakClearLeft);
+
+                int tableCount = m_maxCheckoutNumber > 0 ? m_maxCheckoutNumber : 1;
+                Microsoft.Office.Interop.Word.Table[] aucTables = new Microsoft.Office.Interop.Word.Table[tableCount];
+                aucTables[0] = aucTableTmp;
+                for (int tableId = 1; tableId < tableCount; tableId++)
                 {
-                    string auctioneer = Utility.GetEnumString(typeof(Auctioneer), i);
-#if SJ_FOR_JP
-                    Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + "SFJ" + ".dot";
-#else
-                    Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + auctioneer + ".dot";
-#endif
-                    string docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + auctioneer + ".doc";
+                    aucTables[tableId] = doc.Tables.Add(rng, 1, 1);
+                    aucTables[tableId].Range.Paste();
+                    rng.SetRange(aucTables[tableId].Range.End+1, aucTables[tableId].Range.End+1);
+                    //rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreak);
+                }
 
-                    Microsoft.Office.Interop.Word._Document doc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing,
-                                                                                            ref m_oMissing, ref m_oMissing);
-                    Microsoft.Office.Interop.Word.Table bidderDataTable = doc.Tables[1];
-                    FillBidderTable(bidderDataTable);
-
-                    Microsoft.Office.Interop.Word.Table aucTableTmp = doc.Tables[2];
-                    aucTableTmp.Range.Copy();
-                    Microsoft.Office.Interop.Word.Range rng = aucTableTmp.Range;
-                    rng.SetRange(aucTableTmp.Range.End, aucTableTmp.Range.End);
-                    rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreak);
-
-                    int tableCount = m_maxCheckoutNumber > 0 ? m_maxCheckoutNumber : 1;
-                    Microsoft.Office.Interop.Word.Table[] aucTables = new Microsoft.Office.Interop.Word.Table[tableCount];
-                    aucTables[0] = aucTableTmp;
-                    for (int tableId = 1; tableId < tableCount; tableId++)
+                int[] hammerSum = new int[tableCount];
+                int[] serviceSum = new int[tableCount];
+                int[] taxSum = new int[tableCount];
+                int[] sums = new int[tableCount];
+                int[] aucCount = new int[tableCount];
+                List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer);
+                if (auctionsOfAuctioneer != null)
+                {
+                    foreach (Auction auc in auctionsOfAuctioneer)
                     {
-                        aucTables[tableId] = doc.Tables.Add(rng, aucTableTmp.Rows.Count, aucTableTmp.Columns.Count);
-                        aucTables[tableId].Range.Paste();
-                        rng.SetRange(aucTables[tableId].Range.End, aucTables[tableId].Range.End);
-                        rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreak);
-                    }
-
-                    int[] hammerSum = new int[tableCount];
-                    int[] serviceSum = new int[tableCount];
-#if SJ_FOR_JP
-                    int[] taxSum = new int[tableCount];
-#endif
-                    int[] sums = new int[tableCount];
-                    int[] aucCount = new int[tableCount];
-                    List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer);
-                    if (auctionsOfAuctioneer != null)
-                    {
-                        foreach (Auction auc in auctionsOfAuctioneer)
+                        int tableId = auc.checkoutNumber > 0 ? auc.checkoutNumber - 1 : 0;
+                        aucTables[tableId].Rows.Add(aucTables[tableId].Rows[2 + aucCount[tableId]]);
+                        int tax = Convert.ToInt32(auc.serviceCharge * m_taxRate);
+                        FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot, auc.artwork, auc.hammerPrice,
+                            auc.serviceCharge, tax, auc.total + tax);
+                        aucCount[tableId] += 1;
+                        hammerSum[tableId] += auc.hammerPrice;
+                        serviceSum[tableId] += auc.serviceCharge;
+                        if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
                         {
-                            int tableId = auc.checkoutNumber > 0 ? auc.checkoutNumber - 1 : 0;
-                            aucTables[tableId].Rows.Add(aucTables[tableId].Rows[2 + aucCount[tableId]]);
-#if SJ_FOR_JP
-                            int tax = 0;
-                            tax = Convert.ToInt32(auc.serviceCharge * m_taxRate);
-                            FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot, auc.artwork, auc.hammerPrice,
-                                auc.serviceCharge, tax, auc.total + tax);
-
-#else
-                            FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot.ToString(), auc.artwork, auc.hammerPrice.ToString("n0"),
-                                auc.serviceCharge.ToString("n0"), auc.total.ToString("n0"));
-#endif
-                            aucCount[tableId] += 1;
-                            hammerSum[tableId] += auc.hammerPrice;
-                            serviceSum[tableId] += auc.serviceCharge;
-#if SJ_FOR_JP
                             taxSum[tableId] += tax;
                             sums[tableId] += (auc.total + tax);
-#else
+                        }
+                        else
+                        {
                             sums[tableId] += auc.total;
-#endif
                         }
                     }
+                }
 
-                    for (int tableId = 0; tableId < tableCount; tableId++)
+                for (int tableId = 0; tableId < tableCount; tableId++)
+                {
+                    int amountDue = sums[tableId];
+                    string time = GetCheckoutTime(tableId);
+                    aucTables[tableId].Cell(aucCount[tableId] + 3, 2).Range.Text = hammerSum[tableId].ToString("n0");
+                    aucTables[tableId].Cell(aucCount[tableId] + 3, 3).Range.Text = serviceSum[tableId].ToString("n0");
+                    if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
                     {
-                        int amountDue = sums[tableId];
-                        string time = GetCheckoutTime(tableId);
-                        aucTables[tableId].Cell(aucCount[tableId] + 3, 2).Range.Text = hammerSum[tableId].ToString("n0");
-                        aucTables[tableId].Cell(aucCount[tableId] + 3, 3).Range.Text = serviceSum[tableId].ToString("n0");
-#if SJ_FOR_JP
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = taxSum[tableId].ToString("n0");
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 5).Range.Text = sums[tableId].ToString("n0");
-#else
-                        aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
-#endif
-#if SJ_FOR_JP
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "JPY " + amountDue.ToString("n0");
-#else
-                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
-#endif
-#if SHIJIA || IGS
-                        aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
-#endif
-                        totalSums.Add(time, amountDue);
                     }
-
-                    m_bidder.paymentDocs[auctioneer].name = docName;
-                    m_bidder.paymentDocs[auctioneer].doc = doc;
+                    else
+                    {
+                        aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
+                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
+                    }
+                    if (Auctioneer.M != Auction.DefaultAuctioneer)
+                    {
+                        aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
+                    }
+                    totalSums.Add(time, amountDue);
                 }
+
+                m_bidder.paymentDocs[auctioneer].name = docName;
+                m_bidder.paymentDocs[auctioneer].doc = doc;
 
                 SetCashFlowDoc(ref totalSums);
             }
@@ -497,7 +481,7 @@ namespace Checkout
             bidderDataTable.Cell(4, 2).Range.Text = m_bidder.addr;
             bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
         }
-#if SJ_FOR_JP
+
         private void FillAuctionRow
         (
             Microsoft.Office.Interop.Word.Table auctionTable,
@@ -514,30 +498,27 @@ namespace Checkout
             auctionTable.Cell(rowId, 2).Range.Text = name;
             auctionTable.Cell(rowId, 3).Range.Text = hammerPrice.ToString("n0");
             auctionTable.Cell(rowId, 4).Range.Text = serviceCharge.ToString("n0");
-            auctionTable.Cell(rowId, 5).Range.Text = tax.ToString("n0");
-            auctionTable.Cell(rowId, 6).Range.Text = total.ToString("n0");
+            if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
+            {
+                auctionTable.Cell(rowId, 5).Range.Text = tax.ToString("n0");
+                auctionTable.Cell(rowId, 6).Range.Text = total.ToString("n0");
+            }
+            else
+            {
+                auctionTable.Cell(rowId, 5).Range.Text = total.ToString("n0");
+            }
         }
-#else
-        private void FillAuctionRow(Microsoft.Office.Interop.Word.Table auctionTable, int rowId, string lot, string name, string hammerPrice,
-            string serviceCharge, string total)
-        {
-            auctionTable.Cell(rowId, 1).Range.Text = lot;
-            auctionTable.Cell(rowId, 2).Range.Text = name;
-            auctionTable.Cell(rowId, 3).Range.Text = hammerPrice;
-            auctionTable.Cell(rowId, 4).Range.Text = serviceCharge;
-            auctionTable.Cell(rowId, 5).Range.Text = total;
-        }
-#endif
 
         private void SetCashFlowDoc(ref Dictionary<string, int> totalSums)
         {
-            Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_cashFlowTemplateFN;
+            Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
+                Settings.docTempFolder + @"\" + m_cashFlowTemplateFN;
             m_bidder.cashFlowDocName = m_bidder.no.ToString() + "_" + m_bidder.name + "_金流單.doc";
             m_bidder.cashFlowDoc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing, ref m_oMissing, ref m_oMissing);
             object oBookMark = "Today";
-#if MUCHUNTANG || IGS
-            m_bidder.cashFlowDoc.Bookmarks.get_Item(ref oBookMark).Range.Text = " " + DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
-#endif
+            if (Auctioneer.M == Auction.DefaultAuctioneer || Auctioneer.N == Auction.DefaultAuctioneer)
+                m_bidder.cashFlowDoc.Bookmarks.get_Item(ref oBookMark).Range.Text = " " + DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
+
             Microsoft.Office.Interop.Word.Table bidderDataTable = m_bidder.cashFlowDoc.Tables[1];
             bidderDataTable.Cell(1, 2).Range.Text = m_bidder.name;
             bidderDataTable.Cell(2, 2).Range.Text = m_bidder.phone;
@@ -548,14 +529,16 @@ namespace Checkout
             bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
 
             Microsoft.Office.Interop.Word.Table depositReceiveTable = m_bidder.cashFlowDoc.Tables[2];
-#if MUCHUNTANG
-            depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeState.ToString();
-            depositReceiveTable.Cell(0, 6).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
-#endif
-#if SHIJIA || IGS
-            depositReceiveTable.Cell(0, 2).Range.Text = m_bidder.payGuaranteeState.ToString();
-            depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
-#endif
+            if (Auctioneer.M == Auction.DefaultAuctioneer)
+            {
+                depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeState.ToString();
+                depositReceiveTable.Cell(0, 6).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
+            }
+            if (Auctioneer.S == Auction.DefaultAuctioneer || Auctioneer.N == Auction.DefaultAuctioneer)
+            {
+                depositReceiveTable.Cell(0, 2).Range.Text = m_bidder.payGuaranteeState.ToString();
+                depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
+            }
 
             Microsoft.Office.Interop.Word.Table totalDataTable = m_bidder.cashFlowDoc.Tables[3];
             int counter = 0;
@@ -565,12 +548,10 @@ namespace Checkout
                 if (counter != totalSums.Count - 1)
                     totalDataTable.Rows.Add(totalDataTable.Rows[2 + counter]);
 
-#if MUCHUNTANG
-                totalDataTable.Cell(2 + counter, 1).Range.Text = auctioneerStr;
-#endif
-#if SHIJIA || IGS
-                totalDataTable.Cell(2 + counter, 1).Range.Text = sum.Key;
-#endif
+                if (Auctioneer.M == Auction.DefaultAuctioneer)
+                    totalDataTable.Cell(2 + counter, 1).Range.Text = auctioneerStr;
+                if (Auctioneer.S == Auction.DefaultAuctioneer || Auctioneer.N == Auction.DefaultAuctioneer)
+                    totalDataTable.Cell(2 + counter, 1).Range.Text = sum.Key;
 
                 totalDataTable.Cell(2 + counter, 2).Range.Text = sum.Value.ToString("n0");
                 counter++;
@@ -602,75 +583,6 @@ namespace Checkout
             auctionsListView.EndUpdate();
         }
 
-        private void LoadSettings(string fp)
-        {
-            using (StreamReader sr = new StreamReader(fp))
-            {
-                string line = sr.ReadLine();
-                if (line == null)
-                {
-                    MessageBox.Show(fp + "檔格式錯誤!");
-                    return;
-                }
-
-                while (line != null)
-                {
-                    string[] info = line.Split(' ');
-                    if (2 > info.Length)
-                    {
-                        MessageBox.Show(fp + "檔格式錯誤!");
-                        return;
-                    }
-                    switch (info[0])
-                    {
-                        case "port":
-                            if (!int.TryParse(info[1], out m_serverPort))
-                            {
-                                MessageBox.Show(fp + "檔格式錯誤!");
-                                return;
-                            }
-                            break;
-                        case "service_charge":
-                            {
-                                int sc;
-                                if (!int.TryParse(info[1], out sc))
-                                {
-                                    MessageBox.Show(fp + "檔格式錯誤!");
-                                    return;
-                                }
-                                serviceChargeRateTextBox.Text = sc.ToString();
-                            }
-                            break;
-                        case "card_fee":
-                            {
-                                int cf;
-                                if (!int.TryParse(info[1], out cf))
-                                {
-                                    MessageBox.Show(fp + "檔格式錯誤!");
-                                    return;
-                                }
-                                creditCardRateTextBox.Text = cf.ToString();
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                    line = sr.ReadLine();
-                }
-            }
-        }
-
-        private void SaveSettings()
-        {
-            string fp = Path.Combine(System.Windows.Forms.Application.StartupPath, m_settingsFN);
-            using (StreamWriter sw = new StreamWriter(fp))
-            {
-                sw.WriteLine("port" + " " + m_serverPort);
-                sw.WriteLine("service_charge" + " " + serviceChargeRateTextBox.Text);
-                sw.WriteLine("card_fee" + " " + creditCardRateTextBox.Text);
-            }
-        }
-
         private void SaveAllDoc()
         {
             SetDataInDoc();
@@ -697,6 +609,8 @@ namespace Checkout
             {
                 foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
+                    if (null == paymentDoc.Value.doc)
+                        continue;
                     string filePath = Path.Combine(folder, paymentDoc.Value.name);
                     if (File.Exists(filePath))
                         continue;

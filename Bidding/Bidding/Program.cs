@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace SJ_Bidding_System
+namespace Bidding
 {
     static class Program
     {

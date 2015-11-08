@@ -70,7 +70,7 @@ namespace InternetLibrary
             Fax = Tel = Name = GuaranteeCost = Company = GuaranteeType = BankAcc = CareerTitle = IDNumber = BankContactTel =
                 Address = BidderID = CreditCardID = Auctioneer = CreditCardType = EMail = Bank = "";
             GuaranteeCost = "0";
-            GuaranteeType = Bidding.PayGuarantee.台幣現鈔.ToString();
+            GuaranteeType = BiddingLibrary.PayGuarantee.台幣現鈔.ToString();
         }
     }
 

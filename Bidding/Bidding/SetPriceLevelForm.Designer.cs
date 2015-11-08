@@ -1,4 +1,4 @@
-﻿namespace SJ_Bidding_System
+﻿namespace Bidding
 {
     partial class SetPriceLevelForm
     {

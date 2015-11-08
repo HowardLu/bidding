@@ -1,6 +1,6 @@
-﻿namespace SJ_Bidding_System
+﻿namespace Bidding
 {
-    partial class DisplayForm
+    partial class DisplayForm : DisplayFormBase
     {
         /// <summary>
         /// Required designer variable.
@@ -229,7 +229,7 @@
             // logoPictureBox
             // 
             this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.logoPictureBox.Image = global::SJ_Bidding_System.Properties.Resources.SJ_JAPAN_LOGO;
+            this.logoPictureBox.Image = global::Bidding.Properties.Resources.SJ_JAPAN_LOGO;
             this.logoPictureBox.Location = new System.Drawing.Point(47, 30);
             this.logoPictureBox.Name = "logoPictureBox";
             this.logoPictureBox.Size = new System.Drawing.Size(160, 170);

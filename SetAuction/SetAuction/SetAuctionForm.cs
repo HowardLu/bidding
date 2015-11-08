@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Bidding;
+using BiddingLibrary;
 using InternetLibrary;
 using UtilityLibrary;
 
@@ -29,12 +29,9 @@ namespace SetAuction
         private Internet<AuctionEntity> m_aeInternet;
         private int m_lastUnitIndex = 0;
         private int[] m_units = { 1, 1000, 10000 };
-#if IGS
-        private int m_initPriceThreshold = 0;
-#else
         private int m_initPriceThreshold = 1000;
-#endif
-        
+        private string m_sessionIdNow = "";
+        private List<string> m_sessions;
         #endregion
 
         #region Properties
@@ -48,12 +45,7 @@ namespace SetAuction
             m_lvColWidths = new int[auctionsListView.Columns.Count];
             for (int i = 0; i < auctionsListView.Columns.Count; i++)
                 m_lvColWidths[i] = auctionsListView.Columns[i].Width;
-        }
-        #endregion
 
-        #region Windows Form Events
-        private void SetAuctionForm_Load(object sender, EventArgs e)
-        {
             string ip = Utility.InputIp();
             if (ip.Length == 0)
             {
@@ -61,25 +53,21 @@ namespace SetAuction
                 Application.Exit();
                 return;
             }
+            m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
+            if (Auctioneer.N == Auction.DefaultAuctioneer)
+                m_initPriceThreshold = 0;
+        }
+        #endregion
+
+        #region Windows Form Events
+        private void SetAuctionForm_Load(object sender, EventArgs e)
+        {
             if (!Utility.IsDirectoryExist(Settings.auctionFolder, false))
             {
                 Utility.CreateDirectory(Settings.auctionFolder);
             }
 
-            m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
-            List<Auction> auctions = null;
-            try
-            {
-                Auction.LoadAuctions("", ref auctions, ref m_aeInternet, false);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-                Application.Exit();
-            }
-            m_auctions = auctions.ToDictionary<Auction, string>(auc => auc.lot);
-            LoadAuctionToListView();
-            //InitAuctioneerComboBox();
+            InitSessionComboBox();
             unitComboBox.SelectedIndex = 2;
         }
 
@@ -90,11 +78,6 @@ namespace SetAuction
             float xRatio = (float)this.auctionsListView.Width / m_listViewSize.Width;
             for (int i = 0; i < auctionsListView.Columns.Count; i++)
                 auctionsListView.Columns[i].Width = Convert.ToInt32(m_lvColWidths[i] * xRatio);
-        }
-
-        private void SetAuctionForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            Application.Exit();
         }
 
         private void auctionsListView_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -224,11 +207,11 @@ namespace SetAuction
             bmp.Dispose();
 
             auctionsListView.BeginUpdate();
-            AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
-               initialPriceTextBox.Text/*,
-            Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex)*/);
-            auctionsListView.LargeImageList = m_largeImgList;
-            auctionsListView.SmallImageList = m_smallImgList;
+                AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
+                   initialPriceTextBox.Text/*,
+                Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex)*/);
+                auctionsListView.LargeImageList = m_largeImgList;
+                auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
 
             ClearAllTextBox();
@@ -363,6 +346,13 @@ namespace SetAuction
             }
             m_lastUnitIndex = unitComboBox.SelectedIndex;
         }
+
+        private void sessionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string sessionSelected = sessionComboBox.SelectedItem.ToString();
+            LoadAuctionsFromSession(sessionSelected);  // load auctions from session.
+            LoadAuctionToListView();
+        }
         #endregion
 
         #region Public Methods
@@ -374,23 +364,22 @@ namespace SetAuction
         #region Private Methods
         private void LoadAuctionToListView()
         {
-            string[] filePaths = Directory.GetFiles(Settings.auctionFolder).OrderBy(f => f).ToArray<string>();
             m_largeImgList.ImageSize = new Size(100, 100);
             m_smallImgList.ImageSize = new Size(10, 10);
 
             auctionsListView.Items.Clear();
             auctionsListView.BeginUpdate();
-            foreach (Auction auction in m_auctions.Values)
-            {
-                Bitmap bmp = Utility.OpenBitmap(auction.photoFilePath);
-                m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
-                m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
-                AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
-                    auction.initialPrice.ToString()/*, auction.auctioneer*/);
-                bmp.Dispose();
-            }
-            auctionsListView.LargeImageList = m_largeImgList;
-            auctionsListView.SmallImageList = m_smallImgList;
+                foreach (Auction auction in m_auctions.Values)
+                {
+                    Bitmap bmp = Utility.OpenBitmap(auction.photoFilePath);
+                    m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
+                    m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
+                    AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
+                        auction.initialPrice.ToString()/*, auction.auctioneer*/);
+                    bmp.Dispose();
+                }
+                auctionsListView.LargeImageList = m_largeImgList;
+                auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
         }
 
@@ -414,7 +403,7 @@ namespace SetAuction
         private void CopyPhotoToAuctionsFolder(ref Auction auction)
         {
             string newFileName = auction.lot + Path.GetExtension(photoTextBox.Text);
-            auction.photoFilePath = Path.Combine(Settings.auctionFolder, newFileName);
+            auction.photoFilePath = Path.Combine(Settings.auctionFolder, m_sessionIdNow, newFileName);
             string newFilePath = Path.Combine(Application.StartupPath, auction.photoFilePath);
             if (File.Exists(newFilePath))
                 return;
@@ -436,6 +425,44 @@ namespace SetAuction
             {
                 auctioneerComboBox.Items.Add(Utility.GetEnumString(typeof(AuctioneerName), i));
             }
+        }
+
+        private void InitSessionComboBox()
+        {
+            sessionComboBox.Items.Clear();
+            m_sessions = Auction.LoadSessions();
+            if (m_sessions.Count == 0)
+                MessageBox.Show("請在Auctions建立場次資料夾，\n例：1、2...", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            else
+                sessionComboBox.Items.AddRange(m_sessions.ToArray());
+            if (m_sessions.Count > 0)
+            {
+                sessionComboBox.SelectedIndex = 0;
+            }
+        }
+
+        private void LoadAuctionsFromSession(string sessionId)
+        {
+            if (m_auctions != null)
+                m_auctions.Clear();
+            List<Auction> auctions = null;
+            try
+            {
+                Auction.LoadAuctions(sessionId, ref auctions, ref m_aeInternet, false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                Application.Exit();
+            }
+            m_auctions = auctions.ToDictionary<Auction, string>(auc => auc.lot);
+
+            if (0 == m_auctions.Count)
+            {
+                MessageBox.Show(String.Format("請在Auctions/場次 {0} 儲存拍品圖片", sessionId.ToString()), "",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            m_sessionIdNow = sessionId;
         }
         #endregion
     }

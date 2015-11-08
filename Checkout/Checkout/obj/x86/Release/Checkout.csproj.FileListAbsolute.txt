@@ -22,3 +22,8 @@ E:\bidding\Checkout\Checkout\obj\x86\Release\Checkout.exe.manifest
 E:\bidding\Checkout\Checkout\obj\x86\Release\Checkout.application
 E:\bidding\Checkout\Checkout\obj\x86\Release\Checkout.exe
 E:\bidding\Checkout\Checkout\obj\x86\Release\Checkout.pdb
+D:\bidding\Checkout\Checkout\obj\x86\Release\Interop.Microsoft.Office.Core.dll
+D:\bidding\Checkout\Checkout\obj\x86\Release\Interop.Microsoft.Office.Interop.Word.dll
+D:\bidding\Checkout\Checkout\obj\x86\Release\Checkout.csproj.ResolveComReference.cache
+D:\bidding\Checkout\Checkout\obj\x86\Release\Checkout.exe
+D:\bidding\Checkout\Checkout\obj\x86\Release\Checkout.pdb

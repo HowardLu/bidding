@@ -1,5 +1,6 @@
-﻿//#define MUCHUNTANG
-//#define SHIJIA
+﻿//#define MCT
+//#define SJ
+//#define DS
 
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using Bidding;
+using BiddingLibrary;
 using InternetLibrary;
 using UtilityLibrary;
 
-namespace SJ_Bidding_System
+namespace Bidding
 {
     public partial class ControlForm : Form
     {
@@ -23,7 +24,7 @@ namespace SJ_Bidding_System
         #endregion
 
         #region Member Variables
-        private DisplayForm m_displayForm;
+        private DisplayFormBase m_displayForm;
         private string m_sessionIdNow = "";
         private List<string> m_sessions;
         private List<Auction> m_auctions;
@@ -71,17 +72,23 @@ namespace SJ_Bidding_System
         /// <param name="e"></param>
         private void ControlForm_Load(object sender, EventArgs e)
         {
-#if MUCHUNTANG
-            this.Text = "台灣沐春堂拍賣系統";
-            this.logoPictureBox.Visible = false;
-#endif
-#if IGS
-            this.Text = "新象拍賣系統";
-            this.logoPictureBox.Image = Properties.Resources.LOGO_N;
-#endif
+            if (Auctioneer.M == Auction.DefaultAuctioneer)
+            {
+                this.Text = "台灣沐春堂拍賣系統";
+                this.logoPictureBox.Visible = false;
+            }
+            if (Auctioneer.N == Auction.DefaultAuctioneer)
+            {
+                this.Text = "新象拍賣系統";
+                this.logoPictureBox.Image = Properties.Resources.LOGO_N;
+            }
+            if (Auctioneer.DS == Auction.DefaultAuctioneer)
+            {
+                this.Text = "大行拍賣系統";
+                this.logoPictureBox.Visible = false;
+            }
 
-            string settingsFP = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.settingsFN);
-            Settings.Load(settingsFP);
+            Settings.Load();
 
             /*ProcessStartInfo pStartInfo = new ProcessStartInfo();
             pStartInfo.WorkingDirectory = Path.Combine(Application.StartupPath, Path.GetDirectoryName(Settings.biddingResultFP));
@@ -96,10 +103,6 @@ namespace SJ_Bidding_System
             InitDisplayForm();
 
             InitSessionComboBox();
-            if (m_sessions.Count > 0)
-            {
-                sessionComboBox.SelectedIndex = 0;
-            }
 
             nowPriceTextBox.Focus();
 
@@ -132,7 +135,8 @@ namespace SJ_Bidding_System
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
-            ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
+            if (Auctioneer.S == Auction.DefaultAuctioneer)
+                ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
             m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
         }
 
@@ -153,7 +157,8 @@ namespace SJ_Bidding_System
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
-            ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
+            if (Auctioneer.S == Auction.DefaultAuctioneer)
+                ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
             m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
         }
 
@@ -292,7 +297,10 @@ namespace SJ_Bidding_System
         private void ControlForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.F12)
-                Application.Exit();
+            {
+                m_displayForm.Close();
+                this.Close();
+            }
 
             if (e.KeyData == Keys.Escape)
             {
@@ -413,7 +421,8 @@ namespace SJ_Bidding_System
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
+            if (Auctioneer.S == Auction.DefaultAuctioneer)
+                ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
         }
 
         private void stopButton_Click(object sender, EventArgs e)
@@ -519,7 +528,17 @@ namespace SJ_Bidding_System
         private void InitDisplayForm()
         {
             Screen otherScreen = Screen.FromControl(this);
-            m_displayForm = new DisplayForm();
+            if (Auctioneer.DS == Auction.DefaultAuctioneer)
+            {
+                if (DialogResult.Yes == MessageBox.Show("是否使用純文字投影?", "選項", MessageBoxButtons.YesNo))
+                    m_displayForm = new DisplayForm_DS_TextOnly();
+                else
+                    m_displayForm = new DisplayForm_DS_Movie();
+            }
+            else
+            {
+                m_displayForm = new DisplayForm();
+            }
             //m_displayForm.Size = Settings.displaySize;
             if (Screen.AllScreens.Length > 1)
             {
@@ -688,7 +707,7 @@ namespace SJ_Bidding_System
             if (auction.photo != null)
                 Utility.SetImageNoStretch(ref auctionPictureBox, ref auction.photo);
             else
-                auctionPictureBox.Image = Properties.Resources.loading;
+                auctionPictureBox.Image = Bidding.Properties.Resources.loading;
 
             if (auction.winBidderNo != 0)
             {
@@ -871,6 +890,10 @@ namespace SJ_Bidding_System
                 MessageBox.Show("請在Auctions建立場次資料夾，\n例：1、2...", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             else
                 sessionComboBox.Items.AddRange(m_sessions.ToArray());
+            if (m_sessions.Count > 0)
+            {
+                sessionComboBox.SelectedIndex = 0;
+            }
         }
 
         private bool CheckRateInput(char keyChar)
@@ -886,7 +909,7 @@ namespace SJ_Bidding_System
             float rate = 0f;
             if ("0" == rateText)
             {
-                m_displayForm.ShowExchangeRate(rateId, true);
+                m_displayForm.ShowExchangeRate(rateId, false);
             }
             else
             {
