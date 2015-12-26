@@ -11,7 +11,7 @@ import xlwt
 
 # 買家所有屬性
 BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel", "Fax", "Address", "EMail", "Bank", "BankAcc",
-									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType", "Auctioneer", "GuaranteeCost"
+									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType", "Auctioneer", "GuaranteeCost", "ServiceFee"
 								]
 
 BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel", "Auctioneer" ]
@@ -36,6 +36,9 @@ NONEMPTY_ATTRS = BIDDER_NONEMPTY_ATTRS
 # 暫存的IP存檔路徑
 CACHED_IP_PATH	= "cached_ip.ini"
 
+# 預設服務費%
+DEFAULT_SERVICE_FEE_P = "20"
+
 # 所有常數字串
 Const			= {	"STATICTEXTNAME":						u"準買家姓名",
 							"STATICTEXTCOMPANY":				u"公司名稱",
@@ -55,6 +58,8 @@ Const			= {	"STATICTEXTNAME":						u"準買家姓名",
 							"STATICTEXTBIDDERID":				u"牌號",
 							"STATICTEXTGUARANTEETYPE":	u"保證金繳納",
 							"STATICTEXTGUARANTEECOST":	u"金額",
+							"STATICTEXTSERVICEFEE":			u"服務費",
+							"STATICTEXTSERVICEFEEP":		u"%",
 							"BUTTONTEXTNEWFILE":				u"新建檔案",
 							"BUTTONTEXTOPEN":						u"匯入檔案",
 							"BUTTONTEXTCONNECT":				u"建立連線",
@@ -138,6 +143,8 @@ class MyBackground( model.Background ):
 		com.StaticTextAuctioneer.text			= Const[ "STATICTEXTAUCTIONEER" ]
 		com.StaticTextGuaranteeType.text	= Const[ "STATICTEXTGUARANTEETYPE" ]
 		com.StaticTextGuaranteeCost.text	= Const[ "STATICTEXTGUARANTEECOST" ]
+		com.StaticTextServiceFee.text			= Const[ "STATICTEXTSERVICEFEE" ]
+		com.StaticTextServiceFeeP.text		= Const[ "STATICTEXTSERVICEFEEP" ]
 		
 		# 按鈕
 		com.ButtonAddBidder.label					= Const[ "BUTTONTEXTADDBIDDER" ]
@@ -428,6 +435,11 @@ class MyBackground( model.Background ):
 		if not bidder_data[ "GuaranteeCost" ].isdigit():
 			self.__add_msg( Const[ "GUARANTEECOST_NOT_DIGIT" ] )
 			return None
+		
+		# 服務費未填/亂填 一律採預設值
+		service_fee = bidder_data[ "ServiceFee" ]
+		if not service_fee.isdigit() or int( service_fee ) < 0 or int( service_fee ) > 100:
+			bidder_data[ "ServiceFee" ] = DEFAULT_SERVICE_FEE_P
 		
 		# ID是整數
 		bidder_data[ "BidderID_int" ] = int( bidder_data[ "BidderID" ] )
