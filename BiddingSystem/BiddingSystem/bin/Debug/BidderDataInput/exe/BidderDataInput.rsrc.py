@@ -11,6 +11,24 @@
 
          'components': [
 
+{'type':'StaticText', 
+    'name':'StaticTextServiceFeeP', 
+    'position':(293, 145), 
+    'text':'StaticTextServiceFeeP', 
+    },
+
+{'type':'TextField', 
+    'name':'TextFieldServiceFee', 
+    'position':(253, 142), 
+    'size':(37, -1), 
+    },
+
+{'type':'StaticText', 
+    'name':'StaticTextServiceFee', 
+    'position':(211, 145), 
+    'text':'StaticTextServiceFee', 
+    },
+
 {'type':'Button', 
     'name':'ButtonExport', 
     'position':(336, 277), 
