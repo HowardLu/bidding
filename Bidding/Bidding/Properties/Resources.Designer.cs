@@ -71,16 +71,6 @@ namespace Bidding.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap DS_LOGO {
-            get {
-                object obj = ResourceManager.GetObject("DS_LOGO", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] HelveticaNeueLTPro_Lt {
@@ -146,6 +136,16 @@ namespace Bidding.Properties {
         internal static System.Drawing.Bitmap LOGO_A {
             get {
                 object obj = ResourceManager.GetObject("LOGO_A", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap LOGO_DS {
+            get {
+                object obj = ResourceManager.GetObject("LOGO_DS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

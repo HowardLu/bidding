@@ -1,0 +1,4 @@
+USD
+er0 RMB 1
+er1 HKD 2
+er2 USD 3

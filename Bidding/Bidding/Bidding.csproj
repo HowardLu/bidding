@@ -73,6 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisplayForm_N_16_9.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DisplayForm_N_16_9.Designer.cs">
+      <DependentUpon>DisplayForm_N_16_9.cs</DependentUpon>
+    </Compile>
     <Compile Include="DisplayFormBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,9 @@
     <Compile Include="SetPriceLevelForm.Designer.cs">
       <DependentUpon>SetPriceLevelForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DisplayForm_N_16_9.resx">
+      <DependentUpon>DisplayForm_N_16_9.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DisplayForm_DS_Movie.resx">
       <DependentUpon>DisplayForm_DS_Movie.cs</DependentUpon>
     </EmbeddedResource>

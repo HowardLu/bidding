@@ -61,6 +61,9 @@ namespace Checkout
             Settings.Load();
             serviceChargeRateTextBox.Text = Settings.serviceChargeRate.ToString();
             creditCardRateTextBox.Text = Settings.creditCardRate.ToString();
+            dealDocPrintCntTextBox.Text = Settings.dealDocPrintCount.ToString();
+            cashFlowDocPrintCntTextBox.Text = Settings.cashFlowDocPrintCount.ToString();
+
             string ip = Utility.InputIp();
             if (ip.Length == 0)
             {
@@ -80,6 +83,13 @@ namespace Checkout
             if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
             {
                 m_taxRate = 0.08f;
+            }
+            if (Auctioneer.DS != Auction.DefaultAuctioneer)
+            {
+                totalCountLabel.Visible = false;
+                totalHammerPriceLabel.Visible = false;
+                totalServiceChargeLabel.Visible = false;
+                totalTotalLabel.Visible = false;
             }
         }
 
@@ -137,10 +147,11 @@ namespace Checkout
                 m_bidder = new Bidder();
                 m_bidder.SetBidder(bidder, ref auctionEnts);
                 UpdateListView();
+
                 saveButton.Enabled = true;
                 printButton.Enabled = true;
                 isUseCardButton.Enabled = true;
-                serviceChargeRateTextBox.Enabled = false;
+                UpdateTotalLabels();
             }
         }
 
@@ -173,6 +184,11 @@ namespace Checkout
 
         private void printButton_Click(object sender, EventArgs e)
         {
+            if (DialogResult.OK != MessageBox.Show("按列印將以買家目前得標品結帳，\n確定?", "是否結帳?", MessageBoxButtons.OKCancel))
+            {
+                return;
+            }
+
             UpdateCheckoutInfo();
 
             SaveAllDoc();
@@ -189,7 +205,7 @@ namespace Checkout
                 foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
                     if (null != paymentDoc.Value.doc)
-                        PrintDoc(paymentDoc.Value.doc, 3);
+                        PrintDoc(paymentDoc.Value.doc, Settings.dealDocPrintCount);
                     /*
                                         if (!m_bidder.auctionMappings.ContainsKey(paymentDoc.Key))
                                             continue;   // dont print the doc that buy nothing.
@@ -207,7 +223,7 @@ namespace Checkout
             }
 
             if (Auctioneer.M != Auction.DefaultAuctioneer)
-                PrintDoc(m_bidder.cashFlowDoc, 1);
+                PrintDoc(m_bidder.cashFlowDoc, Settings.cashFlowDocPrintCount);
 
             CloseDocAndWord();
         }
@@ -321,6 +337,28 @@ namespace Checkout
             Auction.CreditCardRate = (float)creditCardRate / 100.0f;
             Settings.creditCardRate = creditCardRate;
         }
+
+        private void dealDocPrintCntTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int printCount = Utility.ParseToInt(dealDocPrintCntTextBox.Text, false);
+            if (-1 == printCount)
+            {
+                dealDocPrintCntTextBox.Text = "3";
+                return;
+            }
+            Settings.dealDocPrintCount = printCount;
+        }
+
+        private void cashFlowDocPrintCntTextBox_TextChanged(object sender, EventArgs e)
+        {
+            int printCount = Utility.ParseToInt(cashFlowDocPrintCntTextBox.Text, false);
+            if (-1 == printCount)
+            {
+                cashFlowDocPrintCntTextBox.Text = "1";
+                return;
+            }
+            Settings.cashFlowDocPrintCount = printCount;
+        }
         #endregion
 
         #region Public Methods
@@ -330,6 +368,25 @@ namespace Checkout
         #endregion
 
         #region Private Methods
+        private void UpdateTotalLabels()
+        {
+            int totalCount = 0;
+            int totalHammerPrice = 0;
+            int totalServiceCharge = 0;
+            int totalTotal = 0;
+            foreach (Auction auc in m_bidder.auctions.Values)
+            {
+                totalCount++;
+                totalHammerPrice += auc.hammerPrice;
+                totalServiceCharge += auc.serviceCharge;
+                totalTotal += auc.total;
+            }
+            totalCountLabel.Text = "總件數：" + totalCount.ToString("n0");
+            totalHammerPriceLabel.Text = "總落槌價：" + totalHammerPrice.ToString("n0");
+            totalServiceChargeLabel.Text = "總服務費：" + totalServiceCharge.ToString("n0");
+            totalTotalLabel.Text = "總成交價：" + totalTotal.ToString("n0");
+        }
+
         private void SetDataInDoc()
         {
             if (m_wordApp == null)
@@ -386,7 +443,7 @@ namespace Checkout
                 Microsoft.Office.Interop.Word.Table aucTableTmp = doc.Tables[2];
                 aucTableTmp.Range.Copy();
                 Microsoft.Office.Interop.Word.Range rng = aucTableTmp.Range;
-                rng.SetRange(aucTableTmp.Range.End+1, aucTableTmp.Range.End+1);
+                rng.SetRange(aucTableTmp.Range.End + 1, aucTableTmp.Range.End + 1);
                 //rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreakClearLeft);
 
                 int tableCount = m_maxCheckoutNumber > 0 ? m_maxCheckoutNumber : 1;
@@ -396,7 +453,7 @@ namespace Checkout
                 {
                     aucTables[tableId] = doc.Tables.Add(rng, 1, 1);
                     aucTables[tableId].Range.Paste();
-                    rng.SetRange(aucTables[tableId].Range.End+1, aucTables[tableId].Range.End+1);
+                    rng.SetRange(aucTables[tableId].Range.End + 1, aucTables[tableId].Range.End + 1);
                     //rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreak);
                 }
 
@@ -590,7 +647,17 @@ namespace Checkout
             string folder = Path.Combine(System.Windows.Forms.Application.StartupPath,
                 m_bidder.no.ToString());
             if (!Directory.Exists(folder))
+            {
                 Directory.CreateDirectory(folder);
+            }
+            else
+            {
+                if (DialogResult.OK == MessageBox.Show(String.Format("是否覆蓋目前買家{0}的結帳資料", m_bidder.no), "", MessageBoxButtons.OKCancel))
+                {
+                    Directory.Delete(folder, true);
+                    Directory.CreateDirectory(folder);
+                }
+            }
 
             if (isPrintOneByOneCheckBox.Checked)
             {

@@ -12,6 +12,8 @@ namespace UtilityLibrary
     public static class ExchangeRate
     {
         public static int count = 3;
+        public static string mainRateName = "NTD";
+        public static string[] rateNames = new string[count];
         public static float[] mainToExchangeRate = new float[count];
 
         /// <summary>
@@ -26,12 +28,15 @@ namespace UtilityLibrary
             using (StreamReader sr = new StreamReader(fn))
             {
                 string line = "";
+                mainRateName = sr.ReadLine();
                 for (int i = 0; i < count; i++)
                 {
                     line = sr.ReadLine();
                     if (line != null)
                     {
-                        float.TryParse(line.Remove(0, 4), out mainToExchangeRate[i]);   // "xxx "
+                        string[] data = line.Split(' ');
+                        rateNames[i] = data[1];
+                        float.TryParse(data[2], out mainToExchangeRate[i]);   // "er* "
                     }
                 }
             }
@@ -41,13 +46,14 @@ namespace UtilityLibrary
         /// Save exchange rate at fn.
         /// </summary>
         /// <param name="fn">file name</param>
-        public static void Save(string fn, ref string[] rates)
+        public static void Save(string fn, string aMainRateName, ref string[] aRateNames, ref string[] aRates)
         {
             using (StreamWriter sw = new StreamWriter(fn))
             {
+                sw.WriteLine(aMainRateName);
                 for (int i = 0; i < count; i++)
                 {
-                    sw.WriteLine("er{0} {1}", i, rates[i]);
+                    sw.WriteLine("er{0} {1} {2}", i, aRateNames[i], aRates[i]);
                 }
             }
         }
@@ -308,8 +314,10 @@ namespace UtilityLibrary
         public static string videoFolder = "Video";
         public static Point displayPos = Point.Empty;
         public static Size displaySize = Size.Empty;
-        public static int serviceChargeRate = 0;    // for Checkout
-        public static int creditCardRate = 0;   // for Checkout
+        public static int serviceChargeRate = 0;        // for Checkout
+        public static int creditCardRate = 0;           // for Checkout
+        public static int dealDocPrintCount = 3;        // for Checkout
+        public static int cashFlowDocPrintCount = 1;    // for Checkout
 
         public static void Load()
         {
@@ -405,6 +413,24 @@ namespace UtilityLibrary
                                 }
                             }
                             break;
+                        case "dealDocPrintCount":
+                            {
+                                if (!int.TryParse(data, out dealDocPrintCount))
+                                {
+                                    MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                    return;
+                                }
+                            }
+                            break;
+                        case "cashFlowDocPrintCount":
+                            {
+                                if (!int.TryParse(data, out cashFlowDocPrintCount))
+                                {
+                                    MessageBox.Show(settingsFP + "檔格式錯誤!");
+                                    return;
+                                }
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -418,9 +444,11 @@ namespace UtilityLibrary
             string fp = Path.Combine(System.Windows.Forms.Application.StartupPath, Settings.configFolder, settingsFN);
             using (StreamWriter sw = new StreamWriter(fp))
             {
-                sw.WriteLine("port" + " " + serverPort);
-                sw.WriteLine("service_charge" + " " + serviceChargeRate);
-                sw.WriteLine("card_fee" + " " + creditCardRate);
+                sw.WriteLine("port " + serverPort);
+                sw.WriteLine("service_charge " + serviceChargeRate);
+                sw.WriteLine("card_fee " + creditCardRate);
+                sw.WriteLine("dealDocPrintCount " + dealDocPrintCount);
+                sw.WriteLine("cashFlowDocPrintCount " + cashFlowDocPrintCount);
             }
         }
     }

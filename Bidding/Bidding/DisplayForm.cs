@@ -52,6 +52,7 @@ namespace Bidding
         private Bitmap m_logo_A = Bidding.Properties.Resources.LOGO_A;
         private Bitmap m_logo_M = Bidding.Properties.Resources.LOGO_M;
         private Bitmap m_logo_N = Bidding.Properties.Resources.LOGO_N_big;
+        private Bitmap m_logo_DS = Bidding.Properties.Resources.LOGO_DS;
         #endregion
 
         #region Properties
@@ -284,7 +285,7 @@ namespace Bidding
             m_progressLabelState.ReArrange(xRatio, yRatio);
         }
 
-        private void SetLogo(Auctioneer auctioneer)
+        public override void SetLogo(Auctioneer auctioneer)
         {
             switch (auctioneer)
             {
@@ -300,6 +301,12 @@ namespace Bidding
                     break;
                 case Auctioneer.N:
                     logoPictureBox.Image = m_logo_N;
+                    break;
+                case Auctioneer.DS:
+                    {
+                        logoPictureBox.Image = m_logo_DS;
+                        logoPictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                    }
                     break;
                 default:
                     break;

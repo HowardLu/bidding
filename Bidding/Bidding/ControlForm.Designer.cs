@@ -69,6 +69,8 @@
             this.currencyLabel = new System.Windows.Forms.Label();
             this.mainCurrencyTextBox = new System.Windows.Forms.TextBox();
             this.setPriceLevelButton = new System.Windows.Forms.Button();
+            this.displayModeComboBox = new System.Windows.Forms.ComboBox();
+            this.displayModeLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -532,11 +534,36 @@
             this.setPriceLevelButton.UseVisualStyleBackColor = false;
             this.setPriceLevelButton.Click += new System.EventHandler(this.setPriceLevelButton_Click);
             // 
+            // displayModeComboBox
+            // 
+            this.displayModeComboBox.FormattingEnabled = true;
+            this.displayModeComboBox.Items.AddRange(new object[] {
+            "純文字",
+            "影片",
+            "圖片"});
+            this.displayModeComboBox.Location = new System.Drawing.Point(605, 178);
+            this.displayModeComboBox.Name = "displayModeComboBox";
+            this.displayModeComboBox.Size = new System.Drawing.Size(75, 20);
+            this.displayModeComboBox.TabIndex = 46;
+            this.displayModeComboBox.SelectedIndexChanged += new System.EventHandler(this.displayModeComboBox_SelectedIndexChanged);
+            // 
+            // displayModeLabel
+            // 
+            this.displayModeLabel.AutoSize = true;
+            this.displayModeLabel.ForeColor = System.Drawing.Color.White;
+            this.displayModeLabel.Location = new System.Drawing.Point(541, 181);
+            this.displayModeLabel.Name = "displayModeLabel";
+            this.displayModeLabel.Size = new System.Drawing.Size(65, 12);
+            this.displayModeLabel.TabIndex = 45;
+            this.displayModeLabel.Text = "投影模式：";
+            // 
             // ControlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1016, 730);
+            this.Controls.Add(this.displayModeComboBox);
+            this.Controls.Add(this.displayModeLabel);
             this.Controls.Add(this.setPriceLevelButton);
             this.Controls.Add(this.mainCurrencyTextBox);
             this.Controls.Add(this.currencyLabel);
@@ -580,7 +607,7 @@
             this.KeyPreview = true;
             this.Name = "ControlForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "台灣世家拍賣系統";
+            this.Text = "拍賣跳階系統";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlForm_FormClosing);
             this.Load += new System.EventHandler(this.ControlForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ControlForm_KeyDown);
@@ -633,6 +660,8 @@
         private System.Windows.Forms.Label currencyLabel;
         private System.Windows.Forms.TextBox mainCurrencyTextBox;
         private System.Windows.Forms.Button setPriceLevelButton;
+        private System.Windows.Forms.ComboBox displayModeComboBox;
+        private System.Windows.Forms.Label displayModeLabel;
     }
 }
 

@@ -210,8 +210,8 @@ namespace SetAuction
                 AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
                    initialPriceTextBox.Text/*,
                 Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex)*/);
-                auctionsListView.LargeImageList = m_largeImgList;
-                auctionsListView.SmallImageList = m_smallImgList;
+                //auctionsListView.LargeImageList = m_largeImgList;
+                //auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
 
             ClearAllTextBox();
@@ -369,18 +369,18 @@ namespace SetAuction
 
             auctionsListView.Items.Clear();
             auctionsListView.BeginUpdate();
-                foreach (Auction auction in m_auctions.Values)
-                {
-                    Bitmap bmp = Utility.OpenBitmap(auction.photoFilePath);
-                    m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
-                    m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
-                    AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
-                        auction.initialPrice.ToString()/*, auction.auctioneer*/);
-                    bmp.Dispose();
-                }
                 auctionsListView.LargeImageList = m_largeImgList;
                 auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
+            foreach (Auction auction in m_auctions.Values)
+            {
+                Bitmap bmp = Utility.OpenBitmap(auction.photoFilePath);
+                m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
+                m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
+                AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
+                    auction.initialPrice.ToString()/*, auction.auctioneer*/);
+                bmp.Dispose();
+            }
         }
 
         private void AddItemToListView(int imgId, string lot, string artist, string artwork, string initPrice/*, string subItem4*/)

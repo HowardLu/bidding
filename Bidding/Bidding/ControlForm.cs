@@ -21,6 +21,12 @@ namespace Bidding
         #endregion
 
         #region Enums, Structs, and Classes
+        private enum DisplayMode
+        {
+            純文字 = 0,
+            影片,
+            圖片
+        }
         #endregion
 
         #region Member Variables
@@ -37,6 +43,7 @@ namespace Bidding
         private Internet<BidderEntity> m_beInternet;
         private PlayerForm m_playerForm;
         //private Form2 m_form2;
+        private DisplayMode m_curDisplayMode;
         #endregion
 
         #region Properties
@@ -61,6 +68,7 @@ namespace Bidding
             {
                 Environment.Exit(Environment.ExitCode);
             }
+            m_curDisplayMode = DisplayMode.純文字;
         }
         #endregion
 
@@ -74,17 +82,22 @@ namespace Bidding
         {
             if (Auctioneer.M == Auction.DefaultAuctioneer)
             {
-                this.Text = "台灣沐春堂拍賣系統";
                 this.logoPictureBox.Visible = false;
+                playButton.Visible = stopButton.Visible = false;
+                displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
             if (Auctioneer.N == Auction.DefaultAuctioneer)
             {
-                this.Text = "新象拍賣系統";
                 this.logoPictureBox.Image = Properties.Resources.LOGO_N;
+                playButton.Visible = stopButton.Visible = false;
+                displayModeLabel.Visible = displayModeComboBox.Visible = false;
+            }
+            if (Auctioneer.S == Auction.DefaultAuctioneer)
+            {
+                displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
             if (Auctioneer.DS == Auction.DefaultAuctioneer)
             {
-                this.Text = "大行拍賣系統";
                 this.logoPictureBox.Visible = false;
             }
 
@@ -107,6 +120,10 @@ namespace Bidding
             nowPriceTextBox.Focus();
 
             ExchangeRate.Load(Settings.exchangeRateFP);
+            mainCurrencyTextBox.Text = ExchangeRate.mainRateName;
+            er1NameTextBox.Text = ExchangeRate.rateNames[0];
+            er2NameTextBox.Text = ExchangeRate.rateNames[1];
+            er3NameTextBox.Text = ExchangeRate.rateNames[2];
             er1TextBox.Text = ExchangeRate.mainToExchangeRate[0].ToString();
             er2TextBox.Text = ExchangeRate.mainToExchangeRate[1].ToString();
             er3TextBox.Text = ExchangeRate.mainToExchangeRate[2].ToString();
@@ -116,6 +133,7 @@ namespace Bidding
 
             //SetPriceLevelForm setPLForm = new SetPriceLevelForm();
             //setPLForm.Show();
+            displayModeComboBox.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -235,13 +253,14 @@ namespace Bidding
             if (m_auctions.Count == 0)
                 return;
 
-            if (MessageBox.Show("是否重置此拍品?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+            if (MessageBox.Show("是否重置此拍品?\n\nNOTE:結帳狀態將一併重置", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
             {
                 winBidderTextBox.Text = "";
                 winBidderTextBox.BackColor = Color.Black;
 
                 SetNewNowPrice(m_auctions[m_auctionIdNow].initialPrice);
                 ClearBidder(m_auctionIdNow);
+                ClearCheckoutState(m_auctionIdNow);
             }
         }
 
@@ -255,7 +274,7 @@ namespace Bidding
             if (m_auctions.Count == 0)
                 return;
 
-            if (MessageBox.Show("是否重置全部?", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+            if (MessageBox.Show("是否重置全部拍品?\n\nNOTE:結帳狀態將一併重置", "警告", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
             {
                 winBidderTextBox.Text = "";
                 winBidderTextBox.BackColor = Color.Black;
@@ -267,6 +286,7 @@ namespace Bidding
                     m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.NowPrice, m_auctions[i].initialPrice);
                     m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.HammerPrice, m_auctions[i].initialPrice);
                     ClearBidder(i);
+                    ClearCheckoutState(i);
                 }
             }
         }
@@ -280,8 +300,9 @@ namespace Bidding
         {
             //SavePrices(Path.Combine(Application.StartupPath, Settings.saveFolder, Settings.pricesFN));
             string erFilePath = Path.Combine(Application.StartupPath, Settings.configFolder, Settings.exchangeRateFN);
+            string[] rateNames = { er1NameTextBox.Text, er2NameTextBox.Text, er3NameTextBox.Text };
             string[] rates = { er1TextBox.Text, er2TextBox.Text, er3TextBox.Text };
-            ExchangeRate.Save(erFilePath, ref rates);
+            ExchangeRate.Save(erFilePath, mainCurrencyTextBox.Text, ref rateNames, ref rates);
             PriceLevels.Save();
 
             //DoSaveBiddingResult(Settings.biddingResultFP);
@@ -513,6 +534,45 @@ namespace Bidding
             SetPriceLevelForm setPLForm = new SetPriceLevelForm();
             setPLForm.Show();
         }
+
+        private void displayModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string modeSelected = displayModeComboBox.SelectedItem.ToString();
+            if (modeSelected == m_curDisplayMode.ToString())
+                return;
+
+            if (DisplayMode.純文字.ToString() == modeSelected )
+            {
+                m_displayForm.Close();
+                m_displayForm.Dispose();
+                m_displayForm = new DisplayForm_DS_TextOnly();
+            }
+            else if (DisplayMode.影片.ToString() == modeSelected)
+            {
+                m_displayForm.Close();
+                m_displayForm.Dispose();
+                m_displayForm = new DisplayForm_DS_Movie();
+            }
+            else if (DisplayMode.圖片.ToString() == modeSelected)
+            {
+                m_displayForm.Close();
+                m_displayForm.Dispose();
+                m_displayForm = new DisplayForm();
+                m_displayForm.SetLogo(Auction.DefaultAuctioneer);
+            }
+            m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
+
+            Screen otherScreen = Screen.FromControl(this);
+            if (Screen.AllScreens.Length > 1)
+            {
+                otherScreen = Screen.AllScreens[1];
+            }
+            m_displayForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
+            m_displayForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
+            m_displayForm.WindowState = FormWindowState.Maximized;
+            m_displayForm.Show();
+            m_curDisplayMode = (DisplayMode)displayModeComboBox.SelectedIndex;
+        }
         #endregion
 
         #region Public Methods
@@ -527,19 +587,20 @@ namespace Bidding
         /// </summary>
         private void InitDisplayForm()
         {
-            Screen otherScreen = Screen.FromControl(this);
             if (Auctioneer.DS == Auction.DefaultAuctioneer)
             {
-                if (DialogResult.Yes == MessageBox.Show("是否使用純文字投影?", "選項", MessageBoxButtons.YesNo))
-                    m_displayForm = new DisplayForm_DS_TextOnly();
-                else
-                    m_displayForm = new DisplayForm_DS_Movie();
+                m_displayForm = new DisplayForm_DS_TextOnly();
+            }
+            else if (Auctioneer.N == Auction.DefaultAuctioneer)
+            {
+                m_displayForm = new DisplayForm_N_16_9();
             }
             else
             {
                 m_displayForm = new DisplayForm();
             }
             //m_displayForm.Size = Settings.displaySize;
+            Screen otherScreen = Screen.FromControl(this);
             if (Screen.AllScreens.Length > 1)
             {
                 otherScreen = Screen.AllScreens[1];
@@ -841,6 +902,14 @@ namespace Bidding
         {
             m_auctions[auctionId].winBidderNo = 0;
             m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, m_auctions[auctionId].lot, ae => ae.BidderNumber, "");
+        }
+
+        private void ClearCheckoutState(int auctionId)
+        {
+            m_auctions[auctionId].checkoutNumber = 0;
+            m_auctions[auctionId].checkoutTime = "";
+            m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[auctionId].lot, ae => ae.CheckoutNumber, m_auctions[auctionId].checkoutNumber);
+            m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, m_auctions[auctionId].lot, ae => ae.CheckoutTime, m_auctions[auctionId].checkoutTime);
         }
 
         private void ShowPlayerForm(string videoPath)

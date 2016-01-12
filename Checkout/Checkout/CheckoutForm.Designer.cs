@@ -51,6 +51,14 @@
             this.serviceChargeRateTextBox = new System.Windows.Forms.TextBox();
             this.creditCardRateTextBox = new System.Windows.Forms.TextBox();
             this.creditCardRateLabel = new System.Windows.Forms.Label();
+            this.dealDocPrintCntLabel = new System.Windows.Forms.Label();
+            this.dealDocPrintCntTextBox = new System.Windows.Forms.TextBox();
+            this.cashFlowDocPrintCntTextBox = new System.Windows.Forms.TextBox();
+            this.cashFlowDocPrintCntLabel = new System.Windows.Forms.Label();
+            this.totalCountLabel = new System.Windows.Forms.Label();
+            this.totalHammerPriceLabel = new System.Windows.Forms.Label();
+            this.totalServiceChargeLabel = new System.Windows.Forms.Label();
+            this.totalTotalLabel = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,7 +143,7 @@
             this.auctionsListView.GridLines = true;
             this.auctionsListView.Location = new System.Drawing.Point(15, 55);
             this.auctionsListView.Name = "auctionsListView";
-            this.auctionsListView.Size = new System.Drawing.Size(664, 511);
+            this.auctionsListView.Size = new System.Drawing.Size(664, 489);
             this.auctionsListView.TabIndex = 5;
             this.auctionsListView.UseCompatibleStateImageBehavior = false;
             this.auctionsListView.View = System.Windows.Forms.View.Details;
@@ -198,7 +206,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 571);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 590);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(692, 22);
             this.statusStrip1.TabIndex = 9;
@@ -207,14 +215,14 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(77, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(60, 17);
             this.toolStripStatusLabel1.Text = "請先連線!";
             // 
             // isPrintOneByOneCheckBox
             // 
             this.isPrintOneByOneCheckBox.AutoSize = true;
             this.isPrintOneByOneCheckBox.Enabled = false;
-            this.isPrintOneByOneCheckBox.Location = new System.Drawing.Point(607, 28);
+            this.isPrintOneByOneCheckBox.Location = new System.Drawing.Point(618, 31);
             this.isPrintOneByOneCheckBox.Name = "isPrintOneByOneCheckBox";
             this.isPrintOneByOneCheckBox.Size = new System.Drawing.Size(72, 16);
             this.isPrintOneByOneCheckBox.TabIndex = 10;
@@ -225,7 +233,7 @@
             // serviceChargeRateLabel
             // 
             this.serviceChargeRateLabel.AutoSize = true;
-            this.serviceChargeRateLabel.Location = new System.Drawing.Point(284, 36);
+            this.serviceChargeRateLabel.Location = new System.Drawing.Point(144, 36);
             this.serviceChargeRateLabel.Name = "serviceChargeRateLabel";
             this.serviceChargeRateLabel.Size = new System.Drawing.Size(58, 12);
             this.serviceChargeRateLabel.TabIndex = 11;
@@ -233,7 +241,7 @@
             // 
             // serviceChargeRateTextBox
             // 
-            this.serviceChargeRateTextBox.Location = new System.Drawing.Point(343, 31);
+            this.serviceChargeRateTextBox.Location = new System.Drawing.Point(203, 31);
             this.serviceChargeRateTextBox.Name = "serviceChargeRateTextBox";
             this.serviceChargeRateTextBox.Size = new System.Drawing.Size(36, 22);
             this.serviceChargeRateTextBox.TabIndex = 12;
@@ -242,7 +250,7 @@
             // 
             // creditCardRateTextBox
             // 
-            this.creditCardRateTextBox.Location = new System.Drawing.Point(489, 31);
+            this.creditCardRateTextBox.Location = new System.Drawing.Point(349, 31);
             this.creditCardRateTextBox.Name = "creditCardRateTextBox";
             this.creditCardRateTextBox.Size = new System.Drawing.Size(36, 22);
             this.creditCardRateTextBox.TabIndex = 14;
@@ -252,17 +260,97 @@
             // creditCardRateLabel
             // 
             this.creditCardRateLabel.AutoSize = true;
-            this.creditCardRateLabel.Location = new System.Drawing.Point(394, 36);
+            this.creditCardRateLabel.Location = new System.Drawing.Point(254, 36);
             this.creditCardRateLabel.Name = "creditCardRateLabel";
             this.creditCardRateLabel.Size = new System.Drawing.Size(94, 12);
             this.creditCardRateLabel.TabIndex = 13;
             this.creditCardRateLabel.Text = "信用卡手續費(%)";
             // 
+            // dealDocPrintCntLabel
+            // 
+            this.dealDocPrintCntLabel.AutoSize = true;
+            this.dealDocPrintCntLabel.Location = new System.Drawing.Point(407, 34);
+            this.dealDocPrintCntLabel.Name = "dealDocPrintCntLabel";
+            this.dealDocPrintCntLabel.Size = new System.Drawing.Size(65, 12);
+            this.dealDocPrintCntLabel.TabIndex = 15;
+            this.dealDocPrintCntLabel.Text = "成交單張數";
+            // 
+            // dealDocPrintCntTextBox
+            // 
+            this.dealDocPrintCntTextBox.Location = new System.Drawing.Point(469, 31);
+            this.dealDocPrintCntTextBox.Name = "dealDocPrintCntTextBox";
+            this.dealDocPrintCntTextBox.Size = new System.Drawing.Size(23, 22);
+            this.dealDocPrintCntTextBox.TabIndex = 16;
+            this.dealDocPrintCntTextBox.Text = "3";
+            this.dealDocPrintCntTextBox.TextChanged += new System.EventHandler(this.dealDocPrintCntTextBox_TextChanged);
+            // 
+            // cashFlowDocPrintCntTextBox
+            // 
+            this.cashFlowDocPrintCntTextBox.Location = new System.Drawing.Point(560, 33);
+            this.cashFlowDocPrintCntTextBox.Name = "cashFlowDocPrintCntTextBox";
+            this.cashFlowDocPrintCntTextBox.Size = new System.Drawing.Size(23, 22);
+            this.cashFlowDocPrintCntTextBox.TabIndex = 18;
+            this.cashFlowDocPrintCntTextBox.Text = "1";
+            this.cashFlowDocPrintCntTextBox.TextChanged += new System.EventHandler(this.cashFlowDocPrintCntTextBox_TextChanged);
+            // 
+            // cashFlowDocPrintCntLabel
+            // 
+            this.cashFlowDocPrintCntLabel.AutoSize = true;
+            this.cashFlowDocPrintCntLabel.Location = new System.Drawing.Point(498, 36);
+            this.cashFlowDocPrintCntLabel.Name = "cashFlowDocPrintCntLabel";
+            this.cashFlowDocPrintCntLabel.Size = new System.Drawing.Size(65, 12);
+            this.cashFlowDocPrintCntLabel.TabIndex = 17;
+            this.cashFlowDocPrintCntLabel.Text = "金流單張數";
+            // 
+            // totalCountLabel
+            // 
+            this.totalCountLabel.AutoSize = true;
+            this.totalCountLabel.Location = new System.Drawing.Point(47, 558);
+            this.totalCountLabel.Name = "totalCountLabel";
+            this.totalCountLabel.Size = new System.Drawing.Size(53, 12);
+            this.totalCountLabel.TabIndex = 19;
+            this.totalCountLabel.Text = "總件數：";
+            // 
+            // totalHammerPriceLabel
+            // 
+            this.totalHammerPriceLabel.AutoSize = true;
+            this.totalHammerPriceLabel.Location = new System.Drawing.Point(191, 558);
+            this.totalHammerPriceLabel.Name = "totalHammerPriceLabel";
+            this.totalHammerPriceLabel.Size = new System.Drawing.Size(65, 12);
+            this.totalHammerPriceLabel.TabIndex = 20;
+            this.totalHammerPriceLabel.Text = "總落槌價：";
+            // 
+            // totalServiceChargeLabel
+            // 
+            this.totalServiceChargeLabel.AutoSize = true;
+            this.totalServiceChargeLabel.Location = new System.Drawing.Point(341, 558);
+            this.totalServiceChargeLabel.Name = "totalServiceChargeLabel";
+            this.totalServiceChargeLabel.Size = new System.Drawing.Size(65, 12);
+            this.totalServiceChargeLabel.TabIndex = 21;
+            this.totalServiceChargeLabel.Text = "總服務費：";
+            // 
+            // totalTotalLabel
+            // 
+            this.totalTotalLabel.AutoSize = true;
+            this.totalTotalLabel.Location = new System.Drawing.Point(490, 558);
+            this.totalTotalLabel.Name = "totalTotalLabel";
+            this.totalTotalLabel.Size = new System.Drawing.Size(65, 12);
+            this.totalTotalLabel.TabIndex = 22;
+            this.totalTotalLabel.Text = "總成交價：";
+            // 
             // CheckoutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 593);
+            this.ClientSize = new System.Drawing.Size(692, 612);
+            this.Controls.Add(this.totalTotalLabel);
+            this.Controls.Add(this.totalServiceChargeLabel);
+            this.Controls.Add(this.totalHammerPriceLabel);
+            this.Controls.Add(this.totalCountLabel);
+            this.Controls.Add(this.cashFlowDocPrintCntTextBox);
+            this.Controls.Add(this.cashFlowDocPrintCntLabel);
+            this.Controls.Add(this.dealDocPrintCntTextBox);
+            this.Controls.Add(this.dealDocPrintCntLabel);
             this.Controls.Add(this.creditCardRateTextBox);
             this.Controls.Add(this.creditCardRateLabel);
             this.Controls.Add(this.serviceChargeRateTextBox);
@@ -313,6 +401,14 @@
         private System.Windows.Forms.TextBox serviceChargeRateTextBox;
         private System.Windows.Forms.TextBox creditCardRateTextBox;
         private System.Windows.Forms.Label creditCardRateLabel;
+        private System.Windows.Forms.Label dealDocPrintCntLabel;
+        private System.Windows.Forms.TextBox dealDocPrintCntTextBox;
+        private System.Windows.Forms.TextBox cashFlowDocPrintCntTextBox;
+        private System.Windows.Forms.Label cashFlowDocPrintCntLabel;
+        private System.Windows.Forms.Label totalCountLabel;
+        private System.Windows.Forms.Label totalHammerPriceLabel;
+        private System.Windows.Forms.Label totalServiceChargeLabel;
+        private System.Windows.Forms.Label totalTotalLabel;
     }
 }
 
