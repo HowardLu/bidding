@@ -8,6 +8,7 @@
 *.ilk
 *.exp
 *.Cache
+*.dll
 
 Accounting/Accounting/obj/
 Bidding/Bidding/obj/
