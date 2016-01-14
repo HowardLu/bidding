@@ -111,7 +111,12 @@ namespace Checkout
         private void searchButton_Click(object sender, EventArgs e)
         {
             if (!m_auctionInternet.IsConnected)
+            {
                 SetButtonsEnable(false);
+                MessageBox.Show("連線失敗，請檢查網路!");
+                return;
+            }
+
             if (m_bidder != null)
                 m_bidder = null;
 

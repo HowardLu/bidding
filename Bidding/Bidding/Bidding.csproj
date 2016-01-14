@@ -171,11 +171,11 @@
     <None Include="Resources\Knob Forward.png" />
     <None Include="Resources\Knob Left.png" />
     <None Include="Resources\20150413_LOGO.jpg" />
-    <None Include="Resources\12081329_907021546060651_472897396_n.jpg" />
     <Content Include="Resources\loading.gif" />
     <None Include="Resources\LOGO.jpg" />
     <Content Include="Resources\LOGO_A.jpg" />
     <None Include="Resources\LOGO_big.jpg" />
+    <Content Include="Resources\LOGO_DS.jpg" />
     <Content Include="Resources\LOGO_M.jpg" />
     <None Include="Resources\LOGO_S.bmp" />
     <None Include="Resources\LOGO_S_big.bmp" />
