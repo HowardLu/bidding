@@ -8,7 +8,6 @@
 *.ilk
 *.exp
 *.Cache
-*.dll
 
 Accounting/Accounting/obj/
 Bidding/Bidding/obj/
@@ -16,9 +15,18 @@ BiddingSystem/BiddingSystem/obj/
 Checkout/Checkout/obj/
 Library/Library/obj/
 SetAuction/SetAuction/obj/
+Accounting/Accounting/bin/*
+Bidding/Bidding/bin/*
+Checkout/Checkout/bin/*
+Library/Library/bin/*
+SetAuction/SetAuction/bin/*
 
 BiddingSystem/BiddingSystem/bin/Debug/Auctions/
 BiddingSystem/BiddingSystem/bin/Debug/Video/
 BiddingSystem/BiddingSystem/bin/Debug/1/
 BiddingSystem/BiddingSystem/bin/Debug/*.exe
-BiddingSystem/BiddingSystem/bin/Debug/*.dll
+BiddingSystem/BiddingSystem/bin/Debug/Accounting.dll
+BiddingSystem/BiddingSystem/bin/Debug/Bidding.dll
+BiddingSystem/BiddingSystem/bin/Debug/Checkout.dll
+BiddingSystem/BiddingSystem/bin/Debug/Library.dll
+BiddingSystem/BiddingSystem/bin/Debug/SetAuction.dll
