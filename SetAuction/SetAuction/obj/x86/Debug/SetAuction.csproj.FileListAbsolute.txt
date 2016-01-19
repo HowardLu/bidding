@@ -44,3 +44,6 @@ D:\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.csproj.GenerateResourc
 D:\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.csprojResolveAssemblyReference.cache
 D:\bidding\SetAuction\SetAuction\bin\Debug\SetAuction.dll
 D:\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.dll
+C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.Properties.Resources.resources
+C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.SetAuctionForm.resources
+C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.csproj.GenerateResource.Cache
