@@ -33,6 +33,8 @@
             this.buttonQuery = new System.Windows.Forms.Button();
             this.listViewResult = new System.Windows.Forms.ListView();
             this.columnLotId = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnItemName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnSellPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // labelDealerName
@@ -66,17 +68,31 @@
             // listViewResult
             // 
             this.listViewResult.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnLotId});
+            this.columnLotId,
+            this.columnItemName,
+            this.columnSellPrice});
             this.listViewResult.GridLines = true;
             this.listViewResult.Location = new System.Drawing.Point(12, 34);
             this.listViewResult.Name = "listViewResult";
             this.listViewResult.Size = new System.Drawing.Size(587, 393);
             this.listViewResult.TabIndex = 3;
             this.listViewResult.UseCompatibleStateImageBehavior = false;
+            this.listViewResult.View = System.Windows.Forms.View.Details;
             // 
             // columnLotId
             // 
-            this.columnLotId.Text = "拍品Lot編號";
+            this.columnLotId.Text = "編號(Lot Id)";
+            this.columnLotId.Width = 79;
+            // 
+            // columnItemName
+            // 
+            this.columnItemName.Text = "拍品名稱(Lot Name)";
+            this.columnItemName.Width = 367;
+            // 
+            // columnSellPrice
+            // 
+            this.columnSellPrice.Text = "成交價(NTD)";
+            this.columnSellPrice.Width = 398;
             // 
             // CheckoutDealerForm
             // 
@@ -102,6 +118,8 @@
         private System.Windows.Forms.Button buttonQuery;
         private System.Windows.Forms.ListView listViewResult;
         private System.Windows.Forms.ColumnHeader columnLotId;
+        private System.Windows.Forms.ColumnHeader columnItemName;
+        private System.Windows.Forms.ColumnHeader columnSellPrice;
     }
 }
 
