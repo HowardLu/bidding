@@ -41,7 +41,7 @@ namespace InternetLibrary
         }
     }
 
-    public class BidderEntity
+    public class    BidderEntity
     {
         public int _id { get; set; }
         public string BankContact { get; set; }
@@ -55,6 +55,7 @@ namespace InternetLibrary
         public string BankAcc { get; set; }
         public string CareerTitle { get; set; }
         public string IDNumber { get; set; }
+        public string ServiceFee { get; set; }
         public string BankContactTel { get; set; }
         public string Address { get; set; }
         public string BidderID { get; set; }
@@ -70,6 +71,7 @@ namespace InternetLibrary
             Fax = Tel = Name = GuaranteeCost = Company = GuaranteeType = BankAcc = CareerTitle = IDNumber = BankContactTel =
                 Address = BidderID = CreditCardID = Auctioneer = CreditCardType = EMail = Bank = "";
             GuaranteeCost = "0";
+            ServiceFee = "20";
             GuaranteeType = BiddingLibrary.PayGuarantee.台幣現鈔.ToString();
         }
     }
