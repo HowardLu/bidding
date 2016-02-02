@@ -7,12 +7,14 @@ __date__ = "$Date: 2004/04/14 02:38:47 $"
 
 from PythonCard import dialog, model
 import pymongo, sys, re
-import xlwt
+import xlwt, xlrd
 
 # 買家所有屬性
 BIDDER_ATTRS = [	"BidderID", "Name", "Company", "CareerTitle", "IDNumber", "Tel", "Fax", "Address", "EMail", "Bank", "BankAcc",
 									"BankContact", "BankContactTel", "CreditCardID", "CreditCardType", "Auctioneer", "GuaranteeCost", "ServiceFee"
 								]
+
+ALL_BIDDER_ATTRS = BIDDER_ATTRS + [ "GuaranteeType" ]
 
 BIDDER_NONEMPTY_ATTRS = [ "BidderID", "Name", "IDNumber", "Tel", "Auctioneer" ]
 
@@ -27,6 +29,7 @@ GUARANTEE_INIT	= 0
 
 # 寫死的login account
 DB_LOGIN_ACC = { "showmethemoney": None, "superjunior": "S", "igsigs": "N" }
+# DB_LOGIN_ACC = { "": None, "superjunior": "S", "igsigs": "N" }
 
 # 無效牌號
 INVALID_ID	= -1
@@ -71,7 +74,8 @@ Const			= {	"STATICTEXTNAME":						u"準買家姓名",
 							"BUTTONTEXTCLEAR":					u"清空欄位",
 							"BUTTONTEXTSEARCH":					u"搜尋/刷新",
 							"BUTTONTEXTEXPORT":					u"匯出",
-							"COMBOBOXGUARANTEETYPE":		u"支付方式",
+							"BUTTONTEXTIMPORT":					u"匯入",
+							# "COMBOBOXGUARANTEETYPE":		u"支付方式",
 							"COMBOBOXGUARANTEE_LIST":		[ u"台幣現鈔", u"日幣現鈔", u"人民幣現鈔", u"美金現鈔", u"信用卡", u"銀聯卡", u"VIP" ],
 							"NEW_FILE_TITLE":						u"請建立一個資料檔",
 							"FILE_RULE":								u"買家資料檔(*.txt)|*.txt",
@@ -153,6 +157,7 @@ class MyBackground( model.Background ):
 		com.ButtonClear.label							= Const[ "BUTTONTEXTCLEAR" ]
 		com.ButtonSearch.label						= Const[ "BUTTONTEXTSEARCH" ]
 		com.ButtonExport.label						= Const[ "BUTTONTEXTEXPORT" ]
+		com.ButtonImport.label						= Const[ "BUTTONTEXTIMPORT" ]
 		
 		# 選單
 		com.ComboBoxGuaranteeType.text		= Const[ "COMBOBOXGUARANTEE_LIST" ][ GUARANTEE_INIT ]
@@ -243,11 +248,11 @@ class MyBackground( model.Background ):
 		return connect_ip
 		
 	# 嘗試新增使用者
-	def __add_buyer( self, bidder_data ):
+	def __db_add_buyer( self, bidder_data ):
 		try:
 			self.__dbtable_buyer.insert( bidder_data )
 		except:
-			self.__add_msg( Const[ "BIDDER_ID_REPEAT" ] % self.__gen_bid_id_plus_name_str( bidder_data[ "BidderID_int" ] ), True )
+			self.__add_msg( Const[ "BIDDER_ID_REPEAT" ] % self.__gen_bid_id_plus_name_str( bidder_data[ "BidderID_int" ] ) )
 			return 0
 			
 		return 1
@@ -259,8 +264,12 @@ class MyBackground( model.Background ):
 		if not bidder_data:
 			return
 
+		self.__add_bidder_by_data( bidder_data )
+		
+	# 藉由資料新增使用者
+	def __add_bidder_by_data( self, bidder_data ):
 		# 插入資料並重新整理頁面
-		if not self.__add_buyer( bidder_data ):
+		if not self.__db_add_buyer( bidder_data ):
 			return
 		
 		self.__gen_list_ui_by_bidder_data()
@@ -293,7 +302,7 @@ class MyBackground( model.Background ):
 		# 如果要改牌號
 		else:
 			# 嘗試插入資料 如果失敗代表重複
-			if not self.__add_buyer( bidder_data ):
+			if not self.__db_add_buyer( bidder_data ):
 				return
 			
 			# 刪除舊牌號資料
@@ -347,20 +356,47 @@ class MyBackground( model.Background ):
 		
 		com = self.components
 		index_row = 0
-		for index, attr in enumerate( BIDDER_ATTRS ):
+		
+		for index, attr in enumerate( ALL_BIDDER_ATTRS ):
 			ws.write( index_row, index, getattr( com, "StaticText%s" % attr ).text )
 		index_row += 1
 		
 		for cached_data_iter in self.__cached_data.itervalues():
 			collection = cached_data_iter[ 1 ]
-			for index, attr in enumerate( BIDDER_ATTRS ):
+			
+			for index, attr in enumerate( ALL_BIDDER_ATTRS ):
 				ws.write( index_row, index, collection[ attr ] )
-				
+			
 			index_row += 1
 			
 		wb.save( EXPORT_PATH )
 		self.__add_msg( Const[ "ERRMSG_EXPORT_OK" ] % EXPORT_PATH )
 	
+	# 按下 匯入 按鈕
+	def on_ButtonImport_mouseClick( self, event ):
+		filter = "Office Excel Files|*.xls"
+		result = dialog.fileDialog( self, 'Open', '', '', filter )
+		
+		if result == False:
+			return
+		
+		book = xlrd.open_workbook( result.paths[0] )
+		sheet = book.sheet_by_index( 0 )
+		
+		for index_row in xrange( 1, sheet.nrows ):
+			bidder_data = {}
+			for index_col, attr in enumerate( ALL_BIDDER_ATTRS ):
+				val = "%s" % sheet.cell( index_row, index_col ).value
+				# self.__add_msg( "%s, %s" % ( val, type( val ) ) )
+				bidder_data[ attr ] = val
+				
+			bidder_data = self.__gen_bidder_data_by_dict( bidder_data )
+			if not bidder_data:
+				continue
+
+			self.__add_bidder_by_data( bidder_data )
+		
+		
 	# 顯示買家資料
 	def __display_bidder_data( self, bidder_data ):
 		com = self.components
@@ -397,22 +433,27 @@ class MyBackground( model.Background ):
 		
 		return index, self.get_bidder_id_by_index( index )
 	
-	# 由界面的文字輸入格 產生買家資料
+	# 由介面的文字輸入格 產生買家資料
 	def gen_bidder_data_by_text_field( self ):
-		# 作基本資料檢測
 		com = self.components
 		
-		# 部分資料不可為空
 		bidder_data = {}
 		for attr in BIDDER_ATTRS:
 			chk_text = getattr( com, "TextField" + attr ).text
+			bidder_data[ attr ] = chk_text
+		
+		bidder_data[ "GuaranteeType" ] = com.ComboBoxGuaranteeType.text
+		
+		return self.__gen_bidder_data_by_dict( bidder_data )
+		
+	# 由 Dict 產生買家資料
+	def __gen_bidder_data_by_dict( self, bidder_data ):
+		# 部分資料不可為空
+		for attr in BIDDER_ATTRS:
+			chk_text = bidder_data[ attr ]
 			if attr in NONEMPTY_ATTRS and not len( chk_text ):
 				self.__add_msg( Const[ "TEXT_CHK_FAIL_EMPTY" ] % getattr( com, "StaticText" + attr ).text )
 				return None
-			
-			bidder_data[ attr ] = chk_text
-			
-		bidder_data[ "GuaranteeType" ] = com.ComboBoxGuaranteeType.text
 		
 		bidder_id_str = bidder_data[ "BidderID" ]
 		
