@@ -519,4 +519,50 @@ namespace BiddingLibrary
         大行,
         Count
     }
+
+    public class DealerCheckoutItem
+    {
+        public const int InfoSize = 9;
+
+        //圖錄號 DealerItemEntity:dealerItem.LotNO
+        //作者 AuctionEntity:Artist
+        //作品名稱 AuctionEntity:Artwork
+        //落槌價 AuctionEntity:HammerPrice
+        //圖錄費 SellerEntity:IfDealedPictureFee
+        //佣金 SellerEntity:IfDealedServiceFee % * 落槌價
+        //保險費 SellerEntity:IfDealedInsuranceFee % * 落槌價
+        //其他 SellerEntity:FrameFee + SellerEntity:FireFee + SellerEntity:IdentifyFee
+        //合計 落槌價 + 圖錄費 + 佣金 + 保險費 + 其他
+
+        public string InfoLotNO;
+        public string InfoArtist;
+        public string InfoArtwork;
+        public int InfoHammerPrice;
+        public int InfoPictureFee;
+        public int InfoServiceFee;
+        public int InfoInsuranceFee;
+        public int InfoOtherFee;
+        public int InfoTotalPrice;
+
+        public void CalcTotalPrice()
+        {
+            InfoTotalPrice = InfoHammerPrice + InfoPictureFee + InfoServiceFee + InfoInsuranceFee + InfoOtherFee;
+        }
+
+        public string[] GenListViewInfo()
+        {
+            return new string[InfoSize] 
+            { 
+                InfoLotNO,
+                InfoArtist,
+                InfoArtwork,
+                InfoHammerPrice.ToString(),
+                InfoPictureFee.ToString(),
+                InfoServiceFee.ToString(),
+                InfoInsuranceFee.ToString(),
+                InfoOtherFee.ToString(),
+                InfoTotalPrice.ToString(),
+            };
+        }
+    }
 }
