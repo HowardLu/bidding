@@ -41,7 +41,7 @@ namespace InternetLibrary
         }
     }
 
-    public class    BidderEntity
+    public class BidderEntity
     {
         public int _id { get; set; }
         public string BankContact { get; set; }
@@ -150,6 +150,29 @@ namespace InternetLibrary
             _id = IfDealedInsuranceFee = FrameFee = Fax = FireFee = Tel = Name = BankName = IdentifyFee = Country =
                 Address = IfDealedPictureFee = BankAcc = IfNDealedPictureFee = IfNDealedInsuranceFee =
                 CardID = IfDealedServiceFee = PostID = IfNDealedServiceFee = ContractID = "";
+        }
+
+        public void parseDealedFee(out int pictureFee, out int insuranceFeeP, out int serviceFeeP)
+        {
+            pictureFee = 0;
+            insuranceFeeP = 0;
+            serviceFeeP = 0;
+
+            int.TryParse(IfDealedPictureFee, out pictureFee);
+            int.TryParse(IfDealedInsuranceFee, out insuranceFeeP);
+            int.TryParse(IfDealedServiceFee, out serviceFeeP);
+        }
+
+        public void parseOtherFee(out int otherFee)
+        {
+            int fireFee, frameFee, identifyFee;
+            fireFee = frameFee = identifyFee = 0;
+
+            int.TryParse(FireFee, out fireFee);
+            int.TryParse(FrameFee, out frameFee);
+            int.TryParse(IdentifyFee, out identifyFee);
+
+            otherFee = fireFee + frameFee + identifyFee;
         }
     }
 

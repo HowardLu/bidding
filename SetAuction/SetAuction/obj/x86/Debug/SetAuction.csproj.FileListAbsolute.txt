@@ -47,3 +47,12 @@ D:\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.dll
 C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.Properties.Resources.resources
 C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.SetAuctionForm.resources
 C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.csproj.GenerateResource.Cache
+C:\Work\Bidding\bidding\SetAuction\SetAuction\bin\Debug\SetAuction.dll
+C:\Work\Bidding\bidding\SetAuction\SetAuction\bin\Debug\SetAuction.pdb
+C:\Work\Bidding\bidding\SetAuction\SetAuction\bin\Debug\Library.dll
+C:\Work\Bidding\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Bson.dll
+C:\Work\Bidding\bidding\SetAuction\SetAuction\bin\Debug\MongoDB.Driver.dll
+C:\Work\Bidding\bidding\SetAuction\SetAuction\bin\Debug\Library.pdb
+C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.csprojResolveAssemblyReference.cache
+C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.dll
+C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.pdb

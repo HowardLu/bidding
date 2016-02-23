@@ -80,6 +80,7 @@ namespace UtilityLibrary
     /// </summary>
     public static class Utility
     {
+        private static Object m_oMissing = System.Reflection.Missing.Value;
         /// <summary>
         /// Resize new image.
         /// </summary>
@@ -288,6 +289,27 @@ namespace UtilityLibrary
         public static string InputBox(string prompt, string title = "", string defaultResponse = "", int xPos = -1, int yPos = -1)
         {
             return Microsoft.VisualBasic.Interaction.InputBox(prompt, title, defaultResponse, xPos, yPos);
+        }
+
+
+        public static void PrintDoc(Microsoft.Office.Interop.Word._Document doc, int copies = 1)
+        {
+            object Background = true;
+            object Range = Microsoft.Office.Interop.Word.WdPrintOutRange.wdPrintAllDocument;
+            object Copies = copies;
+            object PageType = Microsoft.Office.Interop.Word.WdPrintOutPages.wdPrintAllPages;
+            object PrintToFile = false;
+            object Collate = false;
+            object ActivePrinterMacGX = m_oMissing;
+            object ManualDuplexPrint = false;
+            object PrintZoomColumn = 1;
+            object PrintZoomRow = 1;
+
+            doc.PrintOut(ref Background, ref m_oMissing, ref Range, ref m_oMissing,
+                ref m_oMissing, ref m_oMissing, ref m_oMissing, ref Copies,
+                ref m_oMissing, ref PageType, ref PrintToFile, ref Collate,
+                ref m_oMissing, ref ManualDuplexPrint, ref PrintZoomColumn,
+                ref PrintZoomRow, ref m_oMissing, ref m_oMissing);
         }
     }
 

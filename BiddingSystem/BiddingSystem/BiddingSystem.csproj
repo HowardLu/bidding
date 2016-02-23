@@ -88,6 +88,10 @@
       <Project>{C2471C80-BB33-41AF-9C27-194FCDCF0761}</Project>
       <Name>Bidding</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CheckoutDealer\CheckoutDealer.csproj">
+      <Project>{245431B9-0823-4F20-A89D-74AC2A92201D}</Project>
+      <Name>CheckoutDealer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Checkout\Checkout\Checkout.csproj">
       <Project>{B7F899F1-9CD3-4A4E-B4DA-4F1A784839AF}</Project>
       <Name>Checkout</Name>
