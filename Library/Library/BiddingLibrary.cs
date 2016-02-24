@@ -565,4 +565,25 @@ namespace BiddingLibrary
             };
         }
     }
+
+    public class DealerTakeBackItem
+    {
+        public const int InfoSize = 4;
+
+        public string InfoContractId;
+        public string InfoLotNO;
+        public string InfoArtist;
+        public string InfoArtwork;
+
+        public string[] GenListViewInfo()
+        {
+            return new string[InfoSize] 
+            {
+                InfoContractId,
+                InfoLotNO,
+                InfoArtist,
+                InfoArtwork,
+            };
+        }
+    }
 }

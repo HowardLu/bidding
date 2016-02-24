@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CB8A0723-9F9E-411A-B565-22B7EE001B78}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{9F0A4C8D-1EDD-48C1-BE56-38D38175911F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BiddingSystem</RootNamespace>
-    <AssemblyName>BiddingSystem</AssemblyName>
+    <RootNamespace>TakeBackDealer</RootNamespace>
+    <AssemblyName>TakeBackDealer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DS</DefineConstants>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -29,14 +29,19 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;DS</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.Microsoft.Office.Core">
+      <HintPath>..\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Core.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Interop.Microsoft.Office.Interop.Word">
+      <HintPath>..\Checkout\Checkout\obj\x86\Debug\Interop.Microsoft.Office.Interop.Word.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,14 +54,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StartForm.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="StartForm.Designer.cs">
-      <DependentUpon>StartForm.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -66,9 +74,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="StartForm.resx">
-      <DependentUpon>StartForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -80,33 +85,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Accounting\Accounting\Accounting.csproj">
-      <Project>{E46B60E4-6797-4F48-B13E-B1224D47D5E7}</Project>
-      <Name>Accounting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Bidding\Bidding\Bidding.csproj">
-      <Project>{C2471C80-BB33-41AF-9C27-194FCDCF0761}</Project>
-      <Name>Bidding</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CheckoutDealer\CheckoutDealer.csproj">
-      <Project>{245431B9-0823-4F20-A89D-74AC2A92201D}</Project>
-      <Name>CheckoutDealer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Checkout\Checkout\Checkout.csproj">
-      <Project>{B7F899F1-9CD3-4A4E-B4DA-4F1A784839AF}</Project>
-      <Name>Checkout</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Library\Library\Library.csproj">
+    <ProjectReference Include="..\Library\Library\Library.csproj">
       <Project>{4D1640C6-E2C0-4DFC-8977-55253240671B}</Project>
       <Name>Library</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SetAuction\SetAuction\SetAuction.csproj">
-      <Project>{321D94DA-24B4-4CE0-9EDD-C232DEC99DD2}</Project>
-      <Name>SetAuction</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\TakeBackDealer\TakeBackDealer.csproj">
-      <Project>{9F0A4C8D-1EDD-48C1-BE56-38D38175911F}</Project>
-      <Name>TakeBackDealer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
