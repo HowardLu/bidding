@@ -1,0 +1,12 @@
+C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\TakeBackDealer.exe
+C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\TakeBackDealer.pdb
+C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\Library.dll
+C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\MongoDB.Bson.dll
+C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\MongoDB.Driver.dll
+C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\Library.pdb
+C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.csprojResolveAssemblyReference.cache
+C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.MainForm.resources
+C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.Properties.Resources.resources
+C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.csproj.GenerateResource.Cache
+C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.exe
+C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.pdb

@@ -6,36 +6,59 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using UtilityLibrary;
 using InternetLibrary;
 using BiddingLibrary;
+using UtilityLibrary;
 using System.IO;
 
-namespace CheckoutDealer
+namespace TakeBackDealer
 {
-    public partial class CheckoutDealerForm : Form
+    public partial class MainForm : Form
     {
         #region Member Variables
         private Internet<AuctionEntity> m_auctionInternet;
         private Internet<DealerItemEntity> m_dealerItemInternet;
         private Internet<DealerEntity> m_dealerInternet;
         private DealerEntity m_dealer;
-        private List<DealerCheckoutItem> m_checkoutItems = new List<DealerCheckoutItem>();
+        private List<DealerTakeBackItem> m_takeBackItems = new List<DealerTakeBackItem>();
 
         private Microsoft.Office.Interop.Word._Application m_wordApp = null;
         private Microsoft.Office.Interop.Word._Document m_wordDoc = null;
-        private string m_templateDoc = "DealerCheckout.dot";
+        private string m_templateDoc = "DealerTakeBack.dot";
         private Object m_oMissing = System.Reflection.Missing.Value;
         #endregion
 
-        public CheckoutDealerForm()
+        public MainForm()
         {
             InitializeComponent();
         }
 
-        private void labelDealerName_Click(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
+            string ip = Utility.InputIp();
+            if (ip.Length == 0)
+            {
+                MessageBox.Show("IP不可為空!!!");
+                return;
+            }
 
+            m_auctionInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
+            m_dealerItemInternet = new Internet<DealerItemEntity>(ip, "bidding_data", "dealer_item_table");
+            m_dealerInternet = new Internet<DealerEntity>(ip, "bidding_data", "dealer_table");
+
+            if (m_auctionInternet.Connect() &&
+                m_dealerItemInternet.Connect() &&
+                m_dealerInternet.Connect()
+                )
+            {
+                buttonQuery.Enabled = true;
+                textBoxDealerName.Enabled = true;
+                toolStripStatusLabelMain.Text = "連線成功!請開始查詢。";
+            }
+            else
+            {
+                toolStripStatusLabelMain.Text = "連線失敗!";
+            }
         }
 
         private void buttonQuery_Click(object sender, EventArgs e)
@@ -55,12 +78,12 @@ namespace CheckoutDealer
 
             m_dealer.parseDealedFee(out pictureFee, out insuranceFeeP, out serviceFeeP);
             m_dealer.parseOtherFee(out otherFee);
-            
+
             //先拿到賣家旗下所有的商品牌號
             List<DealerItemEntity> dealerItemList = m_dealerItemInternet.Find<string>(ae => ae.SrcDealer, dealerName);
 
             //再用這些牌號去取得相對應的資訊
-            m_checkoutItems.Clear();
+            m_takeBackItems.Clear();
             foreach (DealerItemEntity dealerItem in dealerItemList)
             {
                 //Console.WriteLine("[CheckoutDealerForm.buttonQuery_Click] lotNO = " + dealerItem.LotNO);
@@ -80,63 +103,39 @@ namespace CheckoutDealer
                 }
 
                 AuctionEntity auctionItem = itemList[0];
-                if (auctionItem.HammerPrice == 0)
+                if (auctionItem.HammerPrice != 0)
                 {
                     continue;
                 }
 
-                DealerCheckoutItem checkoutItem = new DealerCheckoutItem();
-                checkoutItem.InfoLotNO = lotNO.ToString();
-                checkoutItem.InfoArtist = auctionItem.Artist;
-                checkoutItem.InfoArtwork = auctionItem.Artwork;
-                checkoutItem.InfoHammerPrice = auctionItem.HammerPrice;
-                checkoutItem.InfoPictureFee = pictureFee;
-                checkoutItem.InfoServiceFee = (int)((float)(serviceFeeP * checkoutItem.InfoHammerPrice) / 100.0f);
-                checkoutItem.InfoInsuranceFee = (int)((float)(insuranceFeeP * checkoutItem.InfoHammerPrice) / 100.0f);
-                checkoutItem.InfoOtherFee = otherFee;
-                checkoutItem.CalcTotalPrice();
+                DealerTakeBackItem takeBackItem = new DealerTakeBackItem();
+                takeBackItem.InfoContractId = m_dealer.ContractID;
+                takeBackItem.InfoLotNO = lotNO.ToString();
+                takeBackItem.InfoArtist = auctionItem.Artist;
+                takeBackItem.InfoArtwork = auctionItem.Artwork;
 
-                m_checkoutItems.Add(checkoutItem);
+                m_takeBackItems.Add(takeBackItem);
             }
 
             listViewResult.BeginUpdate();
             listViewResult.Items.Clear();
-            foreach (DealerCheckoutItem checkoutItem in m_checkoutItems)
+            foreach (DealerTakeBackItem takeBackItem in m_takeBackItems)
             {
-                ListViewItem listViewItem = new ListViewItem(checkoutItem.GenListViewInfo());
+                ListViewItem listViewItem = new ListViewItem(takeBackItem.GenListViewInfo());
 
                 listViewResult.Items.Add(listViewItem);
             }
             listViewResult.EndUpdate();
-
         }
 
-        private void CheckoutDealerForm_Load(object sender, EventArgs e)
+        private void buttonSave_Click(object sender, EventArgs e)
         {
-            string ip = Utility.InputIp();
-            if (ip.Length == 0)
-            {
-                MessageBox.Show("IP不可為空!!!");
-                return;
-            }
+            _saveDoc(false);
+        }
 
-            m_auctionInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
-            m_dealerItemInternet = new Internet<DealerItemEntity>(ip, "bidding_data", "dealer_item_table");
-            m_dealerInternet = new Internet<DealerEntity>(ip, "bidding_data", "dealer_table");
-
-            if (m_auctionInternet.Connect() &&
-                m_dealerItemInternet.Connect() && 
-                m_dealerInternet.Connect()
-                )
-            {
-                buttonQuery.Enabled = true;
-                textBoxDealerName.Enabled = true;
-                toolStripStatusLabelMain.Text = "連線成功!請開始查詢。";
-            }
-            else
-            {
-                toolStripStatusLabelMain.Text = "連線失敗!";
-            }
+        private void buttonPrint_Click(object sender, EventArgs e)
+        {
+            _saveDoc();
         }
 
         private void _saveDoc(bool toPrint = true)
@@ -147,7 +146,7 @@ namespace CheckoutDealer
                 return;
             }
 
-            if (m_checkoutItems.Count == 0)
+            if (m_takeBackItems.Count == 0)
             {
                 MessageBox.Show(string.Format("無資料可列印"));
                 return;
@@ -159,7 +158,7 @@ namespace CheckoutDealer
             Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
                 Settings.docTempFolder + @"\" + m_templateDoc;
 
-            string docName = string.Format("賣家結帳-{0}.doc", m_dealer.Name);
+            string docName = string.Format("賣家退貨-{0}.doc", m_dealer.Name);
 
             m_wordDoc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing, ref m_oMissing, ref m_oMissing);
             Microsoft.Office.Interop.Word.Table wordTable = m_wordDoc.Tables[1];
@@ -171,32 +170,28 @@ namespace CheckoutDealer
             wordTable.Cell(rowPtr++, 2).Range.Text = m_dealer.CellPhone;
             wordTable.Cell(rowPtr++, 2).Range.Text = m_dealer.Address;
 
-            rowPtr = 11;
-            for (int i = 1; i < m_checkoutItems.Count; i++)
+            rowPtr = 10;
+            for (int i = 1; i < m_takeBackItems.Count; i++)
             {
                 wordTable.Rows.Add(wordTable.Rows[rowPtr]);
             }
 
-            int totalPrice = 0;
-            foreach (DealerCheckoutItem item in m_checkoutItems)
-            {
-                wordTable.Cell(rowPtr, 1).Range.Text = item.InfoLotNO;
-                wordTable.Cell(rowPtr, 2).Range.Text = item.InfoArtist;
-                wordTable.Cell(rowPtr, 3).Range.Text = item.InfoArtwork;
-                wordTable.Cell(rowPtr, 4).Range.Text = item.InfoHammerPrice.ToString();
-                wordTable.Cell(rowPtr, 5).Range.Text = item.InfoPictureFee.ToString();
-                wordTable.Cell(rowPtr, 6).Range.Text = item.InfoServiceFee.ToString();
-                wordTable.Cell(rowPtr, 7).Range.Text = item.InfoInsuranceFee.ToString();
-                wordTable.Cell(rowPtr, 8).Range.Text = item.InfoOtherFee.ToString();
+            int counter = 0;
+            DateTime now = DateTime.Now;
+            string todayStr = string.Format("{0}/{1:00}/{2:00}", now.Year, now.Month, now.Day);
 
-                int priceIter = item.InfoTotalPrice;
-                wordTable.Cell(rowPtr, 9).Range.Text = priceIter.ToString();
+            foreach (DealerTakeBackItem item in m_takeBackItems)
+            {
+                wordTable.Cell(rowPtr, 1).Range.Text = (++counter).ToString();
+                wordTable.Cell(rowPtr, 2).Range.Text = item.InfoLotNO;
+                wordTable.Cell(rowPtr, 3).Range.Text = item.InfoArtist;
+                wordTable.Cell(rowPtr, 4).Range.Text = item.InfoArtwork;
+                wordTable.Cell(rowPtr, 5).Range.Text = todayStr;
 
                 rowPtr++;
-                totalPrice += priceIter;
             }
 
-            wordTable.Cell(rowPtr, 1).Range.Text = string.Format("總計:新台幣 {0} 元整", totalPrice);
+            wordTable.Cell(rowPtr, 1).Range.Text = string.Format("退貨合計{0}件", counter);
 
             //save doc
             string savePath = Path.Combine(System.Windows.Forms.Application.StartupPath, docName);
@@ -233,14 +228,5 @@ namespace CheckoutDealer
             toolStripStatusLabelMain.Text = string.Format("檔案已儲存至{0}{1}", savePath, printMsg);
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            _saveDoc(false);
-        }
-
-        private void buttonPrint_Click(object sender, EventArgs e)
-        {
-            _saveDoc();
-        }
     }
 }
