@@ -16,6 +16,6 @@ namespace Bidding
         public virtual void SetProgress(int currentId, int totalCount) { }
         public virtual void SetRateName(int rateId, string name) { }
         public virtual void ShowExchangeRate(int erId, bool isShow) { }
-        public virtual void SetLogo(Auctioneer auctioneer) { }
+        public virtual void SetLogo(BiddingCompany auctioneer) { }
     }
 }

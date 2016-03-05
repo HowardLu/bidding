@@ -54,7 +54,7 @@ namespace SetAuction
                 return;
             }
             m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
-            if (Auctioneer.N == Auction.DefaultAuctioneer)
+            if (BiddingCompany.N == Auction.DefaultBiddingCompany)
                 m_initPriceThreshold = 0;
         }
         #endregion
@@ -421,9 +421,9 @@ namespace SetAuction
 
         private void InitAuctioneerComboBox()
         {
-            for (int i = 0; i < (int)AuctioneerName.Count; i++)
+            for (int i = 0; i < (int)BiddingCompanyName.Count; i++)
             {
-                auctioneerComboBox.Items.Add(Utility.GetEnumString(typeof(AuctioneerName), i));
+                auctioneerComboBox.Items.Add(Utility.GetEnumString(typeof(BiddingCompanyName), i));
             }
         }
 

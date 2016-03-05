@@ -35,6 +35,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.bidderButton = new System.Windows.Forms.Button();
             this.dealerButton = new System.Windows.Forms.Button();
+            this.takebackDealerButton = new System.Windows.Forms.Button();
+            this.checkoutDealerButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // accountingButton
@@ -44,9 +46,9 @@
             this.accountingButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.accountingButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.accountingButton.ForeColor = System.Drawing.Color.White;
-            this.accountingButton.Location = new System.Drawing.Point(107, 39);
+            this.accountingButton.Location = new System.Drawing.Point(106, 28);
             this.accountingButton.Name = "accountingButton";
-            this.accountingButton.Size = new System.Drawing.Size(255, 118);
+            this.accountingButton.Size = new System.Drawing.Size(255, 100);
             this.accountingButton.TabIndex = 0;
             this.accountingButton.Text = "會計";
             this.accountingButton.UseVisualStyleBackColor = false;
@@ -59,9 +61,9 @@
             this.biddingButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.biddingButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.biddingButton.ForeColor = System.Drawing.Color.White;
-            this.biddingButton.Location = new System.Drawing.Point(427, 39);
+            this.biddingButton.Location = new System.Drawing.Point(426, 28);
             this.biddingButton.Name = "biddingButton";
-            this.biddingButton.Size = new System.Drawing.Size(255, 118);
+            this.biddingButton.Size = new System.Drawing.Size(255, 100);
             this.biddingButton.TabIndex = 1;
             this.biddingButton.Text = "拍賣跳階";
             this.biddingButton.UseVisualStyleBackColor = false;
@@ -74,9 +76,9 @@
             this.checkoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.checkoutButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.checkoutButton.ForeColor = System.Drawing.Color.White;
-            this.checkoutButton.Location = new System.Drawing.Point(107, 199);
+            this.checkoutButton.Location = new System.Drawing.Point(106, 163);
             this.checkoutButton.Name = "checkoutButton";
-            this.checkoutButton.Size = new System.Drawing.Size(255, 118);
+            this.checkoutButton.Size = new System.Drawing.Size(255, 100);
             this.checkoutButton.TabIndex = 2;
             this.checkoutButton.Text = "結帳";
             this.checkoutButton.UseVisualStyleBackColor = false;
@@ -89,9 +91,9 @@
             this.setAuctionButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.setAuctionButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.setAuctionButton.ForeColor = System.Drawing.Color.White;
-            this.setAuctionButton.Location = new System.Drawing.Point(427, 199);
+            this.setAuctionButton.Location = new System.Drawing.Point(426, 163);
             this.setAuctionButton.Name = "setAuctionButton";
-            this.setAuctionButton.Size = new System.Drawing.Size(255, 118);
+            this.setAuctionButton.Size = new System.Drawing.Size(255, 100);
             this.setAuctionButton.TabIndex = 3;
             this.setAuctionButton.Text = "設定拍品";
             this.setAuctionButton.UseVisualStyleBackColor = false;
@@ -115,9 +117,9 @@
             this.bidderButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.bidderButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.bidderButton.ForeColor = System.Drawing.Color.White;
-            this.bidderButton.Location = new System.Drawing.Point(107, 359);
+            this.bidderButton.Location = new System.Drawing.Point(106, 298);
             this.bidderButton.Name = "bidderButton";
-            this.bidderButton.Size = new System.Drawing.Size(255, 118);
+            this.bidderButton.Size = new System.Drawing.Size(255, 100);
             this.bidderButton.TabIndex = 5;
             this.bidderButton.Text = "競拍者登記";
             this.bidderButton.UseVisualStyleBackColor = false;
@@ -130,13 +132,43 @@
             this.dealerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.dealerButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.dealerButton.ForeColor = System.Drawing.Color.White;
-            this.dealerButton.Location = new System.Drawing.Point(427, 359);
+            this.dealerButton.Location = new System.Drawing.Point(426, 298);
             this.dealerButton.Name = "dealerButton";
-            this.dealerButton.Size = new System.Drawing.Size(255, 118);
+            this.dealerButton.Size = new System.Drawing.Size(255, 100);
             this.dealerButton.TabIndex = 6;
             this.dealerButton.Text = "賣家登記";
             this.dealerButton.UseVisualStyleBackColor = false;
             this.dealerButton.Click += new System.EventHandler(this.dealerButton_Click);
+            // 
+            // takebackDealerButton
+            // 
+            this.takebackDealerButton.BackColor = System.Drawing.Color.Transparent;
+            this.takebackDealerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.takebackDealerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.takebackDealerButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.takebackDealerButton.ForeColor = System.Drawing.Color.White;
+            this.takebackDealerButton.Location = new System.Drawing.Point(425, 433);
+            this.takebackDealerButton.Name = "takebackDealerButton";
+            this.takebackDealerButton.Size = new System.Drawing.Size(255, 100);
+            this.takebackDealerButton.TabIndex = 8;
+            this.takebackDealerButton.Text = "賣家退貨";
+            this.takebackDealerButton.UseVisualStyleBackColor = false;
+            this.takebackDealerButton.Click += new System.EventHandler(this.takebackDealerButton_Click);
+            // 
+            // checkoutDealerButton
+            // 
+            this.checkoutDealerButton.BackColor = System.Drawing.Color.Transparent;
+            this.checkoutDealerButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.checkoutDealerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.checkoutDealerButton.Font = new System.Drawing.Font("PMingLiU", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.checkoutDealerButton.ForeColor = System.Drawing.Color.White;
+            this.checkoutDealerButton.Location = new System.Drawing.Point(105, 433);
+            this.checkoutDealerButton.Name = "checkoutDealerButton";
+            this.checkoutDealerButton.Size = new System.Drawing.Size(255, 100);
+            this.checkoutDealerButton.TabIndex = 7;
+            this.checkoutDealerButton.Text = "賣家結帳";
+            this.checkoutDealerButton.UseVisualStyleBackColor = false;
+            this.checkoutDealerButton.Click += new System.EventHandler(this.checkoutDealerButton_Click);
             // 
             // StartForm
             // 
@@ -144,6 +176,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(784, 562);
+            this.Controls.Add(this.takebackDealerButton);
+            this.Controls.Add(this.checkoutDealerButton);
             this.Controls.Add(this.dealerButton);
             this.Controls.Add(this.bidderButton);
             this.Controls.Add(this.label1);
@@ -153,7 +187,6 @@
             this.Controls.Add(this.accountingButton);
             this.Name = "StartForm";
             this.Text = "拍賣系統";
-            this.Load += new System.EventHandler(this.StartForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -168,6 +201,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button bidderButton;
         private System.Windows.Forms.Button dealerButton;
+        private System.Windows.Forms.Button takebackDealerButton;
+        private System.Windows.Forms.Button checkoutDealerButton;
     }
 }
 

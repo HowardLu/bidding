@@ -51,7 +51,7 @@ namespace Accounting
         #region Windows Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (Auctioneer.M == Auction.DefaultAuctioneer)
+            if (BiddingCompany.M == Auction.DefaultBiddingCompany)
             {
                 this.unitComboBox.SelectedIndex = 0;
                 m_unit = 1;
@@ -311,9 +311,9 @@ namespace Accounting
             string account = Utility.InputBox("", "請輸入帳號:", "", -1, -1);
             if (account.Length == 0)
                 return;
-            if ((Auctioneer.N == Auction.DefaultAuctioneer && "newaspect" == account) ||
-                (Auctioneer.S == Auction.DefaultAuctioneer && "Ma Lei" == account) ||
-                (Auctioneer.DS == Auction.DefaultAuctioneer && "Ma Lei" == account))
+            if ((BiddingCompany.N == Auction.DefaultBiddingCompany && "newaspect" == account) ||
+                (BiddingCompany.S == Auction.DefaultBiddingCompany && "Ma Lei" == account) ||
+                (BiddingCompany.DS == Auction.DefaultBiddingCompany && "Ma Lei" == account))
                 m_isSuperUser = true;
         }
 
@@ -337,7 +337,7 @@ namespace Accounting
                 toolStripStatusLabel1.Text = "連線失敗!";
             }
 
-            if (Auctioneer.M == Auction.DefaultAuctioneer)
+            if (BiddingCompany.M == Auction.DefaultBiddingCompany)
                 m_isSuperUser = true;
             else
                 Login();

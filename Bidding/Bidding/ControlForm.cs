@@ -80,23 +80,23 @@ namespace Bidding
         /// <param name="e"></param>
         private void ControlForm_Load(object sender, EventArgs e)
         {
-            if (Auctioneer.M == Auction.DefaultAuctioneer)
+            if (BiddingCompany.M == Auction.DefaultBiddingCompany)
             {
                 this.logoPictureBox.Visible = false;
                 playButton.Visible = stopButton.Visible = false;
                 displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
-            if (Auctioneer.N == Auction.DefaultAuctioneer)
+            if (BiddingCompany.N == Auction.DefaultBiddingCompany)
             {
                 this.logoPictureBox.Image = Properties.Resources.LOGO_N;
                 playButton.Visible = stopButton.Visible = false;
                 displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
-            if (Auctioneer.S == Auction.DefaultAuctioneer)
+            if (BiddingCompany.S == Auction.DefaultBiddingCompany)
             {
                 displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
-            if (Auctioneer.DS == Auction.DefaultAuctioneer)
+            if (BiddingCompany.DS == Auction.DefaultBiddingCompany)
             {
                 this.logoPictureBox.Visible = false;
             }
@@ -153,7 +153,7 @@ namespace Bidding
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
-            if (Auctioneer.S == Auction.DefaultAuctioneer)
+            if (BiddingCompany.S == Auction.DefaultBiddingCompany)
                 ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
             m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
         }
@@ -175,7 +175,7 @@ namespace Bidding
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
-            if (Auctioneer.S == Auction.DefaultAuctioneer)
+            if (BiddingCompany.S == Auction.DefaultBiddingCompany)
                 ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
             m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
         }
@@ -442,7 +442,7 @@ namespace Bidding
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            if (Auctioneer.S == Auction.DefaultAuctioneer)
+            if (BiddingCompany.S == Auction.DefaultBiddingCompany)
                 ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
         }
 
@@ -558,7 +558,7 @@ namespace Bidding
                 m_displayForm.Close();
                 m_displayForm.Dispose();
                 m_displayForm = new DisplayForm();
-                m_displayForm.SetLogo(Auction.DefaultAuctioneer);
+                m_displayForm.SetLogo(Auction.DefaultBiddingCompany);
             }
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
 
@@ -587,11 +587,11 @@ namespace Bidding
         /// </summary>
         private void InitDisplayForm()
         {
-            if (Auctioneer.DS == Auction.DefaultAuctioneer)
+            if (BiddingCompany.DS == Auction.DefaultBiddingCompany)
             {
                 m_displayForm = new DisplayForm_DS_TextOnly();
             }
-            else if (Auctioneer.N == Auction.DefaultAuctioneer)
+            else if (BiddingCompany.N == Auction.DefaultBiddingCompany)
             {
                 m_displayForm = new DisplayForm_N_16_9();
             }

@@ -78,13 +78,13 @@ namespace Checkout
             {
                 SetButtonsEnable(true);
             }
-            string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
+            string defaultAuctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
             m_cashFlowTemplateFN = m_cashFlowTemplateFN + defaultAuctioneer + ".dot";
-            if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
+            if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
             {
                 m_taxRate = 0.08f;
             }
-            if (Auctioneer.DS != Auction.DefaultAuctioneer)
+            if (BiddingCompany.DS != Auction.DefaultBiddingCompany)
             {
                 totalCountLabel.Visible = false;
                 totalHammerPriceLabel.Visible = false;
@@ -227,7 +227,7 @@ namespace Checkout
                 }
             }
 
-            if (Auctioneer.M != Auction.DefaultAuctioneer)
+            if (BiddingCompany.M != Auction.DefaultBiddingCompany)
                 PrintDoc(m_bidder.cashFlowDoc, Settings.cashFlowDocPrintCount);
 
             CloseDocAndWord();
@@ -399,7 +399,7 @@ namespace Checkout
             Dictionary<string, int> totalSums = new Dictionary<string, int>();
             if (isPrintOneByOneCheckBox.Checked)
             {
-                string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
+                string defaultAuctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
                 Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" + m_paymentTemplateFN + defaultAuctioneer + ".dot";
                 foreach (Auction auc in m_bidder.auctions.Values)
                 {
@@ -435,7 +435,7 @@ namespace Checkout
             }   // end of isPrintOneByOneCheckBox.Checked == true
             else
             {
-                string auctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
+                string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
                 Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
                     Settings.docTempFolder + @"\" + m_paymentTemplateFN + auctioneer + ".dot";
                 string docName = m_bidder.no.ToString() + "_" + m_bidder.name + "_" + auctioneer + ".doc";
@@ -480,7 +480,7 @@ namespace Checkout
                         aucCount[tableId] += 1;
                         hammerSum[tableId] += auc.hammerPrice;
                         serviceSum[tableId] += auc.serviceCharge;
-                        if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
+                        if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
                         {
                             taxSum[tableId] += tax;
                             sums[tableId] += (auc.total + tax);
@@ -498,7 +498,7 @@ namespace Checkout
                     string time = GetCheckoutTime(tableId);
                     aucTables[tableId].Cell(aucCount[tableId] + 3, 2).Range.Text = hammerSum[tableId].ToString("n0");
                     aucTables[tableId].Cell(aucCount[tableId] + 3, 3).Range.Text = serviceSum[tableId].ToString("n0");
-                    if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
+                    if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
                     {
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = taxSum[tableId].ToString("n0");
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 5).Range.Text = sums[tableId].ToString("n0");
@@ -509,7 +509,7 @@ namespace Checkout
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
                     }
-                    if (Auctioneer.M != Auction.DefaultAuctioneer)
+                    if (BiddingCompany.M != Auction.DefaultBiddingCompany)
                     {
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
                     }
@@ -560,7 +560,7 @@ namespace Checkout
             auctionTable.Cell(rowId, 2).Range.Text = name;
             auctionTable.Cell(rowId, 3).Range.Text = hammerPrice.ToString("n0");
             auctionTable.Cell(rowId, 4).Range.Text = serviceCharge.ToString("n0");
-            if (Auctioneer.SFJ == Auction.DefaultAuctioneer)
+            if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
             {
                 auctionTable.Cell(rowId, 5).Range.Text = tax.ToString("n0");
                 auctionTable.Cell(rowId, 6).Range.Text = total.ToString("n0");
@@ -578,7 +578,7 @@ namespace Checkout
             m_bidder.cashFlowDocName = m_bidder.no.ToString() + "_" + m_bidder.name + "_金流單.doc";
             m_bidder.cashFlowDoc = m_wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing, ref m_oMissing, ref m_oMissing);
             object oBookMark = "Today";
-            if (Auctioneer.M == Auction.DefaultAuctioneer || Auctioneer.N == Auction.DefaultAuctioneer)
+            if (BiddingCompany.M == Auction.DefaultBiddingCompany || BiddingCompany.N == Auction.DefaultBiddingCompany)
                 m_bidder.cashFlowDoc.Bookmarks.get_Item(ref oBookMark).Range.Text = " " + DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
 
             Microsoft.Office.Interop.Word.Table bidderDataTable = m_bidder.cashFlowDoc.Tables[1];
@@ -591,12 +591,12 @@ namespace Checkout
             bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
 
             Microsoft.Office.Interop.Word.Table depositReceiveTable = m_bidder.cashFlowDoc.Tables[2];
-            if (Auctioneer.M == Auction.DefaultAuctioneer)
+            if (BiddingCompany.M == Auction.DefaultBiddingCompany)
             {
                 depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeState.ToString();
                 depositReceiveTable.Cell(0, 6).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
             }
-            if (Auctioneer.S == Auction.DefaultAuctioneer || Auctioneer.N == Auction.DefaultAuctioneer)
+            if (BiddingCompany.S == Auction.DefaultBiddingCompany || BiddingCompany.N == Auction.DefaultBiddingCompany)
             {
                 depositReceiveTable.Cell(0, 2).Range.Text = m_bidder.payGuaranteeState.ToString();
                 depositReceiveTable.Cell(0, 4).Range.Text = m_bidder.payGuaranteeNum.ToString("n0");
@@ -610,9 +610,9 @@ namespace Checkout
                 if (counter != totalSums.Count - 1)
                     totalDataTable.Rows.Add(totalDataTable.Rows[2 + counter]);
 
-                if (Auctioneer.M == Auction.DefaultAuctioneer)
+                if (BiddingCompany.M == Auction.DefaultBiddingCompany)
                     totalDataTable.Cell(2 + counter, 1).Range.Text = auctioneerStr;
-                if (Auctioneer.S == Auction.DefaultAuctioneer || Auctioneer.N == Auction.DefaultAuctioneer)
+                if (BiddingCompany.S == Auction.DefaultBiddingCompany || BiddingCompany.N == Auction.DefaultBiddingCompany)
                     totalDataTable.Cell(2 + counter, 1).Range.Text = sum.Key;
 
                 totalDataTable.Cell(2 + counter, 2).Range.Text = sum.Value.ToString("n0");

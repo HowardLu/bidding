@@ -73,6 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DisplayForm_G_16_9.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DisplayForm_G_16_9.Designer.cs">
+      <DependentUpon>DisplayForm_G_16_9.cs</DependentUpon>
+    </Compile>
     <Compile Include="DisplayForm_N_16_9.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,9 @@
     <Compile Include="SetPriceLevelForm.Designer.cs">
       <DependentUpon>SetPriceLevelForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DisplayForm_G_16_9.resx">
+      <DependentUpon>DisplayForm_G_16_9.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DisplayForm_N_16_9.resx">
       <DependentUpon>DisplayForm_N_16_9.cs</DependentUpon>
     </EmbeddedResource>
@@ -176,6 +185,8 @@
     <Content Include="Resources\LOGO_A.jpg" />
     <None Include="Resources\LOGO_big.jpg" />
     <Content Include="Resources\LOGO_DS.jpg" />
+    <Content Include="Resources\LOGO_G.jpg" />
+    <Content Include="Resources\LOGO_G_small.jpg" />
     <Content Include="Resources\LOGO_M.jpg" />
     <None Include="Resources\LOGO_S.bmp" />
     <None Include="Resources\LOGO_S_big.bmp" />

@@ -154,7 +154,7 @@ namespace CheckoutDealer
             }
 
             m_wordApp = new Microsoft.Office.Interop.Word.Application();
-            string auctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
+            string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
 
             Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
                 Settings.docTempFolder + @"\" + m_templateDoc;

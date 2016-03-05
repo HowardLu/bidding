@@ -121,9 +121,9 @@ namespace Bidding
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
             ChangeLogoCheck();
-            if (Auctioneer.M == Auction.DefaultAuctioneer)
+            if (BiddingCompany.M == Auction.DefaultBiddingCompany)
                 this.logoPictureBox.Image = m_logo_M;
-            if (Auctioneer.N == Auction.DefaultAuctioneer)
+            if (BiddingCompany.N == Auction.DefaultBiddingCompany)
                 this.logoPictureBox.Image = m_logo_N;
         }
 
@@ -284,21 +284,21 @@ namespace Bidding
             m_progressLabelState.ReArrange(xRatio, yRatio);
         }
 
-        private void SetLogo(Auctioneer auctioneer)
+        private void SetLogo(BiddingCompany auctioneer)
         {
             switch (auctioneer)
             {
-                case Auctioneer.S:
+                case BiddingCompany.S:
                     logoPictureBox.Image = m_logo_S;
                     break;
                 /*case Auctioneer.A:
                     logoPictureBox.Image = m_logo_A;
                     break;*/
-                case Auctioneer.M:
+                case BiddingCompany.M:
 
                     logoPictureBox.Image = m_logo_M;
                     break;
-                case Auctioneer.N:
+                case BiddingCompany.N:
                     logoPictureBox.Image = m_logo_N;
                     break;
                 default:

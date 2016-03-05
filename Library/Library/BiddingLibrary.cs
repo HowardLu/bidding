@@ -20,7 +20,7 @@ namespace BiddingLibrary
     {
         public static float ServiceChargeRate = 0.2f;
         public static float CreditCardRate = 0.08f;
-        public static Auctioneer DefaultAuctioneer = Auctioneer.S;
+        public static BiddingCompany DefaultBiddingCompany = BiddingCompany.S;
 
         public string lot;
         public string artist;
@@ -51,7 +51,7 @@ namespace BiddingLibrary
             checkoutNumber = 0;
             checkoutTime = "";
             videoPath = "";
-            auctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)DefaultAuctioneer);
+            auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)DefaultBiddingCompany);
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace BiddingLibrary
         public int creditCardFee;
         public int tax;
         public int amountDue;
-        public Auctioneer auctioneer;
+        public BiddingCompany auctioneer;
         public Dictionary<string, Auction> auctions;
         public Dictionary<string, List<string>> auctionMappings;
         public Dictionary<string, PaymentDoc> paymentDocs;
@@ -386,7 +386,7 @@ namespace BiddingLibrary
             this.fax = bidder.Fax;
             this.email = bidder.EMail;
             this.addr = bidder.Address;
-            this.auctioneer = Utility.ToEnum<Auctioneer>(bidder.Auctioneer);
+            this.auctioneer = Utility.ToEnum<BiddingCompany>(bidder.Auctioneer);
             this.auctions = new Dictionary<string, Auction>();
             this.payGuaranteeState = Utility.ToEnum<PayGuarantee>(bidder.GuaranteeType);
             int guaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost, true);
@@ -407,9 +407,9 @@ namespace BiddingLibrary
             MappingAuctions();
 
             this.paymentDocs = new Dictionary<string, PaymentDoc>();
-            for (int i = 0; i < (int)Auctioneer.Count; i++)
+            for (int i = 0; i < (int)BiddingCompany.Count; i++)
             {
-                string auctioneer = Utility.GetEnumString(typeof(Auctioneer), i);
+                string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), i);
                 this.paymentDocs[auctioneer] = new PaymentDoc();
             }
         }
@@ -421,7 +421,7 @@ namespace BiddingLibrary
                 auctionMappings = new Dictionary<string, List<string>>();
             }
 
-            string defaultAuctioneer = Utility.GetEnumString(typeof(Auctioneer), (int)Auction.DefaultAuctioneer);
+            string defaultAuctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
             foreach (Auction auc in auctions.Values)
             {
                 string auctioneer = auc.auctioneer == "" ? defaultAuctioneer : auc.auctioneer;
@@ -431,7 +431,7 @@ namespace BiddingLibrary
                 }
                 auctionMappings[auctioneer].Add(auc.lot);
             }
-            if (Auctioneer.N == Auction.DefaultAuctioneer)
+            if (BiddingCompany.N == Auction.DefaultBiddingCompany)
             {
                 if (auctionMappings.ContainsKey("N") && 0 == auctionMappings["N"].Count &&
                     auctionMappings.ContainsKey("S"))
@@ -500,23 +500,25 @@ namespace BiddingLibrary
         日幣現鈔
     };
 
-    public enum Auctioneer
+    public enum BiddingCompany
     {
         M = 0,
         S,
         N,
         SFJ,
         DS,
+        G,
         Count
     };
 
-    public enum AuctioneerName
+    public enum BiddingCompanyName
     {
         沐春堂 = 0,
         世家,
         新象,
         禪機,
         大行,
+        吉祥門,
         Count
     }
 

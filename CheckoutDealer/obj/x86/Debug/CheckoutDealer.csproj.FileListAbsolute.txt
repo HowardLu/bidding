@@ -10,3 +10,15 @@ C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\MongoDB.Bson.dll
 C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\MongoDB.Driver.dll
 C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\Library.pdb
 C:\Work\Bidding\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.csprojResolveAssemblyReference.cache
+D:\bidding\CheckoutDealer\bin\Debug\CheckoutDealer.pdb
+D:\bidding\CheckoutDealer\bin\Debug\Library.dll
+D:\bidding\CheckoutDealer\bin\Debug\MongoDB.Bson.dll
+D:\bidding\CheckoutDealer\bin\Debug\MongoDB.Driver.dll
+D:\bidding\CheckoutDealer\bin\Debug\Library.pdb
+D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.csprojResolveAssemblyReference.cache
+D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.CheckoutDealerForm.resources
+D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.Properties.Resources.resources
+D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.csproj.GenerateResource.Cache
+D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.pdb
+D:\bidding\CheckoutDealer\bin\Debug\CheckoutDealer.dll
+D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.dll

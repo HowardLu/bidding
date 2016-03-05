@@ -12,23 +12,28 @@ namespace BiddingSystem
         public StartForm()
         {
             InitializeComponent();
+            checkoutDealerButton.Visible = takebackDealerButton.Visible = false;
 #if M
-            Auction.DefaultAuctioneer = Auctioneer.M;
+            Auction.DefaultBiddingCompany = BiddingCompany.M;
             this.Text = "沐春堂拍賣系統" + Application.ProductVersion;
 #elif S
-            Auction.DefaultAuctioneer = Auctioneer.S;
+            Auction.DefaultBiddingCompany = BiddingCompany.S;
             this.Text = "世家拍賣系統" + Application.ProductVersion;
 #elif N
-            Auction.DefaultAuctioneer = Auctioneer.N;
+            Auction.DefaultBiddingCompany = BiddingCompany.N;
             this.Text = "新象拍賣系統" + Application.ProductVersion;
 #elif SFJ
-            Auction.DefaultAuctioneer = Auctioneer.SFJ;
+            Auction.DefaultBiddingCompany = BiddingCompany.SFJ;
             this.Text = "禪機拍賣系統" + Application.ProductVersion;
 #elif DS
-            Auction.DefaultAuctioneer = Auctioneer.DS;
+            Auction.DefaultBiddingCompany = BiddingCompany.DS;
             this.Text = "大行拍賣系統 " + Application.ProductVersion;
+#elif G
+            Auction.DefaultBiddingCompany = BiddingCompany.G;
+            this.Text = "吉祥門拍賣系統 " + Application.ProductVersion;
+            checkoutDealerButton.Visible = takebackDealerButton.Visible = true;
 #else
-            Auction.DefaultAuctioneer = Auctioneer.S;
+            Auction.DefaultBiddingCompany = BiddingCompany.S;
             this.Text = "世家拍賣系統" + Application.ProductVersion;
 #endif
             if (DialogResult.Yes == MessageBox.Show("請問本機是否為主機?", "是否主機?", MessageBoxButtons.YesNo))
@@ -83,9 +88,16 @@ namespace BiddingSystem
             System.Diagnostics.Process.Start(exePath);
         }
 
-        private void StartForm_Load(object sender, EventArgs e)
+        private void checkoutDealerButton_Click(object sender, EventArgs e)
         {
+            mForm = new CheckoutDealer.CheckoutDealerForm();
+            mForm.Show();
+        }
 
+        private void takebackDealerButton_Click(object sender, EventArgs e)
+        {
+            mForm = new TakeBackDealer.MainForm();
+            mForm.Show();
         }
     }
 }
