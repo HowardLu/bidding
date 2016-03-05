@@ -8,6 +8,7 @@
 *.ilk
 *.exp
 *.Cache
+*.manifest
 
 Accounting/Accounting/obj/
 Bidding/Bidding/obj/
