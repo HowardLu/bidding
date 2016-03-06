@@ -21,9 +21,9 @@ Bidding/Bidding/bin/*
 Checkout/Checkout/bin/*
 Library/Library/bin/*
 SetAuction/SetAuction/bin/*
-CheckoutDealer/bin/*
+CheckoutDealer/bin/Debug/*
 CheckoutDealer/obj/*
-TakeBackDealer/bin/*
+TakeBackDealer/bin/Debug/*
 TakeBackDealer/obj/*
 
 BiddingSystem/BiddingSystem/bin/Debug/Auctions/

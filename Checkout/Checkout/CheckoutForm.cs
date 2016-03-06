@@ -78,6 +78,7 @@ namespace Checkout
             {
                 SetButtonsEnable(true);
             }
+
             string defaultAuctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
             m_cashFlowTemplateFN = m_cashFlowTemplateFN + defaultAuctioneer + ".dot";
             if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
@@ -106,6 +107,16 @@ namespace Checkout
         {
             CloseDocAndWord();
             Settings.Save();
+
+            m_wordApp = null;
+            m_bidder = null;
+            m_auctionInternet = null;
+            m_bidderInternet = null;
+            if (null != m_checkoutTime)
+            {
+                m_checkoutTime.Clear();
+                m_checkoutTime = null;
+            }
         }
 
         private void searchButton_Click(object sender, EventArgs e)
@@ -205,29 +216,16 @@ namespace Checkout
                     PrintDoc(auc.paymentDoc, 1);
                 }
             }
-            else
+            else if (0 != Settings.dealDocPrintCount)
             {
                 foreach (KeyValuePair<string, PaymentDoc> paymentDoc in m_bidder.paymentDocs)
                 {
                     if (null != paymentDoc.Value.doc)
                         PrintDoc(paymentDoc.Value.doc, Settings.dealDocPrintCount);
-                    /*
-                                        if (!m_bidder.auctionMappings.ContainsKey(paymentDoc.Key))
-                                            continue;   // dont print the doc that buy nothing.
-
-                                        if (m_bidder.auctionMappings[paymentDoc.Key].Count > 0)
-                                        {
-                                            PrintDoc(paymentDoc.Value.doc, 3);
-                                        }
-                                        else
-                                        {
-                                            PrintDoc(paymentDoc.Value.doc, 1);
-                                        }
-                    */
                 }
             }
 
-            if (BiddingCompany.M != Auction.DefaultBiddingCompany)
+            if (0 != Settings.cashFlowDocPrintCount && null != m_bidder.cashFlowDoc)
                 PrintDoc(m_bidder.cashFlowDoc, Settings.cashFlowDocPrintCount);
 
             CloseDocAndWord();
@@ -450,7 +448,7 @@ namespace Checkout
                 aucTableTmp.Range.Copy();
                 Microsoft.Office.Interop.Word.Range rng = aucTableTmp.Range;
                 rng.SetRange(aucTableTmp.Range.End + 1, aucTableTmp.Range.End + 1);
-                //rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreakClearLeft);
+                rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreakClearLeft);
 
                 int tableCount = m_maxCheckoutNumber > 0 ? m_maxCheckoutNumber : 1;
                 Microsoft.Office.Interop.Word.Table[] aucTables = new Microsoft.Office.Interop.Word.Table[tableCount];
@@ -704,6 +702,10 @@ namespace Checkout
                 {
                     Directory.Delete(folder, true);
                     Directory.CreateDirectory(folder);
+                }
+                else
+                {
+                    return;
                 }
             }
 

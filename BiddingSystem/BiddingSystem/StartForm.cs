@@ -6,9 +6,6 @@ namespace BiddingSystem
 {
     public partial class StartForm : Form
     {
-        private Form mForm;
-        private bool mIsStartServer;
-
         public StartForm()
         {
             InitializeComponent();
@@ -52,26 +49,30 @@ namespace BiddingSystem
 
         private void accountingButton_Click(object sender, EventArgs e)
         {
-            mForm = new Accounting.AccountingForm();
-            mForm.Show();
+            Form form;
+            form = new Accounting.AccountingForm();
+            form.Show();
         }
 
         private void biddingButton_Click(object sender, EventArgs e)
         {
-            mForm = new Bidding.ControlForm();
-            mForm.Show();
+            Form form;
+            form = new Bidding.ControlForm();
+            form.Show();
         }
 
         private void checkoutButton_Click(object sender, EventArgs e)
         {
-            mForm = new Checkout.CheckoutForm();
-            mForm.Show();
+            Form form;
+            form = new Checkout.CheckoutForm();
+            form.Show();
         }
 
         private void setAuctionButton_Click(object sender, EventArgs e)
         {
-            mForm = new SetAuction.SetAuctionForm();
-            mForm.Show();
+            Form form;
+            form = new SetAuction.SetAuctionForm();
+            form.Show();
         }
 
         private void bidderButton_Click(object sender, EventArgs e)
@@ -90,14 +91,16 @@ namespace BiddingSystem
 
         private void checkoutDealerButton_Click(object sender, EventArgs e)
         {
-            mForm = new CheckoutDealer.CheckoutDealerForm();
-            mForm.Show();
+            Form form;
+            form = new CheckoutDealer.CheckoutDealerForm();
+            form.Show();
         }
 
         private void takebackDealerButton_Click(object sender, EventArgs e)
         {
-            mForm = new TakeBackDealer.MainForm();
-            mForm.Show();
+            Form form;
+            form = new TakeBackDealer.MainForm();
+            form.Show();
         }
     }
 }

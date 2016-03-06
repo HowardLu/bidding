@@ -175,6 +175,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\LOGO_G_small.jpg" />
+    <Content Include="Resources\LOGO_G.jpg" />
     <None Include="Resources\Knob Play Green.png" />
     <None Include="Resources\Knob Stop.png" />
     <None Include="Resources\Knob Forward.png" />

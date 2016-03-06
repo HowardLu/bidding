@@ -84,18 +84,20 @@ namespace UtilityLibrary
         /// <summary>
         /// Resize new image.
         /// </summary>
-        /// <param name="b">Bitmap to resize</param>
+        /// <param name="inBmp">Bitmap to resize</param>
         /// <param name="newWidth">new width after resize</param>
         /// <param name="newHeight">new heigh after resize</param>
         /// <returns></returns>
-        public static Bitmap SizeImage(ref Bitmap b, int newWidth, int newHeight)
+        public /*static Bitmap*/static void SizeImage(ref Bitmap inBmp, out Bitmap newBmp, int newWidth, int newHeight)
         {
-            Bitmap newBmp = new Bitmap(newWidth, newHeight);
+            /*Bitmap */
+            newBmp = new Bitmap(newWidth, newHeight);
             Graphics g = Graphics.FromImage(newBmp);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(b, 0, 0, newWidth, newHeight);
+            g.DrawImage(inBmp, 0, 0, newWidth, newHeight);
             g.Dispose();
-            return newBmp;
+            g = null;
+            //return newBmp;
         }
 
         public static void SetImageNoStretch(ref System.Windows.Forms.PictureBox pb, ref Bitmap bmp)
@@ -105,7 +107,9 @@ namespace UtilityLibrary
             float scale = (scaleX >= scaleY) ? scaleY : scaleX;
             if (pb.Image != null)
                 pb.Image.Dispose();
-            pb.Image = Utility.SizeImage(ref bmp, (int)(bmp.Width * scale), (int)(bmp.Height * scale));
+            Bitmap outImg;
+            Utility.SizeImage(ref bmp, out outImg, (int)(bmp.Width * scale), (int)(bmp.Height * scale));
+            pb.Image = outImg;
             pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
         }
 
@@ -207,11 +211,11 @@ namespace UtilityLibrary
             }
         }
 
-        public static Bitmap OpenBitmap(string filePath)
+        public static void OpenBitmap(string filePath, out Bitmap bmp)
         {
             using (FileStream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                return new Bitmap(stream);
+                bmp = new Bitmap(stream);
             }
         }
 
@@ -515,6 +519,12 @@ namespace UtilityLibrary
             size = _size;
             fontSize = _fontSize;
             control = _control;
+        }
+
+        ~ControlState()
+        {
+            if (null != control)
+                control.Dispose();
         }
 
         private void Relocate(float xRatio, float yRatio)

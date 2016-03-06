@@ -185,8 +185,8 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "AccountingForm";
             this.Text = "會計結算系統";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AccountingForm_FormClosed);
+            this.Load += new System.EventHandler(this.AccountingForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();

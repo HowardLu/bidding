@@ -49,7 +49,7 @@ namespace Accounting
         #endregion
 
         #region Windows Form Events
-        private void Form1_Load(object sender, EventArgs e)
+        private void AccountingForm_Load(object sender, EventArgs e)
         {
             if (BiddingCompany.M == Auction.DefaultBiddingCompany)
             {
@@ -68,6 +68,16 @@ namespace Accounting
                 LoadCollectionToDataGridView();
             }
             this.WindowState = FormWindowState.Maximized;
+        }
+
+        private void AccountingForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            m_auctionsInternet = null;
+            m_dealerItemInternet = null;
+            m_dealerInternet = null;
+            m_memberInternet = null;
+            m_beInternet = null;
+            m_excelApp = null;
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -215,10 +225,6 @@ namespace Accounting
             }
         }
 
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-        }
-
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             string colName = this.checkedListBox1.GetItemText(this.checkedListBox1.Items[e.Index]);
@@ -311,6 +317,7 @@ namespace Accounting
             string account = Utility.InputBox("", "請輸入帳號:", "", -1, -1);
             if (account.Length == 0)
                 return;
+
             if ((BiddingCompany.N == Auction.DefaultBiddingCompany && "newaspect" == account) ||
                 (BiddingCompany.S == Auction.DefaultBiddingCompany && "Ma Lei" == account) ||
                 (BiddingCompany.DS == Auction.DefaultBiddingCompany && "Ma Lei" == account))
@@ -676,7 +683,7 @@ namespace Accounting
         }
 
         private void RefreshDataAfterUnitChanged()
-        { 
+        {
             for (int i = 0; i < this.dataGridView1.Columns.Count; i++)
             {
                 for (int j = 0; j < this.dataGridView1.Rows.Count; j++)

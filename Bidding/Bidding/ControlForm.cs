@@ -35,10 +35,8 @@ namespace Bidding
         private List<string> m_sessions;
         private List<Auction> m_auctions;
         private int m_auctionIdNow = 0;
-        //private List<PriceLevel> m_priceLevels;
         private string m_inputNumbers = "";
         //private Thread m_loadPhotoThread;
-        //private Process m_server;
         private Internet<AuctionEntity> m_aeInternet;
         private Internet<BidderEntity> m_beInternet;
         private PlayerForm m_playerForm;
@@ -86,19 +84,25 @@ namespace Bidding
                 playButton.Visible = stopButton.Visible = false;
                 displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
-            if (BiddingCompany.N == Auction.DefaultBiddingCompany)
+            else if (BiddingCompany.N == Auction.DefaultBiddingCompany)
             {
                 this.logoPictureBox.Image = Properties.Resources.LOGO_N;
                 playButton.Visible = stopButton.Visible = false;
                 displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
-            if (BiddingCompany.S == Auction.DefaultBiddingCompany)
+            else if (BiddingCompany.S == Auction.DefaultBiddingCompany)
             {
                 displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
-            if (BiddingCompany.DS == Auction.DefaultBiddingCompany)
+            else if (BiddingCompany.DS == Auction.DefaultBiddingCompany)
             {
                 this.logoPictureBox.Visible = false;
+            }
+            else if (BiddingCompany.G == Auction.DefaultBiddingCompany)
+            {
+                this.logoPictureBox.Image = Properties.Resources.LOGO_G;
+                playButton.Visible = stopButton.Visible = false;
+                displayModeLabel.Visible = displayModeComboBox.Visible = false;
             }
 
             Settings.Load();
@@ -153,6 +157,7 @@ namespace Bidding
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
+
             if (BiddingCompany.S == Auction.DefaultBiddingCompany)
                 ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
             m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
@@ -175,6 +180,7 @@ namespace Bidding
             SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
             auctionComboBox.SelectedIndex = m_auctionIdNow;
+
             if (BiddingCompany.S == Auction.DefaultBiddingCompany)
                 ShowPlayerForm(m_auctions[m_auctionIdNow].videoPath);
             m_displayForm.SetProgress(m_auctionIdNow + 1, m_auctions.Count);
@@ -337,20 +343,22 @@ namespace Bidding
             {
                 m_inputNumbers += (e.KeyValue - (int)Keys.NumPad0);
                 long np = 0;
-                if (long.TryParse(m_inputNumbers + "000", out np))
+                string inputNumStr = isUseFastInputCheckBox.Checked ? m_inputNumbers + "000" : m_inputNumbers;
+                if (long.TryParse(inputNumStr, out np))
                     nowPriceTextBox.Text = np.ToString("c");
             }
 
             if (e.KeyData == Keys.Enter)
             {
                 int price = 0;
-                if (int.TryParse(m_inputNumbers + "000", out price))
+                string inputNumStr = isUseFastInputCheckBox.Checked ? m_inputNumbers + "000" : m_inputNumbers;
+                if (int.TryParse(inputNumStr, out price))
                     SetNewNowPrice(price);
 
                 m_inputNumbers = "";
                 nowPriceTextBox.BackColor = Color.DarkBlue;
-                if (!timer1.Enabled)
-                    timer1.Start();
+                if (!nowPriceColorTimer.Enabled)
+                    nowPriceColorTimer.Start();
             }
         }
 
@@ -392,7 +400,7 @@ namespace Bidding
         private void timer1_Tick(object sender, EventArgs e)
         {
             nowPriceTextBox.BackColor = Color.Black;
-            timer1.Stop();
+            nowPriceColorTimer.Stop();
         }
 
         private void confirmBidderButton_Click(object sender, EventArgs e)
@@ -595,6 +603,10 @@ namespace Bidding
             {
                 m_displayForm = new DisplayForm_N_16_9();
             }
+            else if (BiddingCompany.G == Auction.DefaultBiddingCompany)
+            {
+                m_displayForm = new DisplayForm_G_16_9();
+            }
             else
             {
                 m_displayForm = new DisplayForm();
@@ -617,7 +629,7 @@ namespace Bidding
         {
             if (m_auctions != null)
                 m_auctions.Clear();
-            Auction.LoadAuctions(sessionId, ref m_auctions, ref m_aeInternet, false);
+            Auction.LoadAuctions(sessionId, out m_auctions, ref m_aeInternet, false);
             //LoadPrices(Settings.pricesFP);
 
             if (m_auctions.Count != 0)
@@ -655,7 +667,7 @@ namespace Bidding
         private void DoLoadAuctionPhoto(int id)
         {
             if (m_auctions[id].photo == null)
-                m_auctions[id].photo = Utility.OpenBitmap(m_auctions[id].photoFilePath);
+                Utility.OpenBitmap(m_auctions[id].photoFilePath, out m_auctions[id].photo);
             Thread t = new Thread(new ParameterizedThreadStart(this.LoadAuctionPhoto));
             t.IsBackground = true;
             t.Start(id);
@@ -664,20 +676,21 @@ namespace Bidding
         private void LoadAuctionPhoto(object obj)
         {
             int auctionIdNow = (int)obj;
-            int min = (auctionIdNow - 10 + m_auctions.Count) % m_auctions.Count;
-            int max = (auctionIdNow + 10) % m_auctions.Count;
+            const int interval = 5;
+            int min = (auctionIdNow - interval + m_auctions.Count) % m_auctions.Count;
+            int max = (auctionIdNow + interval) % m_auctions.Count;
             for (int i = 0; i < m_auctions.Count; i++)
             {
                 Auction auction = m_auctions[i];
                 if (min < max && (i >= min && i <= max))
                 {
                     if (auction.photo == null)
-                        auction.photo = Utility.OpenBitmap(auction.photoFilePath);
+                        Utility.OpenBitmap(auction.photoFilePath, out auction.photo);
                 }
                 else if (min > max && (i >= min || i <= max))
                 {
                     if (auction.photo == null)
-                        auction.photo = Utility.OpenBitmap(auction.photoFilePath);
+                        Utility.OpenBitmap(auction.photoFilePath, out auction.photo);
                 }
                 else
                 {
@@ -994,5 +1007,37 @@ namespace Bidding
             }
         }
         #endregion
+
+        private void ControlForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (null != m_displayForm)
+            {
+                m_displayForm.Dispose();
+                m_displayForm = null;
+            }
+            if (null != m_sessions)
+            {
+                m_sessions.Clear();
+                m_sessions = null;
+            }
+            if (null != m_auctions)
+            {
+                m_auctions.Clear();
+                m_auctions = null;
+            }
+            if (null != m_aeInternet)
+            {
+                m_aeInternet = null;
+            }
+            if (null != m_beInternet)
+            {
+                m_beInternet = null;
+            }
+            if (null != m_playerForm)
+            {
+                m_playerForm.Dispose();
+                m_playerForm = null;
+            }
+        }
     }
 }

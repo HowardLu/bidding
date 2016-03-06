@@ -61,15 +61,18 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.sessionComboBox = new System.Windows.Forms.ComboBox();
             this.sessionLabel = new System.Windows.Forms.Label();
+            this.exportClerkTableButton = new System.Windows.Forms.Button();
+            this.exportDataForAuctioneerButton = new System.Windows.Forms.Button();
+            this.exportAuctionInfoButton = new System.Windows.Forms.Button();
             this.viewsGroupBox.SuspendLayout();
             this.setAuctionGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // auctionsListView
             // 
-            this.auctionsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.auctionsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.auctionsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.lotColumnHeader,
             this.artistColumnHeader,
@@ -397,11 +400,44 @@
             this.sessionLabel.TabIndex = 39;
             this.sessionLabel.Text = "場次：";
             // 
+            // exportClerkTableButton
+            // 
+            this.exportClerkTableButton.Location = new System.Drawing.Point(635, 535);
+            this.exportClerkTableButton.Name = "exportClerkTableButton";
+            this.exportClerkTableButton.Size = new System.Drawing.Size(86, 20);
+            this.exportClerkTableButton.TabIndex = 41;
+            this.exportClerkTableButton.Text = "書記官登記表";
+            this.exportClerkTableButton.UseVisualStyleBackColor = true;
+            this.exportClerkTableButton.Click += new System.EventHandler(this.exportClerkTablebutton_Click);
+            // 
+            // exportDataForAuctioneerButton
+            // 
+            this.exportDataForAuctioneerButton.Location = new System.Drawing.Point(635, 514);
+            this.exportDataForAuctioneerButton.Name = "exportDataForAuctioneerButton";
+            this.exportDataForAuctioneerButton.Size = new System.Drawing.Size(97, 20);
+            this.exportDataForAuctioneerButton.TabIndex = 42;
+            this.exportDataForAuctioneerButton.Text = "拍賣官翻閱資料";
+            this.exportDataForAuctioneerButton.UseVisualStyleBackColor = true;
+            this.exportDataForAuctioneerButton.Click += new System.EventHandler(this.exportDataForAuctioneerbutton_Click);
+            // 
+            // exportAuctionInfoButton
+            // 
+            this.exportAuctionInfoButton.Location = new System.Drawing.Point(752, 514);
+            this.exportAuctionInfoButton.Name = "exportAuctionInfoButton";
+            this.exportAuctionInfoButton.Size = new System.Drawing.Size(83, 20);
+            this.exportAuctionInfoButton.TabIndex = 43;
+            this.exportAuctionInfoButton.Text = "作品小字卡";
+            this.exportAuctionInfoButton.UseVisualStyleBackColor = true;
+            this.exportAuctionInfoButton.Click += new System.EventHandler(this.exportAuctionInfoButton_Click);
+            // 
             // SetAuctionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(851, 562);
+            this.Controls.Add(this.exportAuctionInfoButton);
+            this.Controls.Add(this.exportDataForAuctioneerButton);
+            this.Controls.Add(this.exportClerkTableButton);
             this.Controls.Add(this.sessionComboBox);
             this.Controls.Add(this.sessionLabel);
             this.Controls.Add(this.setAuctionGroupBox);
@@ -410,6 +446,7 @@
             this.Name = "SetAuctionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "拍品設定";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SetAuctionForm_FormClosed);
             this.Load += new System.EventHandler(this.SetAuctionForm_Load);
             this.Resize += new System.EventHandler(this.SetAuctionForm_Resize);
             this.viewsGroupBox.ResumeLayout(false);
@@ -456,5 +493,8 @@
         private System.Windows.Forms.Label unitLabel;
         private System.Windows.Forms.ComboBox sessionComboBox;
         private System.Windows.Forms.Label sessionLabel;
+        private System.Windows.Forms.Button exportClerkTableButton;
+        private System.Windows.Forms.Button exportDataForAuctioneerButton;
+        private System.Windows.Forms.Button exportAuctionInfoButton;
     }
 }

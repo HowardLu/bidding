@@ -270,6 +270,14 @@ namespace InternetLibrary
             MongoDatabase database = server.GetDatabase(m_dbName);
             m_collection = database.GetCollection<TEntity>(m_collectionName);
         }
+
+        ~Internet()
+        {
+            m_client = null;
+            m_collection = null;
+            if (null != m_collectionList)
+                m_collectionList = null;
+        }
         #endregion
 
         #region Windows Form Events
@@ -330,7 +338,7 @@ namespace InternetLibrary
 
         public List<TEntity> GetCollectionList()
         {
-            if (m_collectionList == null)
+            if (null == m_collectionList)
                 m_collectionList = m_collection.FindAll().ToList<TEntity>();
 
             return m_collectionList;

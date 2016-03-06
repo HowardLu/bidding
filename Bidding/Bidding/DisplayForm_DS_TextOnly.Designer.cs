@@ -246,6 +246,7 @@
             this.Name = "DisplayForm_DS_TextOnly";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "DisplayForm_DS_TextOnly";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DisplayForm_DS_TextOnly_FormClosed);
             this.Load += new System.EventHandler(this.DisplayForm_DS_TextOnly_Load);
             this.Resize += new System.EventHandler(this.DisplayForm_DS_TextOnly_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();

@@ -122,6 +122,7 @@ namespace Bidding
             float yRatio = (float)this.Height / m_formSize.Height;
             ReArrangeAll(xRatio, yRatio);
             ChangeLogoCheck();
+
             if (BiddingCompany.M == Auction.DefaultBiddingCompany)
                 this.logoPictureBox.Image = m_logo_M;
             if (BiddingCompany.N == Auction.DefaultBiddingCompany)
@@ -139,6 +140,29 @@ namespace Bidding
             Console.WriteLine("DisplayForm_Resize -----------");
             Console.WriteLine("this: " + this.Size + "; m_formSize: " + m_formSize);
             Console.WriteLine("logo Location: " + this.logoPictureBox.Location + "; Size: " + this.logoPictureBox.Size);
+        }
+
+        private void DisplayForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            m_lotLabelState = null;
+            m_logoPictureBoxState = null;
+            m_lotNumLabelState = null;
+            m_artistLabelState = null;
+            m_mainCurNameLabelState = null;
+            m_mainPriceLabelState = null;
+            m_er1LabelState = null;
+            m_er2LabelState = null;
+            m_er3LabelState = null;
+            m_er1PriceLabelState = null;
+            m_er2PriceLabelState = null;
+            m_er3PriceLabelState = null;
+            m_artworkTextBoxState = null;
+            m_progressLabelState = null;
+            m_logo_S = null;
+            m_logo_A = null;
+            m_logo_M = null;
+            m_logo_N = null;
+            m_logo_DS = null;
         }
         #endregion
 

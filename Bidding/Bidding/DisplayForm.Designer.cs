@@ -196,9 +196,9 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -253,7 +253,7 @@
             this.auctionPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.auctionPictureBox.Location = new System.Drawing.Point(0, 0);
             this.auctionPictureBox.Name = "auctionPictureBox";
-            this.auctionPictureBox.Size = new System.Drawing.Size(1360, 1020);
+            this.auctionPictureBox.Size = new System.Drawing.Size(1360, 750);
             this.auctionPictureBox.TabIndex = 12;
             this.auctionPictureBox.TabStop = false;
             // 
@@ -261,7 +261,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(1360, 1020);
+            this.ClientSize = new System.Drawing.Size(1360, 750);
             this.Controls.Add(this.lotLabel);
             this.Controls.Add(this.er3NameLabel);
             this.Controls.Add(this.er1NameLabel);
@@ -281,6 +281,7 @@
             this.Name = "DisplayForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "DisplayForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DisplayForm_FormClosed);
             this.Load += new System.EventHandler(this.DisplayForm_Load);
             this.Resize += new System.EventHandler(this.DisplayForm_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);

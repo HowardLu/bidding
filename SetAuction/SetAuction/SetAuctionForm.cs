@@ -69,6 +69,11 @@ namespace SetAuction
 
             InitSessionComboBox();
             unitComboBox.SelectedIndex = 2;
+            if (BiddingCompany.G != Auction.DefaultBiddingCompany)
+            {
+                exportDataForAuctioneerButton.Visible = exportAuctionInfoButton.Visible =
+                    exportClerkTableButton.Visible = false;
+            }
         }
 
         private void SetAuctionForm_Resize(object sender, EventArgs e)
@@ -201,17 +206,21 @@ namespace SetAuction
             m_auctions.Add(auction.lot, auction);
             m_aeInternet.Insert(auction.ToAuctionEntity());
 
-            Bitmap bmp = Utility.OpenBitmap(fp);
-            m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
-            m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
+            Bitmap bmp;
+            Utility.OpenBitmap(fp, out bmp);
+            Bitmap largeBmp, smallBmp;
+            Utility.SizeImage(ref bmp, out largeBmp, 100, 100);
+            Utility.SizeImage(ref largeBmp, out smallBmp, 50, 50);
+            m_largeImgList.Images.Add(largeBmp);
+            m_smallImgList.Images.Add(smallBmp);
             bmp.Dispose();
 
             auctionsListView.BeginUpdate();
-                AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
-                   initialPriceTextBox.Text/*,
+            AddItemToListView(m_auctions.Count - 1, lotTextBox.Text, artistTextBox.Text, artworkTextBox.Text,
+               initialPriceTextBox.Text/*,
                 Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex)*/);
-                //auctionsListView.LargeImageList = m_largeImgList;
-                //auctionsListView.SmallImageList = m_smallImgList;
+            //auctionsListView.LargeImageList = m_largeImgList;
+            //auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
 
             ClearAllTextBox();
@@ -353,6 +362,36 @@ namespace SetAuction
             LoadAuctionsFromSession(sessionSelected);  // load auctions from session.
             LoadAuctionToListView();
         }
+
+        private void exportDataForAuctioneerbutton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exportAuctionInfoButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exportClerkTablebutton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SetAuctionForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (m_auctions != null)
+            {
+                m_auctions.Clear();
+                m_auctions = null;
+            }
+            if (null != m_largeImgList)
+                m_largeImgList.Dispose();
+            if (null != m_smallImgList)
+                m_smallImgList.Dispose();
+            if (null != m_aeInternet)
+                m_aeInternet = null;
+        }
         #endregion
 
         #region Public Methods
@@ -369,14 +408,18 @@ namespace SetAuction
 
             auctionsListView.Items.Clear();
             auctionsListView.BeginUpdate();
-                auctionsListView.LargeImageList = m_largeImgList;
-                auctionsListView.SmallImageList = m_smallImgList;
+            auctionsListView.LargeImageList = m_largeImgList;
+            auctionsListView.SmallImageList = m_smallImgList;
             auctionsListView.EndUpdate();
             foreach (Auction auction in m_auctions.Values)
             {
-                Bitmap bmp = Utility.OpenBitmap(auction.photoFilePath);
-                m_largeImgList.Images.Add(Utility.SizeImage(ref bmp, 100, 100));
-                m_smallImgList.Images.Add(Utility.SizeImage(ref bmp, 50, 50));
+                Bitmap bmp;
+                Utility.OpenBitmap(auction.photoFilePath, out bmp);
+                Bitmap largeBmp, smallBmp;
+                Utility.SizeImage(ref bmp, out largeBmp, 100, 100);
+                Utility.SizeImage(ref largeBmp, out smallBmp, 50, 50);
+                m_largeImgList.Images.Add(largeBmp);
+                m_smallImgList.Images.Add(smallBmp);
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
                     auction.initialPrice.ToString()/*, auction.auctioneer*/);
                 bmp.Dispose();
@@ -448,7 +491,7 @@ namespace SetAuction
             List<Auction> auctions = null;
             try
             {
-                Auction.LoadAuctions(sessionId, ref auctions, ref m_aeInternet, false);
+                Auction.LoadAuctions(sessionId, out auctions, ref m_aeInternet, false);
             }
             catch (Exception ex)
             {

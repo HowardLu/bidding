@@ -52,6 +52,14 @@ namespace BiddingLibrary
             checkoutTime = "";
             videoPath = "";
             auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)DefaultBiddingCompany);
+            photo = null;
+        }
+
+        ~Auction()
+        {
+            if (null != photo)
+                photo.Dispose();
+            paymentDoc = null;
         }
 
         /// <summary>
@@ -163,7 +171,7 @@ namespace BiddingLibrary
             return sessions;
         }
 
-        public static void LoadAuctions(string sessionId, ref List<Auction> auctions, ref Internet<AuctionEntity> aeInternet, bool isSilence)
+        public static void LoadAuctions(string sessionId, out List<Auction> auctions, ref Internet<AuctionEntity> aeInternet, bool isSilence)
         {
             Dictionary<string, AuctionEntity> aeDic = ToDictionary(ref aeInternet);
             auctions = new List<Auction>();
@@ -182,7 +190,7 @@ namespace BiddingLibrary
                 {
                     auction.photoFilePath = fp;
                     if (auctions.Count < 10)
-                        auction.photo = Utility.OpenBitmap(fp);
+                        Utility.OpenBitmap(fp, out auction.photo);
                     else
                         auction.photo = null;
                     if (videoPaths.ContainsKey(auction.lot))
@@ -379,6 +387,26 @@ namespace BiddingLibrary
         public PayGuarantee payGuaranteeState;
         public int payGuaranteeNum;
 
+        ~Bidder()
+        {
+            if (null != auctions)
+            {
+                auctions.Clear();
+                auctions = null;
+            }
+            if (null != auctionMappings)
+            {
+                auctionMappings.Clear();
+                auctionMappings = null;
+            }
+            if (null != paymentDocs)
+            {
+                paymentDocs.Clear();
+                paymentDocs = null;
+            }
+            cashFlowDoc = null;
+        }
+
         public void SetBidder(BidderEntity bidder, ref List<AuctionEntity> auctionEntities)
         {
             this.name = bidder.Name;   //ignore first string of id.
@@ -433,6 +461,7 @@ namespace BiddingLibrary
                 }
                 auctionMappings[auctioneer].Add(auc.lot);
             }
+
             if (BiddingCompany.N == Auction.DefaultBiddingCompany)
             {
                 if (auctionMappings.ContainsKey("N") && 0 == auctionMappings["N"].Count &&

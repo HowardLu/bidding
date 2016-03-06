@@ -139,6 +139,28 @@ namespace Bidding
             Console.WriteLine("this: " + this.Size + "; m_formSize: " + m_formSize);
             Console.WriteLine("logo Location: " + this.logoPictureBox.Location + "; Size: " + this.logoPictureBox.Size);
         }
+
+        private void DisplayForm_N_16_9_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            m_lotLabelState = null;
+            m_logoPictureBoxState = null;
+            m_lotNumLabelState = null;
+            m_artistLabelState = null;
+            m_mainCurNameLabelState = null;
+            m_mainPriceLabelState = null;
+            m_er1LabelState = null;
+            m_er2LabelState = null;
+            m_er3LabelState = null;
+            m_er1PriceLabelState = null;
+            m_er2PriceLabelState = null;
+            m_er3PriceLabelState = null;
+            m_artworkTextBoxState = null;
+            m_progressLabelState = null;
+            m_logo_S = null;
+            m_logo_A = null;
+            m_logo_M = null;
+            m_logo_N = null;
+        }
         #endregion
 
         #region Public Methods
@@ -295,7 +317,6 @@ namespace Bidding
                     logoPictureBox.Image = m_logo_A;
                     break;*/
                 case BiddingCompany.M:
-
                     logoPictureBox.Image = m_logo_M;
                     break;
                 case BiddingCompany.N:

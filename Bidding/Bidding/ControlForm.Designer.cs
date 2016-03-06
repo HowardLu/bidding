@@ -49,7 +49,7 @@
             this.er2TextBox = new System.Windows.Forms.TextBox();
             this.auctionComboBox = new System.Windows.Forms.ComboBox();
             this.resetAllBtn = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.nowPriceColorTimer = new System.Windows.Forms.Timer(this.components);
             this.er3TextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.winBidderTextBox = new System.Windows.Forms.TextBox();
@@ -71,6 +71,8 @@
             this.setPriceLevelButton = new System.Windows.Forms.Button();
             this.displayModeComboBox = new System.Windows.Forms.ComboBox();
             this.displayModeLabel = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.isUseFastInputCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -303,10 +305,10 @@
             this.resetAllBtn.UseVisualStyleBackColor = false;
             this.resetAllBtn.Click += new System.EventHandler(this.resetAllBtn_Click);
             // 
-            // timer1
+            // nowPriceColorTimer
             // 
-            this.timer1.Interval = 500;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.nowPriceColorTimer.Interval = 500;
+            this.nowPriceColorTimer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // er3TextBox
             // 
@@ -440,7 +442,7 @@
             this.logoPictureBox.Location = new System.Drawing.Point(861, 24);
             this.logoPictureBox.Name = "logoPictureBox";
             this.logoPictureBox.Size = new System.Drawing.Size(100, 101);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.logoPictureBox.TabIndex = 10;
             this.logoPictureBox.TabStop = false;
             // 
@@ -526,7 +528,7 @@
             // 
             this.setPriceLevelButton.BackColor = System.Drawing.Color.White;
             this.setPriceLevelButton.Font = new System.Drawing.Font("Microsoft JhengHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.setPriceLevelButton.Location = new System.Drawing.Point(479, 85);
+            this.setPriceLevelButton.Location = new System.Drawing.Point(543, 85);
             this.setPriceLevelButton.Name = "setPriceLevelButton";
             this.setPriceLevelButton.Size = new System.Drawing.Size(85, 27);
             this.setPriceLevelButton.TabIndex = 44;
@@ -557,11 +559,26 @@
             this.displayModeLabel.TabIndex = 45;
             this.displayModeLabel.Text = "投影模式：";
             // 
+            // isUseFastInputCheckBox
+            // 
+            this.isUseFastInputCheckBox.AutoSize = true;
+            this.isUseFastInputCheckBox.Checked = true;
+            this.isUseFastInputCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.isUseFastInputCheckBox.ForeColor = System.Drawing.Color.White;
+            this.isUseFastInputCheckBox.Location = new System.Drawing.Point(389, 438);
+            this.isUseFastInputCheckBox.Name = "isUseFastInputCheckBox";
+            this.isUseFastInputCheckBox.Size = new System.Drawing.Size(72, 16);
+            this.isUseFastInputCheckBox.TabIndex = 47;
+            this.isUseFastInputCheckBox.Text = "快速輸入";
+            this.toolTip1.SetToolTip(this.isUseFastInputCheckBox, "使用快速輸入時，只需輸入千位以上數字；關閉則需輸入全部位數。");
+            this.isUseFastInputCheckBox.UseVisualStyleBackColor = true;
+            // 
             // ControlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1016, 730);
+            this.Controls.Add(this.isUseFastInputCheckBox);
             this.Controls.Add(this.displayModeComboBox);
             this.Controls.Add(this.displayModeLabel);
             this.Controls.Add(this.setPriceLevelButton);
@@ -609,6 +626,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "拍賣跳階系統";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ControlForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ControlForm_FormClosed);
             this.Load += new System.EventHandler(this.ControlForm_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ControlForm_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).EndInit();
@@ -643,7 +661,7 @@
         private System.Windows.Forms.TextBox er2TextBox;
         private System.Windows.Forms.ComboBox auctionComboBox;
         private System.Windows.Forms.Button resetAllBtn;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer nowPriceColorTimer;
         private System.Windows.Forms.TextBox er3TextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox winBidderTextBox;
@@ -662,6 +680,8 @@
         private System.Windows.Forms.Button setPriceLevelButton;
         private System.Windows.Forms.ComboBox displayModeComboBox;
         private System.Windows.Forms.Label displayModeLabel;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.CheckBox isUseFastInputCheckBox;
     }
 }
 

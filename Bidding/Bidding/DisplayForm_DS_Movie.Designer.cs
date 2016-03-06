@@ -197,9 +197,9 @@
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -282,6 +282,7 @@
             this.Name = "DisplayForm_DS_Movie";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "DisplayForm_DS_Movie";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DisplayForm_DS_Movie_FormClosed);
             this.Load += new System.EventHandler(this.DisplayForm_DS_Movie_Load);
             this.Resize += new System.EventHandler(this.DisplayForm_DS_Movie_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
