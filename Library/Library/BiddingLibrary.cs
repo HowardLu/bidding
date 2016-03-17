@@ -369,6 +369,7 @@ namespace BiddingLibrary
         public int creditCardFee;
         public int tax;
         public int amountDue;
+        public int serviceFee = 0;
         public BiddingCompany auctioneer;
         public Dictionary<string, Auction> auctions;
         public Dictionary<string, List<string>> auctionMappings;
@@ -391,6 +392,7 @@ namespace BiddingLibrary
             this.payGuaranteeState = Utility.ToEnum<PayGuarantee>(bidder.GuaranteeType);
             int guaranteeNum = Utility.ParseToInt(bidder.GuaranteeCost, true);
             this.payGuaranteeNum = guaranteeNum < 0 ? 0 : guaranteeNum;
+            int.TryParse(bidder.ServiceFee, out this.serviceFee);
             for (int i = 0; i < auctionEntities.Count; i++)
             {
                 AuctionEntity ae = auctionEntities[i];

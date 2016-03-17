@@ -421,6 +421,7 @@ namespace Checkout
                     auctionTable.Cell(4, 2).Range.Text = auc.hammerPrice.ToString("n0");
                     auctionTable.Cell(4, 3).Range.Text = auc.serviceCharge.ToString("n0");
                     auctionTable.Cell(4, 4).Range.Text = auc.total.ToString("n0");
+
                     if (auc.isUseCreditCard)
                     {
                         auctionTable.Cell(5, 2).Range.Text = "NTD " + creditCardFee.ToString("n0");
@@ -498,17 +499,19 @@ namespace Checkout
                     string time = GetCheckoutTime(tableId);
                     aucTables[tableId].Cell(aucCount[tableId] + 3, 2).Range.Text = hammerSum[tableId].ToString("n0");
                     aucTables[tableId].Cell(aucCount[tableId] + 3, 3).Range.Text = serviceSum[tableId].ToString("n0");
+
                     if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
                     {
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = taxSum[tableId].ToString("n0");
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 5).Range.Text = sums[tableId].ToString("n0");
-                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "JPY " + amountDue.ToString("n0");
+                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = GenTotalDesc(amountDue, "JPY");
                     }
                     else
                     {
                         aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
-                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = "NTD " + amountDue.ToString("n0");
+                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = GenTotalDesc(amountDue, "NTD");
                     }
+
                     if (BiddingCompany.M != Auction.DefaultBiddingCompany)
                     {
                         aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
@@ -521,6 +524,38 @@ namespace Checkout
 
                 SetCashFlowDoc(ref totalSums);
             }
+        }
+
+        //產生文字
+        //原 NTD 2,750,000
+        //抵帳 NTD 750,000
+        //總計NTD 2,000,000
+        private string GenTotalDesc(int total, string coinType)
+        {
+            int directDiscount = 0;
+
+            int.TryParse(directDiscountTextBox.Text, out directDiscount);
+
+            string result = "";
+            if (directDiscount > 0)
+            {
+                result += string.Format("原 {0} {1}\n", coinType, total.ToString("n0"));
+                result += string.Format("抵 {0} {1}\n", coinType, directDiscount.ToString("n0"));
+                result += string.Format("= ");
+            }
+
+            result += string.Format("{0} {1}", coinType, GenTotalPrice(total).ToString("n0"));
+
+            return result;
+        }
+
+        private int GenTotalPrice(int total)
+        {
+            int directDiscount = 0;
+
+            int.TryParse(directDiscountTextBox.Text, out directDiscount);
+
+            return total - directDiscount;
         }
 
         private string GetCheckoutTime(int tableId)
@@ -541,7 +576,15 @@ namespace Checkout
             bidderDataTable.Cell(3, 2).Range.Text = m_bidder.fax;
             bidderDataTable.Cell(3, 4).Range.Text = m_bidder.email;
             bidderDataTable.Cell(4, 2).Range.Text = m_bidder.addr;
-            bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
+
+            if (BiddingCompany.G == Auction.DefaultBiddingCompany)
+            {
+                bidderDataTable.Cell(4, 4).Range.Text = string.Format("{0}%", Settings.serviceChargeRate);
+            }
+            else
+            {
+                bidderDataTable.Cell(4, 3).Range.Text = m_bidder.auctioneer.ToString();
+            }
         }
 
         private void FillAuctionRow
@@ -615,7 +658,7 @@ namespace Checkout
                 if (BiddingCompany.S == Auction.DefaultBiddingCompany || BiddingCompany.N == Auction.DefaultBiddingCompany)
                     totalDataTable.Cell(2 + counter, 1).Range.Text = sum.Key;
 
-                totalDataTable.Cell(2 + counter, 2).Range.Text = sum.Value.ToString("n0");
+                totalDataTable.Cell(2 + counter, 2).Range.Text = GenTotalPrice(sum.Value).ToString("n0");
                 counter++;
             }
             /*for (int i = 0; i < (int)Auctioneer.Count; i++)

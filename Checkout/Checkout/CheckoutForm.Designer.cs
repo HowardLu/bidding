@@ -59,6 +59,8 @@
             this.totalHammerPriceLabel = new System.Windows.Forms.Label();
             this.totalServiceChargeLabel = new System.Windows.Forms.Label();
             this.totalTotalLabel = new System.Windows.Forms.Label();
+            this.directDiscountLabel = new System.Windows.Forms.Label();
+            this.directDiscountTextBox = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,7 +86,7 @@
             // saveButton
             // 
             this.saveButton.Enabled = false;
-            this.saveButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.saveButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.saveButton.Location = new System.Drawing.Point(360, 5);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(72, 23);
@@ -96,7 +98,7 @@
             // searchButton
             // 
             this.searchButton.Enabled = false;
-            this.searchButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.searchButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.searchButton.Location = new System.Drawing.Point(185, 5);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(72, 23);
@@ -108,7 +110,7 @@
             // printButton
             // 
             this.printButton.Enabled = false;
-            this.printButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.printButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.printButton.Location = new System.Drawing.Point(440, 5);
             this.printButton.Name = "printButton";
             this.printButton.Size = new System.Drawing.Size(72, 23);
@@ -138,7 +140,7 @@
             this.hammerPriceColumnHeader,
             this.serviceChargeColumnHeader,
             this.totalColumnHeader});
-            this.auctionsListView.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.auctionsListView.Font = new System.Drawing.Font("新細明體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.auctionsListView.FullRowSelect = true;
             this.auctionsListView.GridLines = true;
             this.auctionsListView.Location = new System.Drawing.Point(15, 55);
@@ -181,7 +183,7 @@
             // connectButton
             // 
             this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.connectButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.connectButton.Location = new System.Drawing.Point(627, 5);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(52, 23);
@@ -193,7 +195,7 @@
             // isUseCardButton
             // 
             this.isUseCardButton.Enabled = false;
-            this.isUseCardButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.isUseCardButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.isUseCardButton.Location = new System.Drawing.Point(280, 5);
             this.isUseCardButton.Name = "isUseCardButton";
             this.isUseCardButton.Size = new System.Drawing.Size(72, 23);
@@ -215,7 +217,7 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(60, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(59, 17);
             this.toolStripStatusLabel1.Text = "請先連線!";
             // 
             // isPrintOneByOneCheckBox
@@ -233,7 +235,7 @@
             // serviceChargeRateLabel
             // 
             this.serviceChargeRateLabel.AutoSize = true;
-            this.serviceChargeRateLabel.Location = new System.Drawing.Point(144, 36);
+            this.serviceChargeRateLabel.Location = new System.Drawing.Point(170, 36);
             this.serviceChargeRateLabel.Name = "serviceChargeRateLabel";
             this.serviceChargeRateLabel.Size = new System.Drawing.Size(58, 12);
             this.serviceChargeRateLabel.TabIndex = 11;
@@ -241,7 +243,7 @@
             // 
             // serviceChargeRateTextBox
             // 
-            this.serviceChargeRateTextBox.Location = new System.Drawing.Point(203, 31);
+            this.serviceChargeRateTextBox.Location = new System.Drawing.Point(229, 31);
             this.serviceChargeRateTextBox.Name = "serviceChargeRateTextBox";
             this.serviceChargeRateTextBox.Size = new System.Drawing.Size(36, 22);
             this.serviceChargeRateTextBox.TabIndex = 12;
@@ -250,7 +252,7 @@
             // 
             // creditCardRateTextBox
             // 
-            this.creditCardRateTextBox.Location = new System.Drawing.Point(349, 31);
+            this.creditCardRateTextBox.Location = new System.Drawing.Point(365, 31);
             this.creditCardRateTextBox.Name = "creditCardRateTextBox";
             this.creditCardRateTextBox.Size = new System.Drawing.Size(36, 22);
             this.creditCardRateTextBox.TabIndex = 14;
@@ -260,7 +262,7 @@
             // creditCardRateLabel
             // 
             this.creditCardRateLabel.AutoSize = true;
-            this.creditCardRateLabel.Location = new System.Drawing.Point(254, 36);
+            this.creditCardRateLabel.Location = new System.Drawing.Point(270, 36);
             this.creditCardRateLabel.Name = "creditCardRateLabel";
             this.creditCardRateLabel.Size = new System.Drawing.Size(94, 12);
             this.creditCardRateLabel.TabIndex = 13;
@@ -269,7 +271,7 @@
             // dealDocPrintCntLabel
             // 
             this.dealDocPrintCntLabel.AutoSize = true;
-            this.dealDocPrintCntLabel.Location = new System.Drawing.Point(407, 34);
+            this.dealDocPrintCntLabel.Location = new System.Drawing.Point(407, 36);
             this.dealDocPrintCntLabel.Name = "dealDocPrintCntLabel";
             this.dealDocPrintCntLabel.Size = new System.Drawing.Size(65, 12);
             this.dealDocPrintCntLabel.TabIndex = 15;
@@ -286,7 +288,7 @@
             // 
             // cashFlowDocPrintCntTextBox
             // 
-            this.cashFlowDocPrintCntTextBox.Location = new System.Drawing.Point(560, 33);
+            this.cashFlowDocPrintCntTextBox.Location = new System.Drawing.Point(560, 31);
             this.cashFlowDocPrintCntTextBox.Name = "cashFlowDocPrintCntTextBox";
             this.cashFlowDocPrintCntTextBox.Size = new System.Drawing.Size(23, 22);
             this.cashFlowDocPrintCntTextBox.TabIndex = 18;
@@ -338,11 +340,29 @@
             this.totalTotalLabel.TabIndex = 22;
             this.totalTotalLabel.Text = "總成交價：";
             // 
+            // directDiscountLabel
+            // 
+            this.directDiscountLabel.AutoSize = true;
+            this.directDiscountLabel.Location = new System.Drawing.Point(44, 35);
+            this.directDiscountLabel.Name = "directDiscountLabel";
+            this.directDiscountLabel.Size = new System.Drawing.Size(53, 12);
+            this.directDiscountLabel.TabIndex = 23;
+            this.directDiscountLabel.Text = "直接扣抵";
+            // 
+            // directDiscountTextBox
+            // 
+            this.directDiscountTextBox.Location = new System.Drawing.Point(97, 31);
+            this.directDiscountTextBox.Name = "directDiscountTextBox";
+            this.directDiscountTextBox.Size = new System.Drawing.Size(67, 22);
+            this.directDiscountTextBox.TabIndex = 24;
+            // 
             // CheckoutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(692, 612);
+            this.Controls.Add(this.directDiscountTextBox);
+            this.Controls.Add(this.directDiscountLabel);
             this.Controls.Add(this.totalTotalLabel);
             this.Controls.Add(this.totalServiceChargeLabel);
             this.Controls.Add(this.totalHammerPriceLabel);
@@ -409,6 +429,8 @@
         private System.Windows.Forms.Label totalHammerPriceLabel;
         private System.Windows.Forms.Label totalServiceChargeLabel;
         private System.Windows.Forms.Label totalTotalLabel;
+        private System.Windows.Forms.Label directDiscountLabel;
+        private System.Windows.Forms.TextBox directDiscountTextBox;
     }
 }
 

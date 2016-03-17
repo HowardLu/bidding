@@ -1,4 +1,3 @@
-C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\TakeBackDealer.exe
 C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\TakeBackDealer.pdb
 C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\Library.dll
 C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\MongoDB.Bson.dll
@@ -8,7 +7,6 @@ C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.csprojResolv
 C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.MainForm.resources
 C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.Properties.Resources.resources
 C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.csproj.GenerateResource.Cache
-C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.exe
 C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.pdb
 D:\bidding\TakeBackDealer\bin\Debug\TakeBackDealer.pdb
 D:\bidding\TakeBackDealer\bin\Debug\Library.dll
@@ -22,3 +20,5 @@ D:\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.csproj.GenerateResource.C
 D:\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.pdb
 D:\bidding\TakeBackDealer\bin\Debug\TakeBackDealer.dll
 D:\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.dll
+C:\Work\Bidding\bidding\TakeBackDealer\bin\Debug\TakeBackDealer.dll
+C:\Work\Bidding\bidding\TakeBackDealer\obj\x86\Debug\TakeBackDealer.dll

@@ -1,9 +1,7 @@
-C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\CheckoutDealer.exe
 C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\CheckoutDealer.pdb
 C:\Work\Bidding\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.CheckoutDealerForm.resources
 C:\Work\Bidding\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.Properties.Resources.resources
 C:\Work\Bidding\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.csproj.GenerateResource.Cache
-C:\Work\Bidding\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.exe
 C:\Work\Bidding\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.pdb
 C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\Library.dll
 C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\MongoDB.Bson.dll
@@ -22,3 +20,5 @@ D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.csproj.GenerateResource.C
 D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.pdb
 D:\bidding\CheckoutDealer\bin\Debug\CheckoutDealer.dll
 D:\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.dll
+C:\Work\Bidding\bidding\CheckoutDealer\bin\Debug\CheckoutDealer.dll
+C:\Work\Bidding\bidding\CheckoutDealer\obj\x86\Debug\CheckoutDealer.dll
