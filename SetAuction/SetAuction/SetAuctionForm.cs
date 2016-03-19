@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using BiddingLibrary;
 using InternetLibrary;
 using UtilityLibrary;
+using Microsoft.Office.Interop.Word;
 
 namespace SetAuction
 {
@@ -32,6 +33,9 @@ namespace SetAuction
         private int m_initPriceThreshold = 1000;
         private string m_sessionIdNow = "";
         private List<string> m_sessions;
+        private Object m_oMissing = System.Reflection.Missing.Value;
+        private string m_saveFolder = "";
+        private string m_ip;
         #endregion
 
         #region Properties
@@ -50,12 +54,14 @@ namespace SetAuction
             if (ip.Length == 0)
             {
                 MessageBox.Show("IP不可為空!!!");
-                Application.Exit();
+                System.Windows.Forms.Application.Exit();
                 return;
             }
             m_aeInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
+            m_ip = ip;
             if (BiddingCompany.N == Auction.DefaultBiddingCompany)
                 m_initPriceThreshold = 0;
+            m_saveFolder = Path.Combine(System.Windows.Forms.Application.StartupPath, Settings.saveFolder);
         }
         #endregion
 
@@ -69,7 +75,12 @@ namespace SetAuction
 
             InitSessionComboBox();
             unitComboBox.SelectedIndex = 2;
-            if (BiddingCompany.G != Auction.DefaultBiddingCompany)
+            if (BiddingCompany.G == Auction.DefaultBiddingCompany)
+            {
+                Settings.Load();
+                ExchangeRate.Load(Settings.exchangeRateFP);
+            }
+            else
             {
                 exportDataForAuctioneerButton.Visible = exportAuctionInfoButton.Visible =
                     exportClerkTableButton.Visible = false;
@@ -121,7 +132,7 @@ namespace SetAuction
             artistTextBox.Text = lvi.SubItems[1].Text;
             artworkTextBox.Text = lvi.SubItems[2].Text;
             initialPriceTextBox.Text = lvi.SubItems[3].Text;
-            m_addImgFP = Path.Combine(Application.StartupPath, m_auctions[auctionsListView.SelectedItems[0].Text].photoFilePath);
+            m_addImgFP = Path.Combine(System.Windows.Forms.Application.StartupPath, m_auctions[auctionsListView.SelectedItems[0].Text].photoFilePath);
             photoTextBox.Text = Path.GetFileName(m_addImgFP);
             //int index = Utility.ToEnumInt<Auctioneer>(lvi.SubItems[4].Text);
             //auctioneerComboBox.SelectedIndex = index < 0 ? 0 : index;
@@ -202,7 +213,7 @@ namespace SetAuction
             auction.initialPrice = initPrice;
             //auction.auctioneer = Utility.GetEnumString(typeof(Auctioneer), auctioneerComboBox.SelectedIndex);
             CopyPhotoToAuctionsFolder(ref auction);
-            string fp = Path.Combine(Application.StartupPath, auction.photoFilePath);
+            string fp = Path.Combine(System.Windows.Forms.Application.StartupPath, auction.photoFilePath);
             m_auctions.Add(auction.lot, auction);
             m_aeInternet.Insert(auction.ToAuctionEntity());
 
@@ -319,27 +330,27 @@ namespace SetAuction
 
         private void largeIconRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            auctionsListView.View = View.LargeIcon;
+            auctionsListView.View = System.Windows.Forms.View.LargeIcon;
         }
 
         private void detailsRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            auctionsListView.View = View.Details;
+            auctionsListView.View = System.Windows.Forms.View.Details;
         }
 
         private void smallIconRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            auctionsListView.View = View.SmallIcon;
+            auctionsListView.View = System.Windows.Forms.View.SmallIcon;
         }
 
         private void listRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            auctionsListView.View = View.List;
+            auctionsListView.View = System.Windows.Forms.View.List;
         }
 
         private void tileRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-            auctionsListView.View = View.Tile;
+            auctionsListView.View = System.Windows.Forms.View.Tile;
         }
 
         private void unitComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -365,17 +376,213 @@ namespace SetAuction
 
         private void exportDataForAuctioneerbutton_Click(object sender, EventArgs e)
         {
+            string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
+            Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
+                    Settings.docTempFolder + @"\DataForAuctioneerTemp_" + auctioneer + ".dot";
+            string docName = "拍賣官翻閱用資料.doc";
+            Microsoft.Office.Interop.Word._Application wordApp = new Microsoft.Office.Interop.Word.Application(); ;
+            Microsoft.Office.Interop.Word._Document doc = wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing,
+                                                                                        ref m_oMissing, ref m_oMissing);
+            // duplicate first page to create the pages we need for auctions
+            object startPoint = 0;
+            object oEoF = WdUnits.wdStory;
+            Range pageRange = doc.Range(ref startPoint, ref m_oMissing);
+            Range rng = pageRange;
+            int pageCount = m_auctions.Count / 2 + m_auctions.Count % 2;
+            pageRange.Copy();
+            for (int i = 0; i < pageCount - 1; i++)
+            {
+                rng.SetRange(pageRange.End + 1, pageRange.End + 1);
+                pageRange.Paste();
+            }
+            wordApp.Selection.EndKey(ref oEoF, ref m_oMissing);
+            wordApp.Selection.TypeBackspace();  // delete last empty line
 
+            // Fill aution data in tables
+            List<Auction> auctions = m_auctions.Values.ToList<Auction>();
+            for (int i = 0; i < auctions.Count; i++)
+            {
+                Microsoft.Office.Interop.Word.Table table = doc.Tables[i + 1];
+
+                table.Cell(1, 1).Range.Text = auctions[i].lot;
+                table.Cell(2, 1).Range.Text = Utility.CutStringByLength(auctions[i].artist, 8);
+                table.Cell(3, 1).Range.Text = Utility.CutStringByLength(auctions[i].artwork, 8);
+                table.Cell(4, 1).Range.Text = "起拍價：" + auctions[i].initialPrice;
+            }
+
+            if (!Directory.Exists(m_saveFolder))
+            {
+                Directory.CreateDirectory(m_saveFolder);
+            }
+            string filePath = Path.Combine(m_saveFolder, docName);
+            if (File.Exists(filePath))
+            {
+                if (DialogResult.OK == MessageBox.Show("是否覆蓋目前拍賣官翻閱資料", "", MessageBoxButtons.OKCancel))
+                {
+                    File.Delete(filePath);
+                }
+            }
+            if (!doc.Saved)
+            {
+                doc.SaveAs(filePath);
+                MessageBox.Show("已儲存在Save資料夾", "", MessageBoxButtons.OK);
+            }
+
+            CloseDoc(ref doc);
+            CloseWordApp(ref wordApp);
         }
 
         private void exportAuctionInfoButton_Click(object sender, EventArgs e)
         {
+            if (0 == ExchangeRate.mainToExchangeRate.Length)
+            {
+                MessageBox.Show("請至拍賣跳接設定匯率，\n第一個匯率為輸出匯率。", "", MessageBoxButtons.OK);
+                return;
+            }
+            string warning = String.Format("是否以第一個匯率{0}:{1}轉換?", ExchangeRate.rateNames[0],
+                ExchangeRate.mainToExchangeRate[0]);
+            if (DialogResult.OK != MessageBox.Show(warning, "", MessageBoxButtons.OKCancel))
+            {
+                return;
+            }
 
+            Internet<DealerItemEntity> dealerItemInternet = new Internet<DealerItemEntity>(m_ip, "bidding_data", "dealer_item_table");
+            string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
+            Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
+                    Settings.docTempFolder + @"\AuctionInfoTemp_" + auctioneer + ".dot";
+            string docName = "作品小字卡.doc";
+            Microsoft.Office.Interop.Word._Application wordApp = new Microsoft.Office.Interop.Word.Application(); ;
+            Microsoft.Office.Interop.Word._Document doc = wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing,
+                                                                                        ref m_oMissing, ref m_oMissing);
+            // duplicate first page to create the pages we need for auctions
+            object startPoint = 0;
+            object oEOF = WdUnits.wdStory;
+            Range pageRange = doc.Range(ref startPoint, ref m_oMissing);
+            Range rng = pageRange;
+            bool isNeedOneMorePage = 0 != (m_auctions.Count % 6);
+            int pageCount = m_auctions.Count / 6;    // 6 items per page
+            if (isNeedOneMorePage)
+                pageCount++;
+            pageRange.Copy();
+            for (int i = 0; i < pageCount - 1; i++)
+            {
+                rng.SetRange(pageRange.End + 1, pageRange.End + 1);
+                pageRange.Paste();
+            }
+            wordApp.Selection.EndKey(ref oEOF, ref m_oMissing);
+            wordApp.Selection.TypeBackspace();  // delete last empty line
+
+            // Fill aution data in tables
+            List<Auction> auctions = m_auctions.Values.ToList<Auction>();
+            for (int i = 0; i < auctions.Count; i++)
+            {
+                Microsoft.Office.Interop.Word.Table table = doc.Tables[i / 2 + 1];
+
+                DealerItemEntity dealerItem = dealerItemInternet.FineOne((di => di.LotNO), auctions[i].lot);
+                table.Cell(1, 1).Range.Text = "Lot " + auctions[i].lot;
+                table.Cell(2, 1).Range.Text = auctions[i].artwork;
+                table.Cell(3, 1).Range.Text = auctions[i].artist;
+                if (null != dealerItem)
+                {
+                    table.Cell(5, 1).Range.Text = dealerItem.ItemPS;
+                    table.Cell(6, 1).Range.Text = dealerItem.Spec;
+                }
+                table.Cell(8, 1).Range.Text = "NT$：" + auctions[i].initialPrice;
+                table.Cell(9, 1).Range.Text = ExchangeRate.rateNames[0] + ":" + ExchangeRate.MainToCurrency(auctions[i].initialPrice, 0);
+                i++;
+                if (auctions.Count <= i)
+                    break;
+                dealerItem = null;
+                dealerItem = dealerItemInternet.FineOne((di => di.LotNO), auctions[i].lot);
+                table.Cell(1, 2).Range.Text = "Lot " + auctions[i].lot;
+                table.Cell(2, 2).Range.Text = auctions[i].artwork;
+                table.Cell(3, 2).Range.Text = auctions[i].artist;
+                if (null != dealerItem)
+                {
+                    table.Cell(5, 2).Range.Text = dealerItem.ItemPS;
+                    table.Cell(6, 2).Range.Text = dealerItem.Spec;
+                }
+                table.Cell(8, 2).Range.Text = "NT$：" + auctions[i].initialPrice;
+                table.Cell(9, 2).Range.Text = ExchangeRate.rateNames[0] + ":" + ExchangeRate.MainToCurrency(auctions[i].initialPrice, 0);
+            }
+
+            if (!Directory.Exists(m_saveFolder))
+            {
+                Directory.CreateDirectory(m_saveFolder);
+            }
+            string filePath = Path.Combine(m_saveFolder, docName);
+            if (File.Exists(filePath))
+            {
+                if (DialogResult.OK == MessageBox.Show("是否覆蓋目前作品小字卡", "", MessageBoxButtons.OKCancel))
+                {
+                    File.Delete(filePath);
+                }
+            }
+            if (!doc.Saved)
+            {
+                doc.SaveAs(filePath);
+                MessageBox.Show("已儲存在Save資料夾", "", MessageBoxButtons.OK);
+            }
+
+            CloseDoc(ref doc);
+            CloseWordApp(ref wordApp);
         }
 
         private void exportClerkTablebutton_Click(object sender, EventArgs e)
         {
+            string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
+            Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
+                    Settings.docTempFolder + @"\ClerkTableTemp_" + auctioneer + ".dot";
+            string docName = "書記官登記表.doc";
+            Microsoft.Office.Interop.Word._Application wordApp = new Microsoft.Office.Interop.Word.Application(); ;
+            Microsoft.Office.Interop.Word._Document doc = wordApp.Documents.Add(ref tmpDocFN, ref m_oMissing,
+                                                                                        ref m_oMissing, ref m_oMissing);
+            // duplicate first page to create the pages we need for auctions
+            object startPoint = 0;
+            object oEoF = WdUnits.wdStory;
+            Range pageRange = doc.Range(ref startPoint, ref m_oMissing);
+            Range rng = pageRange;
+            int pageCount = m_auctions.Count / 2 + m_auctions.Count % 2;
+            pageRange.Copy();
+            for (int i = 0; i < pageCount - 1; i++)
+            {
+                rng.SetRange(pageRange.End + 1, pageRange.End + 1);
+                pageRange.Paste();
+            }
+            wordApp.Selection.EndKey(ref oEoF, ref m_oMissing);
+            wordApp.Selection.TypeBackspace();  // delete last empty line
 
+            // Fill aution data in tables
+            List<Auction> auctions = m_auctions.Values.ToList<Auction>();
+            for (int i = 0; i < auctions.Count; i++)
+            {
+                Microsoft.Office.Interop.Word.Table table = doc.Tables[i + 1];
+
+                table.Cell(2, 1).Range.Text = auctions[i].lot;
+                table.Cell(2, 2).Range.Text = Utility.CutStringByLength(auctions[i].artist, 8);
+                table.Cell(2, 3).Range.Text = Utility.CutStringByLength(auctions[i].artwork, 8);
+            }
+
+            if (!Directory.Exists(m_saveFolder))
+            {
+                Directory.CreateDirectory(m_saveFolder);
+            }
+            string filePath = Path.Combine(m_saveFolder, docName);
+            if (File.Exists(filePath))
+            {
+                if (DialogResult.OK == MessageBox.Show("是否覆蓋目前拍賣官翻閱資料", "", MessageBoxButtons.OKCancel))
+                {
+                    File.Delete(filePath);
+                }
+            }
+            if (!doc.Saved)
+            {
+                doc.SaveAs(filePath);
+                MessageBox.Show("已儲存在Save資料夾", "", MessageBoxButtons.OK);
+            }
+
+            CloseDoc(ref doc);
+            CloseWordApp(ref wordApp);
         }
 
         private void SetAuctionForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -447,7 +654,7 @@ namespace SetAuction
         {
             string newFileName = auction.lot + Path.GetExtension(photoTextBox.Text);
             auction.photoFilePath = Path.Combine(Settings.auctionFolder, m_sessionIdNow, newFileName);
-            string newFilePath = Path.Combine(Application.StartupPath, auction.photoFilePath);
+            string newFilePath = Path.Combine(System.Windows.Forms.Application.StartupPath, auction.photoFilePath);
             if (File.Exists(newFilePath))
                 return;
 
@@ -496,7 +703,7 @@ namespace SetAuction
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-                Application.Exit();
+                System.Windows.Forms.Application.Exit();
             }
             m_auctions = auctions.ToDictionary<Auction, string>(auc => auc.lot);
 
@@ -506,6 +713,26 @@ namespace SetAuction
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             m_sessionIdNow = sessionId;
+        }
+
+        private void CloseDoc(ref Microsoft.Office.Interop.Word._Document doc)
+        {
+            object saveOption = Microsoft.Office.Interop.Word.WdSaveOptions.wdDoNotSaveChanges;
+            doc.Close(ref saveOption, ref m_oMissing, ref m_oMissing);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
+            doc = null;
+        }
+
+        private void CloseWordApp(ref Microsoft.Office.Interop.Word._Application wordApp)
+        {
+            if (wordApp != null)
+            {
+                if (wordApp.NormalTemplate != null)
+                    wordApp.NormalTemplate.Saved = true;
+                wordApp.Quit(ref m_oMissing, ref m_oMissing, ref m_oMissing);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(wordApp);
+                wordApp = null;
+            }
         }
         #endregion
     }

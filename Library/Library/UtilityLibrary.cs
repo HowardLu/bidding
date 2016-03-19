@@ -59,10 +59,11 @@ namespace UtilityLibrary
         }
 
         /// <summary>
-        /// Convert NTD to RMB.
+        /// Convert NTD by specific rate.
         /// </summary>
         /// <param name="mainNum">NTD to convert</param>
-        /// <returns>RMB</returns>
+        /// <param name="rateId">rate id, determine which rate to use in converting</param>
+        /// <returns>number converted</returns>
         public static int MainToCurrency(int mainNum, int rateId)
         {
             int numByNewCurrency = (int)Math.Round((decimal)(mainNum * mainToExchangeRate[rateId] / 10), MidpointRounding.AwayFromZero) * 10;   // 四捨五入個位
@@ -295,7 +296,6 @@ namespace UtilityLibrary
             return Microsoft.VisualBasic.Interaction.InputBox(prompt, title, defaultResponse, xPos, yPos);
         }
 
-
         public static void PrintDoc(Microsoft.Office.Interop.Word._Document doc, int copies = 1)
         {
             object Background = true;
@@ -314,6 +314,13 @@ namespace UtilityLibrary
                 ref m_oMissing, ref PageType, ref PrintToFile, ref Collate,
                 ref m_oMissing, ref ManualDuplexPrint, ref PrintZoomColumn,
                 ref PrintZoomRow, ref m_oMissing, ref m_oMissing);
+        }
+
+        public static string CutStringByLength(string str, int expectedLength)
+        {
+            if (str.Length > expectedLength)
+                str = str.Substring(0, expectedLength);
+            return str;
         }
     }
 

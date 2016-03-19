@@ -56,3 +56,4 @@ C:\Work\Bidding\bidding\SetAuction\SetAuction\bin\Debug\Library.pdb
 C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.csprojResolveAssemblyReference.cache
 C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.dll
 C:\Work\Bidding\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.pdb
+D:\bidding\SetAuction\SetAuction\obj\x86\Debug\SetAuction.csproj.ResolveComReference.cache

@@ -1,4 +1,4 @@
 NTD
-er0 RMB 
-er1 USD 
-er2 HKD 
+er0 RMB 4
+er1  0
+er2  0

@@ -21,7 +21,7 @@ Bidding/Bidding/bin/*
 Checkout/Checkout/bin/*
 Library/Library/bin/*
 SetAuction/SetAuction/bin/*
-CheckoutDealer/bin/Debug/*
+CheckoutDealer/bin/Debug/
 CheckoutDealer/obj/*
 TakeBackDealer/bin/Debug/*
 TakeBackDealer/obj/*
@@ -37,3 +37,6 @@ BiddingSystem/BiddingSystem/bin/Debug/Library.dll
 BiddingSystem/BiddingSystem/bin/Debug/SetAuction.dll
 BiddingSystem/BiddingSystem/bin/Debug/CheckoutDealer.dll
 BiddingSystem/BiddingSystem/bin/Debug/TakeBackDealer.dll
+
+CheckoutDealer/bin/Debug/Library.dll
+TakeBackDealer/bin/Debug/Library.dll

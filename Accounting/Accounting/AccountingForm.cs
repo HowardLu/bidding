@@ -314,6 +314,12 @@ namespace Accounting
 
         private void Login()
         {
+            if (BiddingCompany.G == Auction.DefaultBiddingCompany)
+            {
+                m_isSuperUser = true;
+                return;
+            }
+
             string account = Utility.InputBox("", "請輸入帳號:", "", -1, -1);
             if (account.Length == 0)
                 return;
