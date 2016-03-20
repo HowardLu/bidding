@@ -81,12 +81,12 @@ namespace TakeBackDealer
 
             //先拿到賣家旗下所有的商品牌號
             List<DealerItemEntity> dealerItemList = m_dealerItemInternet.Find<string>(ae => ae.SrcDealer, dealerName);
-
+            Console.WriteLine("[CheckoutDealerForm.buttonQuery_Click] dealerItemList.Count = " + dealerItemList.Count);
             //再用這些牌號去取得相對應的資訊
             m_takeBackItems.Clear();
             foreach (DealerItemEntity dealerItem in dealerItemList)
             {
-                //Console.WriteLine("[CheckoutDealerForm.buttonQuery_Click] lotNO = " + dealerItem.LotNO);
+                Console.WriteLine("[CheckoutDealerForm.buttonQuery_Click] lotNO = " + dealerItem.LotNO);
 
                 int lotNO;
                 if (!int.TryParse(dealerItem.LotNO, out lotNO))
@@ -95,7 +95,7 @@ namespace TakeBackDealer
                     continue;
                 }
 
-                List<AuctionEntity> itemList = m_auctionInternet.Find<string>(ae => ae.AuctionId, lotNO.ToString());
+                List<AuctionEntity> itemList = m_auctionInternet.Find<string>(ae => ae.AuctionId, dealerItem.LotNO);
                 if (itemList.Count != 1)
                 {
                     Console.WriteLine("[CheckoutDealerForm.buttonQuery_Click] invalid itemList.Count = " + itemList.Count);
@@ -105,6 +105,7 @@ namespace TakeBackDealer
                 AuctionEntity auctionItem = itemList[0];
                 if (auctionItem.HammerPrice != 0)
                 {
+                    Console.WriteLine("[CheckoutDealerForm.buttonQuery_Click] invalid HammerPrice = " + auctionItem.HammerPrice);
                     continue;
                 }
 

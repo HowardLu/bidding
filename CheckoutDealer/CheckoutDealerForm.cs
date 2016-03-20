@@ -72,7 +72,7 @@ namespace CheckoutDealer
                     continue;
                 }
 
-                List<AuctionEntity> itemList = m_auctionInternet.Find<string>(ae => ae.AuctionId, lotNO.ToString());
+                List<AuctionEntity> itemList = m_auctionInternet.Find<string>(ae => ae.AuctionId, dealerItem.LotNO);
                 if (itemList.Count != 1)
                 {
                     Console.WriteLine("[CheckoutDealerForm.buttonQuery_Click] invalid itemList.Count = " + itemList.Count);
@@ -183,20 +183,20 @@ namespace CheckoutDealer
                 wordTable.Cell(rowPtr, 1).Range.Text = item.InfoLotNO;
                 wordTable.Cell(rowPtr, 2).Range.Text = item.InfoArtist;
                 wordTable.Cell(rowPtr, 3).Range.Text = item.InfoArtwork;
-                wordTable.Cell(rowPtr, 4).Range.Text = item.InfoHammerPrice.ToString();
-                wordTable.Cell(rowPtr, 5).Range.Text = item.InfoPictureFee.ToString();
-                wordTable.Cell(rowPtr, 6).Range.Text = item.InfoServiceFee.ToString();
-                wordTable.Cell(rowPtr, 7).Range.Text = item.InfoInsuranceFee.ToString();
-                wordTable.Cell(rowPtr, 8).Range.Text = item.InfoOtherFee.ToString();
+                wordTable.Cell(rowPtr, 4).Range.Text = item.InfoHammerPrice.ToString("n0");
+                wordTable.Cell(rowPtr, 5).Range.Text = item.InfoPictureFee.ToString("n0");
+                wordTable.Cell(rowPtr, 6).Range.Text = item.InfoServiceFee.ToString("n0");
+                wordTable.Cell(rowPtr, 7).Range.Text = item.InfoInsuranceFee.ToString("n0");
+                wordTable.Cell(rowPtr, 8).Range.Text = item.InfoOtherFee.ToString("n0");
 
                 int priceIter = item.InfoTotalPrice;
-                wordTable.Cell(rowPtr, 9).Range.Text = priceIter.ToString();
+                wordTable.Cell(rowPtr, 9).Range.Text = priceIter.ToString("n0");
 
                 rowPtr++;
                 totalPrice += priceIter;
             }
 
-            wordTable.Cell(rowPtr, 1).Range.Text = string.Format("總計:新台幣 {0} 元整", totalPrice);
+            wordTable.Cell(rowPtr, 1).Range.Text = string.Format("總計:新台幣 {0} 元整", totalPrice.ToString("n0"));
 
             //save doc
             string savePath = Path.Combine(System.Windows.Forms.Application.StartupPath, docName);

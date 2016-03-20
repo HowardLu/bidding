@@ -28,8 +28,8 @@ DB_CFG_PORT	= 27017
 GUARANTEE_INIT	= 0
 
 # 寫死的login account
-DB_LOGIN_ACC = { "showmethemoney": None, "superjunior": "S", "igsigs": "N" }
-# DB_LOGIN_ACC = { "": None, "superjunior": "S", "igsigs": "N" }
+# DB_LOGIN_ACC = { "showmethemoney": None, "superjunior": "S", "igsigs": "N" }
+DB_LOGIN_ACC = { "": None, "superjunior": "S", "igsigs": "N" }
 
 # 無效牌號
 INVALID_ID	= -1
@@ -377,7 +377,7 @@ class MyBackground( model.Background ):
 		filter = "Office Excel Files|*.xls"
 		result = dialog.fileDialog( self, 'Open', '', '', filter )
 		
-		if result == False:
+		if result.paths == None:
 			return
 		
 		book = xlrd.open_workbook( result.paths[0] )
@@ -448,6 +448,8 @@ class MyBackground( model.Background ):
 		
 	# 由 Dict 產生買家資料
 	def __gen_bidder_data_by_dict( self, bidder_data ):
+		com = self.components
+		
 		# 部分資料不可為空
 		for attr in BIDDER_ATTRS:
 			chk_text = bidder_data[ attr ]
