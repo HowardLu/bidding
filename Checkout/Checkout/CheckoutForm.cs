@@ -700,8 +700,15 @@ namespace Checkout
             {
                 if (DialogResult.OK == MessageBox.Show(String.Format("是否覆蓋目前買家{0}的結帳資料", m_bidder.no), "", MessageBoxButtons.OKCancel))
                 {
-                    Directory.Delete(folder, true);
-                    Directory.CreateDirectory(folder);
+                    System.IO.DirectoryInfo di = new DirectoryInfo(folder);
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                    foreach (DirectoryInfo dir in di.GetDirectories())
+                    {
+                        dir.Delete(true);
+                    }
                 }
                 else
                 {

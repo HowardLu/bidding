@@ -464,16 +464,26 @@ namespace SetAuction
             if (isNeedOneMorePage)
                 pageCount++;
             pageRange.Copy();
+            //Microsoft.Office.Interop.Word.Selection selection = wordApp.Selection;
+            //Microsoft.Office.Interop.Word.WdGoToItem gotoItem = Microsoft.Office.Interop.Word.WdGoToItem.wdGoToPage;
+            //Microsoft.Office.Interop.Word.WdGoToDirection gotoDir = Microsoft.Office.Interop.Word.WdGoToDirection.wdGoToNext;
+            //selection.GoTo(gotoItem, m_oMissing, m_oMissing, "1");
+            //wordApp.ActiveDocument.Bookmarks[@"\Page"].Range.Copy();
             for (int i = 0; i < pageCount - 1; i++)
             {
-                rng.SetRange(pageRange.End + 1, pageRange.End + 1);
+                rng.SetRange(pageRange.End + 2, pageRange.End + 2);
                 pageRange.Paste();
+
+                //Go forward one page
+                //selection.GoTo(gotoItem, gotoDir, m_oMissing, m_oMissing);
+                //Paste copied page
+                //selection.Paste();
             }
             wordApp.Selection.EndKey(ref oEOF, ref m_oMissing);
             wordApp.Selection.TypeBackspace();  // delete last empty line
 
             // Fill aution data in tables
-            List<Auction> auctions = m_auctions.Values.ToList<Auction>();
+            /*List<Auction> auctions = m_auctions.Values.ToList<Auction>();
             for (int i = 0; i < auctions.Count; i++)
             {
                 Microsoft.Office.Interop.Word.Table table = doc.Tables[i / 2 + 1];
@@ -504,6 +514,45 @@ namespace SetAuction
                 }
                 table.Cell(8, 2).Range.Text = "NT$：" + auctions[i].initialPrice;
                 table.Cell(9, 2).Range.Text = ExchangeRate.rateNames[0] + ":" + ExchangeRate.MainToCurrency(auctions[i].initialPrice, 0);
+            }*/
+
+            // Fill aution data in tables
+            List<Auction> auctions = m_auctions.Values.ToList<Auction>();
+            const int itemPerPage = 6;
+            for (int i = 0; i < auctions.Count; i++)
+            {
+                int tableIndex = i / itemPerPage + 1;
+                Microsoft.Office.Interop.Word.Table table = doc.Tables[tableIndex];
+                int row = (i - (tableIndex - 1) * itemPerPage) / 2 * 12;
+
+                DealerItemEntity dealerItem = dealerItemInternet.FineOne((di => di.LotNO), auctions[i].lot);
+                table.Cell(row + 1, 1).Range.Text = "Lot " + auctions[i].lot;
+                table.Cell(row + 2, 1).Range.Text = auctions[i].artwork;
+                table.Cell(row + 3, 1).Range.Text = auctions[i].artist;
+                if (null != dealerItem)
+                {
+                    table.Cell(row + 5, 1).Range.Text = dealerItem.ItemPS;
+                    table.Cell(row + 6, 1).Range.Text = dealerItem.Spec + "cm";
+                }
+                table.Cell(row + 8, 1).Range.Text = "NT$：" + auctions[i].initialPrice.ToString("n0");
+                table.Cell(row + 9, 1).Range.Text = ExchangeRate.rateNames[0] + " : " +
+                    ExchangeRate.MainToCurrency(auctions[i].initialPrice, 0).ToString("n0");
+                i++;
+                if (auctions.Count <= i)
+                    break;
+                dealerItem = null;
+                dealerItem = dealerItemInternet.FineOne((di => di.LotNO), auctions[i].lot);
+                table.Cell(row + 1, 2).Range.Text = "Lot " + auctions[i].lot;
+                table.Cell(row + 2, 2).Range.Text = auctions[i].artwork;
+                table.Cell(row + 3, 2).Range.Text = auctions[i].artist;
+                if (null != dealerItem)
+                {
+                    table.Cell(row + 5, 2).Range.Text = dealerItem.ItemPS;
+                    table.Cell(row + 6, 2).Range.Text = dealerItem.Spec + "cm";
+                }
+                table.Cell(row + 8, 2).Range.Text = "NT$：" + auctions[i].initialPrice.ToString("n0");
+                table.Cell(row + 9, 2).Range.Text = ExchangeRate.rateNames[0] + " : " +
+                    ExchangeRate.MainToCurrency(auctions[i].initialPrice, 0).ToString("n0");
             }
 
             if (!Directory.Exists(m_saveFolder))

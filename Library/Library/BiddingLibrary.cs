@@ -216,7 +216,8 @@ namespace BiddingLibrary
 
         public void ResetPrice()
         {
-            this.hammerPrice = this.nowPrice = this.initialPrice;
+            this.hammerPrice = 0;
+            this.nowPrice = this.initialPrice;
         }
 
         private static Dictionary<string, string> GetVideosFilePaths()
@@ -589,12 +590,12 @@ namespace BiddingLibrary
                 InfoLotNO,
                 InfoArtist,
                 InfoArtwork,
-                InfoHammerPrice.ToString(),
-                InfoPictureFee.ToString(),
-                InfoServiceFee.ToString(),
-                InfoInsuranceFee.ToString(),
-                InfoOtherFee.ToString(),
-                InfoTotalPrice.ToString(),
+                InfoHammerPrice.ToString("n0"),
+                InfoPictureFee.ToString("n0"),
+                InfoServiceFee.ToString("n0"),
+                InfoInsuranceFee.ToString("n0"),
+                InfoOtherFee.ToString("n0"),
+                InfoTotalPrice.ToString("n0"),
             };
         }
     }

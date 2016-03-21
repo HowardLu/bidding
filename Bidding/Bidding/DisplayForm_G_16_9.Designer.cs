@@ -237,10 +237,10 @@
             // logoPictureBox
             // 
             this.logoPictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.logoPictureBox.Image = global::Bidding.Properties.Resources.SJ_JAPAN_LOGO;
-            this.logoPictureBox.Location = new System.Drawing.Point(47, 39);
+            this.logoPictureBox.Image = global::Bidding.Properties.Resources.LOGO_G;
+            this.logoPictureBox.Location = new System.Drawing.Point(66, 44);
             this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(123, 130);
+            this.logoPictureBox.Size = new System.Drawing.Size(416, 83);
             this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.logoPictureBox.TabIndex = 2;
             this.logoPictureBox.TabStop = false;

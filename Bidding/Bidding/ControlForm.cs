@@ -289,8 +289,8 @@ namespace Bidding
                 for (int i = 0; i < m_auctions.Count; i++)
                 {
                     m_auctions[i].ResetPrice();
-                    m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.NowPrice, m_auctions[i].initialPrice);
-                    m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.HammerPrice, m_auctions[i].initialPrice);
+                    m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.NowPrice, m_auctions[i].nowPrice);
+                    m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[i].lot, ae => ae.HammerPrice, m_auctions[i].hammerPrice);
                     ClearBidder(i);
                     ClearCheckoutState(i);
                 }
