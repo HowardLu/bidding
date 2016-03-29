@@ -152,15 +152,15 @@ namespace InternetLibrary
                 CardID = IfDealedServiceFee = PostID = IfNDealedServiceFee = ContractID = "";
         }
 
-        public void parseDealedFee(out int pictureFee, out int insuranceFeeP, out int serviceFeeP)
+        public void parseDealedFee(out int pictureFee, out double insuranceFeeP, out double serviceFeeP)
         {
             pictureFee = 0;
-            insuranceFeeP = 0;
-            serviceFeeP = 0;
+            insuranceFeeP = 0.0;
+            serviceFeeP = 0.0;
 
             int.TryParse(IfDealedPictureFee, out pictureFee);
-            int.TryParse(IfDealedInsuranceFee, out insuranceFeeP);
-            int.TryParse(IfDealedServiceFee, out serviceFeeP);
+            double.TryParse(IfDealedInsuranceFee, out insuranceFeeP);
+            double.TryParse(IfDealedServiceFee, out serviceFeeP);
         }
 
         public void parseOtherFee(out int otherFee)

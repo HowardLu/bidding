@@ -24,7 +24,7 @@ namespace CheckoutDealer
 
         private Microsoft.Office.Interop.Word._Application m_wordApp = null;
         private Microsoft.Office.Interop.Word._Document m_wordDoc = null;
-        private string m_templateDoc = "DealerCheckout.dot";
+        private string m_templateDoc = "DealerCheckout_{0}.dot";
         private Object m_oMissing = System.Reflection.Missing.Value;
         #endregion
 
@@ -51,7 +51,8 @@ namespace CheckoutDealer
             }
 
             m_dealer = dealerList[0];
-            int pictureFee, insuranceFeeP, serviceFeeP, otherFee;
+            int pictureFee, otherFee;
+            double insuranceFeeP, serviceFeeP;
 
             m_dealer.parseDealedFee(out pictureFee, out insuranceFeeP, out serviceFeeP);
             m_dealer.parseOtherFee(out otherFee);
@@ -91,8 +92,8 @@ namespace CheckoutDealer
                 checkoutItem.InfoArtwork = auctionItem.Artwork;
                 checkoutItem.InfoHammerPrice = auctionItem.HammerPrice;
                 checkoutItem.InfoPictureFee = pictureFee;
-                checkoutItem.InfoServiceFee = (int)((float)(serviceFeeP * checkoutItem.InfoHammerPrice) / 100.0f);
-                checkoutItem.InfoInsuranceFee = (int)((float)(insuranceFeeP * checkoutItem.InfoHammerPrice) / 100.0f);
+                checkoutItem.InfoServiceFee = (int)Math.Truncate(serviceFeeP * (double)checkoutItem.InfoHammerPrice / 100.0);
+                checkoutItem.InfoInsuranceFee = (int)Math.Truncate(insuranceFeeP * (double)checkoutItem.InfoHammerPrice / 100.0);
                 checkoutItem.InfoOtherFee = otherFee;
                 checkoutItem.CalcTotalPrice();
 
@@ -157,7 +158,7 @@ namespace CheckoutDealer
             string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
 
             Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
-                Settings.docTempFolder + @"\" + m_templateDoc;
+                Settings.docTempFolder + @"\" + string.Format(m_templateDoc, auctioneer);
 
             string docName = string.Format("賣家結帳-{0}.doc", m_dealer.Name);
 

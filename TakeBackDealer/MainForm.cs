@@ -24,7 +24,7 @@ namespace TakeBackDealer
 
         private Microsoft.Office.Interop.Word._Application m_wordApp = null;
         private Microsoft.Office.Interop.Word._Document m_wordDoc = null;
-        private string m_templateDoc = "DealerTakeBack.dot";
+        private string m_templateDoc = "DealerTakeBack_{0}.dot";
         private Object m_oMissing = System.Reflection.Missing.Value;
         #endregion
 
@@ -74,10 +74,6 @@ namespace TakeBackDealer
             }
 
             m_dealer = dealerList[0];
-            int pictureFee, insuranceFeeP, serviceFeeP, otherFee;
-
-            m_dealer.parseDealedFee(out pictureFee, out insuranceFeeP, out serviceFeeP);
-            m_dealer.parseOtherFee(out otherFee);
 
             //先拿到賣家旗下所有的商品牌號
             List<DealerItemEntity> dealerItemList = m_dealerItemInternet.Find<string>(ae => ae.SrcDealer, dealerName);
@@ -157,7 +153,7 @@ namespace TakeBackDealer
             string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), (int)Auction.DefaultBiddingCompany);
 
             Object tmpDocFN = System.Windows.Forms.Application.StartupPath + @"\" +
-                Settings.docTempFolder + @"\" + m_templateDoc;
+                Settings.docTempFolder + @"\" + string.Format(m_templateDoc, auctioneer);
 
             string docName = string.Format("賣家退貨-{0}.doc", m_dealer.Name);
 

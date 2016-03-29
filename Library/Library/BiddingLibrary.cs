@@ -580,7 +580,7 @@ namespace BiddingLibrary
 
         public void CalcTotalPrice()
         {
-            InfoTotalPrice = InfoHammerPrice + InfoPictureFee + InfoServiceFee + InfoInsuranceFee + InfoOtherFee;
+            InfoTotalPrice = InfoHammerPrice - InfoPictureFee - InfoServiceFee - InfoInsuranceFee - InfoOtherFee;
         }
 
         public string[] GenListViewInfo()
