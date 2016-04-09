@@ -29,7 +29,7 @@ GUARANTEE_INIT	= 0
 
 # 寫死的login account
 # DB_LOGIN_ACC = { "showmethemoney": None, "superjunior": "S", "igsigs": "N" }
-DB_LOGIN_ACC = { "": None, "superjunior": "S", "igsigs": "N" }
+DB_LOGIN_ACC = { "": None, "superjunior": "S", "igsigs": "N", "moomoomoo": "M" }
 
 # 無效牌號
 INVALID_ID	= -1
