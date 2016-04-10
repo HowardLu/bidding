@@ -43,7 +43,7 @@
             this.serviceChargeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.totalColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.connectButton = new System.Windows.Forms.Button();
-            this.isUseCardButton = new System.Windows.Forms.Button();
+            this.useCardButton = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.isPrintOneByOneCheckBox = new System.Windows.Forms.CheckBox();
@@ -61,6 +61,8 @@
             this.totalTotalLabel = new System.Windows.Forms.Label();
             this.directDiscountLabel = new System.Windows.Forms.Label();
             this.directDiscountTextBox = new System.Windows.Forms.TextBox();
+            this.isUseCreditCardColHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.isAllUseCreditCardCheckBox = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,8 +88,8 @@
             // saveButton
             // 
             this.saveButton.Enabled = false;
-            this.saveButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.saveButton.Location = new System.Drawing.Point(360, 5);
+            this.saveButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.saveButton.Location = new System.Drawing.Point(485, 3);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(72, 23);
             this.saveButton.TabIndex = 2;
@@ -98,7 +100,7 @@
             // searchButton
             // 
             this.searchButton.Enabled = false;
-            this.searchButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.searchButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.searchButton.Location = new System.Drawing.Point(185, 5);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(72, 23);
@@ -110,8 +112,8 @@
             // printButton
             // 
             this.printButton.Enabled = false;
-            this.printButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.printButton.Location = new System.Drawing.Point(440, 5);
+            this.printButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.printButton.Location = new System.Drawing.Point(565, 3);
             this.printButton.Name = "printButton";
             this.printButton.Size = new System.Drawing.Size(72, 23);
             this.printButton.TabIndex = 4;
@@ -131,21 +133,22 @@
             // 
             // auctionsListView
             // 
-            this.auctionsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.auctionsListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.auctionsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.lotColumnHeader,
             this.nameColumnHeader,
             this.hammerPriceColumnHeader,
             this.serviceChargeColumnHeader,
-            this.totalColumnHeader});
-            this.auctionsListView.Font = new System.Drawing.Font("新細明體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.totalColumnHeader,
+            this.isUseCreditCardColHeader});
+            this.auctionsListView.Font = new System.Drawing.Font("PMingLiU", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.auctionsListView.FullRowSelect = true;
             this.auctionsListView.GridLines = true;
             this.auctionsListView.Location = new System.Drawing.Point(15, 55);
             this.auctionsListView.Name = "auctionsListView";
-            this.auctionsListView.Size = new System.Drawing.Size(664, 489);
+            this.auctionsListView.Size = new System.Drawing.Size(726, 489);
             this.auctionsListView.TabIndex = 5;
             this.auctionsListView.UseCompatibleStateImageBehavior = false;
             this.auctionsListView.View = System.Windows.Forms.View.Details;
@@ -183,8 +186,8 @@
             // connectButton
             // 
             this.connectButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.connectButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.connectButton.Location = new System.Drawing.Point(627, 5);
+            this.connectButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.connectButton.Location = new System.Drawing.Point(689, 5);
             this.connectButton.Name = "connectButton";
             this.connectButton.Size = new System.Drawing.Size(52, 23);
             this.connectButton.TabIndex = 7;
@@ -192,17 +195,17 @@
             this.connectButton.UseVisualStyleBackColor = true;
             this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
             // 
-            // isUseCardButton
+            // useCardButton
             // 
-            this.isUseCardButton.Enabled = false;
-            this.isUseCardButton.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.isUseCardButton.Location = new System.Drawing.Point(280, 5);
-            this.isUseCardButton.Name = "isUseCardButton";
-            this.isUseCardButton.Size = new System.Drawing.Size(72, 23);
-            this.isUseCardButton.TabIndex = 8;
-            this.isUseCardButton.Text = "是/否刷卡";
-            this.isUseCardButton.UseVisualStyleBackColor = true;
-            this.isUseCardButton.Click += new System.EventHandler(this.isUseCardButton_Click);
+            this.useCardButton.Enabled = false;
+            this.useCardButton.Font = new System.Drawing.Font("PMingLiU", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.useCardButton.Location = new System.Drawing.Point(280, 5);
+            this.useCardButton.Name = "useCardButton";
+            this.useCardButton.Size = new System.Drawing.Size(72, 23);
+            this.useCardButton.TabIndex = 8;
+            this.useCardButton.Text = "是/否刷卡";
+            this.useCardButton.UseVisualStyleBackColor = true;
+            this.useCardButton.Click += new System.EventHandler(this.useCardButton_Click);
             // 
             // statusStrip1
             // 
@@ -210,14 +213,14 @@
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 590);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(692, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(754, 22);
             this.statusStrip1.TabIndex = 9;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(59, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(60, 17);
             this.toolStripStatusLabel1.Text = "請先連線!";
             // 
             // isPrintOneByOneCheckBox
@@ -356,11 +359,28 @@
             this.directDiscountTextBox.Size = new System.Drawing.Size(67, 22);
             this.directDiscountTextBox.TabIndex = 24;
             // 
+            // isUseCreditCardColHeader
+            // 
+            this.isUseCreditCardColHeader.Text = "刷卡";
+            this.isUseCreditCardColHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // isAllUseCreditCardCheckBox
+            // 
+            this.isAllUseCreditCardCheckBox.AutoSize = true;
+            this.isAllUseCreditCardCheckBox.Location = new System.Drawing.Point(358, 9);
+            this.isAllUseCreditCardCheckBox.Name = "isAllUseCreditCardCheckBox";
+            this.isAllUseCreditCardCheckBox.Size = new System.Drawing.Size(72, 16);
+            this.isAllUseCreditCardCheckBox.TabIndex = 25;
+            this.isAllUseCreditCardCheckBox.Text = "全部刷卡";
+            this.isAllUseCreditCardCheckBox.UseVisualStyleBackColor = true;
+            this.isAllUseCreditCardCheckBox.CheckedChanged += new System.EventHandler(this.isAllUseCreditCardCheckBox_CheckedChanged);
+            // 
             // CheckoutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 612);
+            this.ClientSize = new System.Drawing.Size(754, 612);
+            this.Controls.Add(this.isAllUseCreditCardCheckBox);
             this.Controls.Add(this.directDiscountTextBox);
             this.Controls.Add(this.directDiscountLabel);
             this.Controls.Add(this.totalTotalLabel);
@@ -377,7 +397,7 @@
             this.Controls.Add(this.serviceChargeRateLabel);
             this.Controls.Add(this.isPrintOneByOneCheckBox);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.isUseCardButton);
+            this.Controls.Add(this.useCardButton);
             this.Controls.Add(this.connectButton);
             this.Controls.Add(this.auctionsListView);
             this.Controls.Add(this.printButton);
@@ -413,7 +433,7 @@
         private System.Windows.Forms.ColumnHeader serviceChargeColumnHeader;
         private System.Windows.Forms.ColumnHeader totalColumnHeader;
         private System.Windows.Forms.Button connectButton;
-        private System.Windows.Forms.Button isUseCardButton;
+        private System.Windows.Forms.Button useCardButton;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.CheckBox isPrintOneByOneCheckBox;
@@ -431,6 +451,8 @@
         private System.Windows.Forms.Label totalTotalLabel;
         private System.Windows.Forms.Label directDiscountLabel;
         private System.Windows.Forms.TextBox directDiscountTextBox;
+        private System.Windows.Forms.ColumnHeader isUseCreditCardColHeader;
+        private System.Windows.Forms.CheckBox isAllUseCreditCardCheckBox;
     }
 }
 

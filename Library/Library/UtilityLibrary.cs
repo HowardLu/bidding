@@ -37,6 +37,7 @@ namespace UtilityLibrary
                         string[] data = line.Split(' ');
                         rateNames[i] = data[1];
                         float.TryParse(data[2], out mainToExchangeRate[i]);   // "er* "
+                        //mainToExchangeRate[i] = ExchangeRate.Revert(mainToExchangeRate[i]);
                     }
                 }
             }
@@ -66,12 +67,15 @@ namespace UtilityLibrary
         /// <returns>number converted</returns>
         public static int MainToCurrency(int mainNum, int rateId)
         {
-            int numByNewCurrency = (int)Math.Round((decimal)(mainNum * mainToExchangeRate[rateId] / 10), MidpointRounding.AwayFromZero) * 10;   // 四捨五入個位
+            float rate = Revert(mainToExchangeRate[rateId]);
+            int numByNewCurrency = (int)Math.Round((decimal)(mainNum * rate / 10), MidpointRounding.AwayFromZero) * 10;   // 四捨五入個位
             return numByNewCurrency;
         }
 
         public static float Revert(float rate)
         {
+            if (0f == rate)
+                return 0;
             return 1f / rate;
         }
     }
@@ -284,9 +288,12 @@ namespace UtilityLibrary
             }
 
             string ip = InputBox("", "請輸入Server IP:", lastInputIp, -1, -1);
-            using (StreamWriter sw = new StreamWriter(filePath, false))
+            if ("" != ip)
             {
-                sw.WriteLine(ip);
+                using (StreamWriter sw = new StreamWriter(filePath, false))
+                {
+                    sw.WriteLine(ip);
+                }
             }
             return ip;
         }
@@ -330,6 +337,7 @@ namespace UtilityLibrary
         public static string configFolder = "Config";
         public static string saveFolder = "Save";
         public static string docTempFolder = "TempDoc";
+        public static string cachedFoler = "Cached";
         public static string pricesFN = "Prices.txt";
         public static string pricesFP = "Prices.txt";
         public static string priceLevelFN = "PriceLevel.txt";
@@ -347,8 +355,8 @@ namespace UtilityLibrary
         public static string videoFolder = "Video";
         public static Point displayPos = Point.Empty;
         public static Size displaySize = Size.Empty;
-        public static int serviceChargeRate = 0;        // for Checkout
-        public static int creditCardRate = 0;           // for Checkout
+        public static float serviceChargeRate = 0;        // for Checkout
+        public static float creditCardRate = 0;           // for Checkout
         public static int dealDocPrintCount = 3;        // for Checkout
         public static int cashFlowDocPrintCount = 1;    // for Checkout
 
@@ -430,7 +438,7 @@ namespace UtilityLibrary
                             break;
                         case "service_charge":
                             {
-                                if (!int.TryParse(data, out serviceChargeRate))
+                                if (!float.TryParse(data, out serviceChargeRate))
                                 {
                                     MessageBox.Show(settingsFP + "檔格式錯誤!");
                                     return;
@@ -439,7 +447,7 @@ namespace UtilityLibrary
                             break;
                         case "card_fee":
                             {
-                                if (!int.TryParse(data, out creditCardRate))
+                                if (!float.TryParse(data, out creditCardRate))
                                 {
                                     MessageBox.Show(settingsFP + "檔格式錯誤!");
                                     return;

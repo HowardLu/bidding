@@ -67,7 +67,6 @@ namespace Checkout
             string ip = Utility.InputIp();
             if (ip.Length == 0)
             {
-                MessageBox.Show("IP不可為空!!!");
                 return;
             }
             m_auctionInternet = new Internet<AuctionEntity>(ip, "bidding_data", "auctions_table");
@@ -92,6 +91,12 @@ namespace Checkout
                 totalServiceChargeLabel.Visible = false;
                 totalTotalLabel.Visible = false;
             }
+            if (BiddingCompany.G != Auction.DefaultBiddingCompany)
+            {
+                directDiscountLabel.Visible = directDiscountTextBox.Visible = false;
+            }
+
+            auctionsListView.CheckBoxes = true;
         }
 
         private void CheckoutForm_Resize(object sender, System.EventArgs e)
@@ -166,8 +171,9 @@ namespace Checkout
 
                 saveButton.Enabled = true;
                 printButton.Enabled = true;
-                isUseCardButton.Enabled = true;
+                useCardButton.Enabled = true;
                 UpdateTotalLabels();
+                toolStripStatusLabel1.Text = "查詢成功";
             }
         }
 
@@ -187,7 +193,7 @@ namespace Checkout
                 searchButton.Enabled = false;
                 saveButton.Enabled = false;
                 printButton.Enabled = false;
-                isUseCardButton.Enabled = false;
+                useCardButton.Enabled = false;
                 toolStripStatusLabel1.Text = "連線失敗!請重新連線!";
             }
         }
@@ -235,7 +241,7 @@ namespace Checkout
         {
             saveButton.Enabled = false;
             printButton.Enabled = false;
-            isUseCardButton.Enabled = false;
+            useCardButton.Enabled = false;
 
             if (bidderNoTextBox.Text.Length == 0)
                 return;
@@ -291,7 +297,7 @@ namespace Checkout
             }
         }
 
-        private void isUseCardButton_Click(object sender, EventArgs e)
+        private void useCardButton_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem lvi in auctionsListView.SelectedItems)
             {
@@ -319,25 +325,25 @@ namespace Checkout
 
         private void serviceChargeRateTextBox_TextChanged(object sender, EventArgs e)
         {
-            int serviceChargeRate = Utility.ParseToInt(serviceChargeRateTextBox.Text, false);
+            float serviceChargeRate = Utility.ParseToFloat(serviceChargeRateTextBox.Text, false);
             if (-1 == serviceChargeRate)
             {
                 serviceChargeRateTextBox.Text = "20";
                 return;
             }
-            Auction.ServiceChargeRate = (float)serviceChargeRate / 100.0f;
+            Auction.ServiceChargeRate = serviceChargeRate / 100.0f;
             Settings.serviceChargeRate = serviceChargeRate;
         }
 
         private void creditCardRateTextBox_TextChanged(object sender, EventArgs e)
         {
-            int creditCardRate = Utility.ParseToInt(creditCardRateTextBox.Text, false);
+            float creditCardRate = Utility.ParseToFloat(creditCardRateTextBox.Text, false);
             if (-1 == creditCardRate)
             {
                 creditCardRateTextBox.Text = "8";
                 return;
             }
-            Auction.CreditCardRate = (float)creditCardRate / 100.0f;
+            Auction.CreditCardRate = creditCardRate / 100.0f;
             Settings.creditCardRate = creditCardRate;
         }
 
@@ -361,6 +367,33 @@ namespace Checkout
                 return;
             }
             Settings.cashFlowDocPrintCount = printCount;
+        }
+
+        private void isAllUseCreditCardCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            bool isAllUseCard = isAllUseCreditCardCheckBox.Checked;
+            foreach (ListViewItem lvi in auctionsListView.Items)
+            {
+                Auction auc = m_bidder.auctions[lvi.Text];
+                if (isAllUseCard)
+                {
+                    auc.isUseCreditCard = true;
+                    auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
+                    auc.total = auc.hammerPrice + auc.serviceCharge;
+                    lvi.SubItems[5].Text = m_yesStr;
+                    lvi.BackColor = Color.LightCyan;
+                }
+                else
+                {
+                    auc.isUseCreditCard = false;
+                    auc.serviceCharge = Convert.ToInt32(Auction.ServiceChargeRate * (float)auc.hammerPrice);
+                    auc.total = auc.hammerPrice + auc.serviceCharge;
+                    lvi.SubItems[5].Text = m_noStr;
+                    lvi.BackColor = System.Drawing.SystemColors.Window;
+                }
+                lvi.SubItems[3].Text = auc.serviceCharge.ToString("n0");
+                lvi.SubItems[4].Text = auc.total.ToString("n0");
+            }
         }
         #endregion
 
@@ -444,78 +477,59 @@ namespace Checkout
                 Microsoft.Office.Interop.Word.Table bidderDataTable = doc.Tables[1];
                 FillBidderTable(bidderDataTable);
 
-                Microsoft.Office.Interop.Word.Table aucTableTmp = doc.Tables[2];
-                aucTableTmp.Range.Copy();
-                Microsoft.Office.Interop.Word.Range rng = aucTableTmp.Range;
-                rng.SetRange(aucTableTmp.Range.End + 1, aucTableTmp.Range.End + 1);
-                rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreakClearLeft);
-
-                int tableCount = m_maxCheckoutNumber > 0 ? m_maxCheckoutNumber : 1;
-                Microsoft.Office.Interop.Word.Table[] aucTables = new Microsoft.Office.Interop.Word.Table[tableCount];
-                aucTables[0] = aucTableTmp;
-                for (int tableId = 1; tableId < tableCount; tableId++)
-                {
-                    aucTables[tableId] = doc.Tables.Add(rng, 1, 1);
-                    aucTables[tableId].Range.Paste();
-                    rng.SetRange(aucTables[tableId].Range.End + 1, aucTables[tableId].Range.End + 1);
-                    //rng.InsertBreak(Microsoft.Office.Interop.Word.WdBreakType.wdLineBreak);
-                }
-
-                int[] hammerSum = new int[tableCount];
-                int[] serviceSum = new int[tableCount];
-                int[] taxSum = new int[tableCount];
-                int[] sums = new int[tableCount];
-                int[] aucCount = new int[tableCount];
-                List<Auction> auctionsOfAuctioneer = m_bidder.GetAuctions(auctioneer);
+                Microsoft.Office.Interop.Word.Table aucTable = doc.Tables[2];
+                int hammerSum = 0;
+                int serviceSum = 0;
+                int taxSum = 0;
+                int sums = 0;
+                int aucCount = 0;
+                Dictionary<string, Auction> auctionsOfAuctioneer = m_bidder.auctions;   // use GetAuctions(auctioneer) to multi bidding company
                 if (auctionsOfAuctioneer != null)
                 {
-                    foreach (Auction auc in auctionsOfAuctioneer)
+                    foreach (ListViewItem aucChecked in auctionsListView.CheckedItems)
                     {
-                        int tableId = auc.checkoutNumber > 0 ? auc.checkoutNumber - 1 : 0;
-                        aucTables[tableId].Rows.Add(aucTables[tableId].Rows[2 + aucCount[tableId]]);
+                        Auction auc = auctionsOfAuctioneer[aucChecked.SubItems[0].Text];
+                        aucTable.Rows.Add(aucTable.Rows[2 + aucCount]);
                         int tax = Convert.ToInt32(auc.serviceCharge * m_taxRate);
-                        FillAuctionRow(aucTables[tableId], 2 + aucCount[tableId], auc.lot, auc.artwork, auc.hammerPrice,
+                        FillAuctionRow(aucTable, 2 + aucCount, auc.lot, auc.artwork, auc.hammerPrice,
                             auc.serviceCharge, tax, auc.total + tax);
-                        aucCount[tableId] += 1;
-                        hammerSum[tableId] += auc.hammerPrice;
-                        serviceSum[tableId] += auc.serviceCharge;
+                        aucCount += 1;
+                        hammerSum += auc.hammerPrice;
+                        serviceSum += auc.serviceCharge;
                         if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
                         {
-                            taxSum[tableId] += tax;
-                            sums[tableId] += (auc.total + tax);
+                            taxSum += tax;
+                            sums += (auc.total + tax);
                         }
                         else
                         {
-                            sums[tableId] += auc.total;
+                            sums += auc.total;
                         }
                     }
                 }
 
-                for (int tableId = 0; tableId < tableCount; tableId++)
+                int amountDue = sums;
+                aucTable.Cell(aucCount + 3, 2).Range.Text = hammerSum.ToString("n0");
+                aucTable.Cell(aucCount + 3, 3).Range.Text = serviceSum.ToString("n0");
+
+                if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
                 {
-                    int amountDue = sums[tableId];
-                    string time = GetCheckoutTime(tableId);
-                    aucTables[tableId].Cell(aucCount[tableId] + 3, 2).Range.Text = hammerSum[tableId].ToString("n0");
-                    aucTables[tableId].Cell(aucCount[tableId] + 3, 3).Range.Text = serviceSum[tableId].ToString("n0");
-
-                    if (BiddingCompany.SFJ == Auction.DefaultBiddingCompany)
-                    {
-                        aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = taxSum[tableId].ToString("n0");
-                        aucTables[tableId].Cell(aucCount[tableId] + 3, 5).Range.Text = sums[tableId].ToString("n0");
-                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = GenTotalDesc(amountDue, "JPY");
-                    }
-                    else
-                    {
-                        aucTables[tableId].Cell(aucCount[tableId] + 3, 4).Range.Text = sums[tableId].ToString("n0");
-                        aucTables[tableId].Cell(aucCount[tableId] + 4, 2).Range.Text = GenTotalDesc(amountDue, "NTD");
-                    }
-
-                    if (BiddingCompany.M != Auction.DefaultBiddingCompany)
-                    {
-                        aucTables[tableId].Cell(aucCount[tableId] + 4, 4).Range.Text = time;
-                    }
-                    totalSums.Add(time, amountDue);
+                    aucTable.Cell(aucCount + 3, 4).Range.Text = taxSum.ToString("n0");
+                    aucTable.Cell(aucCount + 3, 5).Range.Text = sums.ToString("n0");
+                    aucTable.Cell(aucCount + 4, 2).Range.Text = GenTotalDesc(amountDue, "JPY");
                 }
+                else
+                {
+                    aucTable.Cell(aucCount + 3, 4).Range.Text = sums.ToString("n0");
+                    aucTable.Cell(aucCount + 4, 2).Range.Text = GenTotalDesc(amountDue, "NTD");
+                }
+
+                string time = DateTime.Now.ToString(@"yyyy/MM/dd HH:mm");
+                if (BiddingCompany.M != Auction.DefaultBiddingCompany)
+                {
+                    aucTable.Cell(aucCount + 4, 4).Range.Text = time;
+                }
+                totalSums.Add(time, amountDue);
 
                 m_bidder.paymentDocs[auctioneer].name = docName;
                 m_bidder.paymentDocs[auctioneer].doc = doc;
@@ -679,8 +693,7 @@ namespace Checkout
                 lvi.SubItems.Add(auc.serviceCharge.ToString("n0"));
                 lvi.SubItems.Add(auc.total.ToString("n0"));
                 lvi.SubItems.Add(auc.isUseCreditCard ? m_yesStr : m_noStr);
-                if (auc.checkoutNumber > 0)
-                    lvi.BackColor = Color.LightGray;
+                lvi.Checked = true;
                 auctionsListView.Items.Add(lvi);
             }
             auctionsListView.EndUpdate();
@@ -751,7 +764,8 @@ namespace Checkout
                     m_bidder.cashFlowDoc.SaveAs(filePath);
                 }
             }
-            toolStripStatusLabel1.Text = "Saved!";
+            MessageBox.Show(String.Format("已儲存在\n{0}", folder), "", MessageBoxButtons.OK);
+            toolStripStatusLabel1.Text = String.Format("結帳Word已儲存在{0}", folder);
         }
 
         private void CloseDocAndWord()

@@ -163,7 +163,7 @@
             this.artworkTextBox.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.artworkTextBox.Font = new System.Drawing.Font("Microsoft JhengHei", 36F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.artworkTextBox.ForeColor = System.Drawing.Color.White;
-            this.artworkTextBox.Location = new System.Drawing.Point(66, 409);
+            this.artworkTextBox.Location = new System.Drawing.Point(66, 408);
             this.artworkTextBox.Multiline = true;
             this.artworkTextBox.Name = "artworkTextBox";
             this.artworkTextBox.ReadOnly = true;
@@ -206,6 +206,7 @@
             // 
             this.splitContainer1.Panel1.Controls.Add(this.sessionLabel);
             this.splitContainer1.Panel1.Controls.Add(this.logoPictureBox);
+            this.splitContainer1.Panel1.Controls.Add(this.artworkTextBox);
             // 
             // splitContainer1.Panel2
             // 
@@ -268,7 +269,6 @@
             this.Controls.Add(this.er2NameLabel);
             this.Controls.Add(this.mainCurNameLabel);
             this.Controls.Add(this.er3PriceLabel);
-            this.Controls.Add(this.artworkTextBox);
             this.Controls.Add(this.er2PriceLabel);
             this.Controls.Add(this.er1PriceLabel);
             this.Controls.Add(this.mainPriceLabel);
@@ -293,7 +293,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

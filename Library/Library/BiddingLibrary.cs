@@ -471,17 +471,17 @@ namespace BiddingLibrary
             }
         }
 
-        public List<Auction> GetAuctions(string auctioneer)
+        public Dictionary<string, Auction> GetAuctions(string auctioneer)
         {
             if (!auctionMappings.ContainsKey(auctioneer))
                 return null;
 
-            List<Auction> auctionsOfActioneer = new List<Auction>();
+            Dictionary<string, Auction> auctionsOfActioneer = new Dictionary<string, Auction>();
             foreach (string lot in auctionMappings[auctioneer])
             {
                 if (auctions.ContainsKey(lot))
                 {
-                    auctionsOfActioneer.Add(auctions[lot]);
+                    auctionsOfActioneer[lot] = auctions[lot];
                 }
             }
             return auctionsOfActioneer;

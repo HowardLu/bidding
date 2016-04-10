@@ -74,14 +74,15 @@ namespace SetAuction
             }
 
             InitSessionComboBox();
-            unitComboBox.SelectedIndex = 2;
             if (BiddingCompany.G == Auction.DefaultBiddingCompany)
             {
                 Settings.Load();
                 ExchangeRate.Load(Settings.exchangeRateFP);
+                unitComboBox.SelectedIndex = 1;
             }
             else
             {
+                unitComboBox.SelectedIndex = 2;
                 exportDataForAuctioneerButton.Visible = exportAuctionInfoButton.Visible =
                     exportClerkTableButton.Visible = false;
             }
@@ -464,57 +465,13 @@ namespace SetAuction
             if (isNeedOneMorePage)
                 pageCount++;
             pageRange.Copy();
-            //Microsoft.Office.Interop.Word.Selection selection = wordApp.Selection;
-            //Microsoft.Office.Interop.Word.WdGoToItem gotoItem = Microsoft.Office.Interop.Word.WdGoToItem.wdGoToPage;
-            //Microsoft.Office.Interop.Word.WdGoToDirection gotoDir = Microsoft.Office.Interop.Word.WdGoToDirection.wdGoToNext;
-            //selection.GoTo(gotoItem, m_oMissing, m_oMissing, "1");
-            //wordApp.ActiveDocument.Bookmarks[@"\Page"].Range.Copy();
             for (int i = 0; i < pageCount - 1; i++)
             {
                 rng.SetRange(pageRange.End + 2, pageRange.End + 2);
                 pageRange.Paste();
-
-                //Go forward one page
-                //selection.GoTo(gotoItem, gotoDir, m_oMissing, m_oMissing);
-                //Paste copied page
-                //selection.Paste();
             }
             wordApp.Selection.EndKey(ref oEOF, ref m_oMissing);
             wordApp.Selection.TypeBackspace();  // delete last empty line
-
-            // Fill aution data in tables
-            /*List<Auction> auctions = m_auctions.Values.ToList<Auction>();
-            for (int i = 0; i < auctions.Count; i++)
-            {
-                Microsoft.Office.Interop.Word.Table table = doc.Tables[i / 2 + 1];
-
-                DealerItemEntity dealerItem = dealerItemInternet.FineOne((di => di.LotNO), auctions[i].lot);
-                table.Cell(1, 1).Range.Text = "Lot " + auctions[i].lot;
-                table.Cell(2, 1).Range.Text = auctions[i].artwork;
-                table.Cell(3, 1).Range.Text = auctions[i].artist;
-                if (null != dealerItem)
-                {
-                    table.Cell(5, 1).Range.Text = dealerItem.ItemPS;
-                    table.Cell(6, 1).Range.Text = dealerItem.Spec;
-                }
-                table.Cell(8, 1).Range.Text = "NT$：" + auctions[i].initialPrice;
-                table.Cell(9, 1).Range.Text = ExchangeRate.rateNames[0] + ":" + ExchangeRate.MainToCurrency(auctions[i].initialPrice, 0);
-                i++;
-                if (auctions.Count <= i)
-                    break;
-                dealerItem = null;
-                dealerItem = dealerItemInternet.FineOne((di => di.LotNO), auctions[i].lot);
-                table.Cell(1, 2).Range.Text = "Lot " + auctions[i].lot;
-                table.Cell(2, 2).Range.Text = auctions[i].artwork;
-                table.Cell(3, 2).Range.Text = auctions[i].artist;
-                if (null != dealerItem)
-                {
-                    table.Cell(5, 2).Range.Text = dealerItem.ItemPS;
-                    table.Cell(6, 2).Range.Text = dealerItem.Spec;
-                }
-                table.Cell(8, 2).Range.Text = "NT$：" + auctions[i].initialPrice;
-                table.Cell(9, 2).Range.Text = ExchangeRate.rateNames[0] + ":" + ExchangeRate.MainToCurrency(auctions[i].initialPrice, 0);
-            }*/
 
             // Fill aution data in tables
             List<Auction> auctions = m_auctions.Values.ToList<Auction>();
@@ -659,6 +616,16 @@ namespace SetAuction
         #region Private Methods
         private void LoadAuctionToListView()
         {
+            bool isCached = false;
+            if (!Utility.IsDirectoryExist(Settings.cachedFoler, true))
+            {
+                Utility.CreateDirectory(Settings.cachedFoler);
+            }
+            else
+            {
+                isCached = true;
+            }
+
             m_largeImgList.ImageSize = new Size(100, 100);
             m_smallImgList.ImageSize = new Size(10, 10);
 
@@ -669,16 +636,29 @@ namespace SetAuction
             auctionsListView.EndUpdate();
             foreach (Auction auction in m_auctions.Values)
             {
-                Bitmap bmp;
-                Utility.OpenBitmap(auction.photoFilePath, out bmp);
                 Bitmap largeBmp, smallBmp;
-                Utility.SizeImage(ref bmp, out largeBmp, 100, 100);
-                Utility.SizeImage(ref largeBmp, out smallBmp, 50, 50);
+                string filename = Path.GetFileName(auction.photoFilePath);
+                string largeFileName = Path.Combine(Settings.cachedFoler, "100X_" + filename);
+                string smallFileName = Path.Combine(Settings.cachedFoler, "10X_" + filename);
+                if (isCached)
+                {
+                    Utility.OpenBitmap(largeFileName, out largeBmp);
+                    Utility.OpenBitmap(smallFileName, out smallBmp);
+                }
+                else
+                {
+                    Bitmap bmp;
+                    Utility.OpenBitmap(auction.photoFilePath, out bmp);
+                    Utility.SizeImage(ref bmp, out largeBmp, 100, 100);
+                    Utility.SizeImage(ref largeBmp, out smallBmp, 10, 10);
+                    largeBmp.Save(largeFileName);
+                    smallBmp.Save(smallFileName);
+                    bmp.Dispose();
+                }
                 m_largeImgList.Images.Add(largeBmp);
                 m_smallImgList.Images.Add(smallBmp);
                 AddItemToListView(m_largeImgList.Images.Count - 1, auction.lot, auction.artist, auction.artwork,
                     auction.initialPrice.ToString()/*, auction.auctioneer*/);
-                bmp.Dispose();
             }
         }
 
@@ -703,19 +683,43 @@ namespace SetAuction
         {
             string newFileName = auction.lot + Path.GetExtension(photoTextBox.Text);
             auction.photoFilePath = Path.Combine(Settings.auctionFolder, m_sessionIdNow, newFileName);
-            string newFilePath = Path.Combine(System.Windows.Forms.Application.StartupPath, auction.photoFilePath);
-            if (File.Exists(newFilePath))
-                return;
+            string targetFilePath = Path.Combine(System.Windows.Forms.Application.StartupPath, auction.photoFilePath);
+            if (File.Exists(targetFilePath))
+            {
+                if (DialogResult.Cancel == MessageBox.Show(String.Format("{0}\n已存在，是否覆蓋?", targetFilePath),
+                                                            "", MessageBoxButtons.OKCancel))
+                {
+                    return;
+                }
+            }
 
             if (File.Exists(m_addImgFP))
             {
-                File.Copy(m_addImgFP, newFilePath, true);
+                if (m_addImgFP != targetFilePath)
+                    File.Copy(m_addImgFP, targetFilePath, true);
+                else
+                    return;
             }
             else
             {
                 photoTextBox.Text = "";
                 MessageBox.Show(m_addImgFP + "圖片來源不存在! ");
             }
+
+            // Save cached image
+            if (!Utility.IsDirectoryExist(Settings.cachedFoler, true))
+            {
+                Utility.CreateDirectory(Settings.cachedFoler);
+            }
+            Bitmap largeBmp, smallBmp;
+            string largeFileName = Path.Combine(Settings.cachedFoler, "100X_" + newFileName);
+            string smallFileName = Path.Combine(Settings.cachedFoler, "10X_" + newFileName);
+            Bitmap bmp;
+            Utility.OpenBitmap(m_addImgFP, out bmp);
+            Utility.SizeImage(ref bmp, out largeBmp, 100, 100);
+            Utility.SizeImage(ref largeBmp, out smallBmp, 10, 10);
+            largeBmp.Save(largeFileName);
+            smallBmp.Save(smallFileName);
         }
 
         private void InitAuctioneerComboBox()

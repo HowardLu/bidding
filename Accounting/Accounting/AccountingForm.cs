@@ -383,7 +383,6 @@ namespace Accounting
 
         private void LoadCollectionToDataGridView()
         {
-            List<AuctionEntity> auctions = m_auctionsInternet.GetCollectionList();
             this.dataGridView1.ReadOnly = false;
 
             int columnCount = (int)AuctionColumnHeader.Count;

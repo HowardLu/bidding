@@ -33,7 +33,7 @@ namespace BiddingSystem
             Auction.DefaultBiddingCompany = BiddingCompany.S;
             this.Text = "世家拍賣系統" + Application.ProductVersion;
 #endif
-            if (DialogResult.Yes == MessageBox.Show("請問本機是否為主機?", "是否主機?", MessageBoxButtons.YesNo))
+            if (DialogResult.Yes == MessageBox.Show("請問是否啟動資料庫?", "啟動資料庫", MessageBoxButtons.YesNo))
             {
                 string exePath = "C:\\mongodb-win32-i386-2.4.6\\bin\\run.bat";
                 if (System.IO.File.Exists(exePath))

@@ -565,7 +565,7 @@ namespace Bidding
             {
                 m_displayForm.Close();
                 m_displayForm.Dispose();
-                m_displayForm = new DisplayForm();
+                m_displayForm = new DisplayForm_DS_4_3();
                 m_displayForm.SetLogo(Auction.DefaultBiddingCompany);
             }
             m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
@@ -605,7 +605,8 @@ namespace Bidding
             }
             else if (BiddingCompany.G == Auction.DefaultBiddingCompany)
             {
-                m_displayForm = new DisplayForm_G_16_9();
+                //m_displayForm = new DisplayForm_G_16_9();
+                m_displayForm = new DisplayForm_G_4_3();
             }
             else
             {
@@ -1000,7 +1001,8 @@ namespace Bidding
                 {
                     if (float.TryParse(rateText, out rate))
                     {
-                        ExchangeRate.mainToExchangeRate[rateId] = ExchangeRate.Revert(rate);
+                        //ExchangeRate.mainToExchangeRate[rateId] = ExchangeRate.Revert(rate);
+                        ExchangeRate.mainToExchangeRate[rateId] = rate;
                         m_displayForm.SetNewPrice(m_auctions[m_auctionIdNow].nowPrice);
                     }
                 }
