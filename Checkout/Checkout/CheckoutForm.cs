@@ -174,6 +174,7 @@ namespace Checkout
                 useCardButton.Enabled = true;
                 UpdateTotalLabels();
                 toolStripStatusLabel1.Text = "查詢成功";
+                isAllUseCreditCardCheckBox.Checked = false;
             }
         }
 
@@ -321,6 +322,9 @@ namespace Checkout
                 lvi.SubItems[3].Text = auc.serviceCharge.ToString("n0");
                 lvi.SubItems[4].Text = auc.total.ToString("n0");
             }
+
+            if (Auction.DefaultBiddingCompany == BiddingCompany.DS)
+                UpdateTotalLabels();
         }
 
         private void serviceChargeRateTextBox_TextChanged(object sender, EventArgs e)
@@ -333,6 +337,11 @@ namespace Checkout
             }
             Auction.ServiceChargeRate = serviceChargeRate / 100.0f;
             Settings.serviceChargeRate = serviceChargeRate;
+
+            UpdateAllInListView();
+
+            if (Auction.DefaultBiddingCompany == BiddingCompany.DS)
+                UpdateTotalLabels();
         }
 
         private void creditCardRateTextBox_TextChanged(object sender, EventArgs e)
@@ -345,6 +354,11 @@ namespace Checkout
             }
             Auction.CreditCardRate = creditCardRate / 100.0f;
             Settings.creditCardRate = creditCardRate;
+
+            UpdateAllInListView();
+
+            if (Auction.DefaultBiddingCompany == BiddingCompany.DS)
+                UpdateTotalLabels();
         }
 
         private void dealDocPrintCntTextBox_TextChanged(object sender, EventArgs e)
@@ -377,6 +391,8 @@ namespace Checkout
                 Auction auc = m_bidder.auctions[lvi.Text];
                 if (isAllUseCard)
                 {
+                    if (auc.isUseCreditCard)
+                        continue;
                     auc.isUseCreditCard = true;
                     auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
                     auc.total = auc.hammerPrice + auc.serviceCharge;
@@ -394,6 +410,15 @@ namespace Checkout
                 lvi.SubItems[3].Text = auc.serviceCharge.ToString("n0");
                 lvi.SubItems[4].Text = auc.total.ToString("n0");
             }
+
+            if (Auction.DefaultBiddingCompany == BiddingCompany.DS)
+                UpdateTotalLabels();
+        }
+
+        private void auctionsListView_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (Auction.DefaultBiddingCompany == BiddingCompany.DS)
+                UpdateTotalLabels();
         }
         #endregion
 
@@ -410,8 +435,9 @@ namespace Checkout
             int totalHammerPrice = 0;
             int totalServiceCharge = 0;
             int totalTotal = 0;
-            foreach (Auction auc in m_bidder.auctions.Values)
+            foreach (ListViewItem lvi in auctionsListView.CheckedItems)
             {
+                Auction auc = m_bidder.auctions[lvi.Text];
                 totalCount++;
                 totalHammerPrice += auc.hammerPrice;
                 totalServiceCharge += auc.serviceCharge;
@@ -871,6 +897,26 @@ namespace Checkout
             }
             if (hasNewBuyed)
                 m_maxCheckoutNumber = checkoutNum;
+        }
+
+        private void UpdateAllInListView()
+        {
+            foreach (ListViewItem lvi in auctionsListView.Items)
+            {
+                Auction auc = m_bidder.auctions[lvi.Text];
+                if (lvi.SubItems[5].Text != m_noStr)
+                {
+                    auc.serviceCharge = Convert.ToInt32((Auction.ServiceChargeRate + Auction.CreditCardRate) * (float)auc.hammerPrice);
+                    auc.total = auc.hammerPrice + auc.serviceCharge;
+                }
+                else
+                {
+                    auc.serviceCharge = Convert.ToInt32(Auction.ServiceChargeRate * (float)auc.hammerPrice);
+                    auc.total = auc.hammerPrice + auc.serviceCharge;
+                }
+                lvi.SubItems[3].Text = auc.serviceCharge.ToString("n0");
+                lvi.SubItems[4].Text = auc.total.ToString("n0");
+            }
         }
         #endregion
     }

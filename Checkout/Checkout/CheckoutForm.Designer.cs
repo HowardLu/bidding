@@ -42,6 +42,7 @@
             this.hammerPriceColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.serviceChargeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.totalColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.isUseCreditCardColHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.connectButton = new System.Windows.Forms.Button();
             this.useCardButton = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -61,7 +62,6 @@
             this.totalTotalLabel = new System.Windows.Forms.Label();
             this.directDiscountLabel = new System.Windows.Forms.Label();
             this.directDiscountTextBox = new System.Windows.Forms.TextBox();
-            this.isUseCreditCardColHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.isAllUseCreditCardCheckBox = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -153,6 +153,7 @@
             this.auctionsListView.UseCompatibleStateImageBehavior = false;
             this.auctionsListView.View = System.Windows.Forms.View.Details;
             this.auctionsListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.auctionsListView_ColumnClick);
+            this.auctionsListView.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.auctionsListView_ItemChecked);
             // 
             // lotColumnHeader
             // 
@@ -182,6 +183,11 @@
             this.totalColumnHeader.Text = "成交價(NTD)";
             this.totalColumnHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.totalColumnHeader.Width = 170;
+            // 
+            // isUseCreditCardColHeader
+            // 
+            this.isUseCreditCardColHeader.Text = "刷卡";
+            this.isUseCreditCardColHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // connectButton
             // 
@@ -358,11 +364,6 @@
             this.directDiscountTextBox.Name = "directDiscountTextBox";
             this.directDiscountTextBox.Size = new System.Drawing.Size(67, 22);
             this.directDiscountTextBox.TabIndex = 24;
-            // 
-            // isUseCreditCardColHeader
-            // 
-            this.isUseCreditCardColHeader.Text = "刷卡";
-            this.isUseCreditCardColHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // isAllUseCreditCardCheckBox
             // 
