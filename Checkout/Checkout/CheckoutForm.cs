@@ -306,7 +306,14 @@ namespace Checkout
                 if (lvi.SubItems[5].Text == m_noStr)
                 {
                     auc.isUseCreditCard = true;
-                    auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
+                    if (BiddingCompany.DS == Auction.DefaultBiddingCompany)
+                    {
+                        auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)(auc.serviceCharge + auc.hammerPrice));
+                    }
+                    else
+                    {
+                        auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
+                    }
                     auc.total = auc.hammerPrice + auc.serviceCharge;
                     lvi.SubItems[5].Text = m_yesStr;
                     lvi.BackColor = Color.LightCyan;
@@ -394,7 +401,14 @@ namespace Checkout
                     if (auc.isUseCreditCard)
                         continue;
                     auc.isUseCreditCard = true;
-                    auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
+                    if (BiddingCompany.DS == Auction.DefaultBiddingCompany)
+                    {
+                        auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)(auc.serviceCharge + auc.hammerPrice));
+                    }
+                    else
+                    {
+                        auc.serviceCharge = auc.serviceCharge + Convert.ToInt32(Auction.CreditCardRate * (float)auc.hammerPrice);
+                    }
                     auc.total = auc.hammerPrice + auc.serviceCharge;
                     lvi.SubItems[5].Text = m_yesStr;
                     lvi.BackColor = Color.LightCyan;
