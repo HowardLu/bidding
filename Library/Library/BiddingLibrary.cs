@@ -206,8 +206,16 @@ namespace BiddingLibrary
             if (illegalFiles.Count != 0)
             {
                 System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                int count = 0;
                 foreach (string s in illegalFiles)
-                    sb.AppendLine(s);
+                {
+                    sb.Append(s + "\t");
+                    count++;
+                    if (count % 5 == 0)
+                    {
+                        sb.Append("\n");
+                    }
+                }
 
                 if (!isSilence)
                     System.Windows.Forms.MessageBox.Show("不合法的拍品，請設定:\n\n" + sb.ToString());
