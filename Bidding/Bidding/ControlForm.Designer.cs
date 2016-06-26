@@ -217,7 +217,7 @@
             // 
             // resetBtn
             // 
-            this.resetBtn.BackColor = System.Drawing.Color.White;
+            this.resetBtn.BackColor = System.Drawing.Color.Red;
             this.resetBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.resetBtn.Location = new System.Drawing.Point(268, 550);
             this.resetBtn.Name = "resetBtn";
@@ -295,7 +295,7 @@
             // 
             // resetAllBtn
             // 
-            this.resetAllBtn.BackColor = System.Drawing.Color.White;
+            this.resetAllBtn.BackColor = System.Drawing.Color.Red;
             this.resetAllBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.resetAllBtn.Location = new System.Drawing.Point(366, 550);
             this.resetAllBtn.Name = "resetAllBtn";

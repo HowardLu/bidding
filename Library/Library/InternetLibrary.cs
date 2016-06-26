@@ -338,10 +338,19 @@ namespace InternetLibrary
 
         public List<TEntity> GetCollectionList()
         {
-            if (null == m_collectionList)
+            if (null == m_collectionList || 0 == m_collectionList.Count)
+            {
                 m_collectionList = m_collection.FindAll().ToList<TEntity>();
-
+            }
             return m_collectionList;
+        }
+
+        public void ClearCollectionList()
+        {
+            if (null != m_collectionList)
+            {
+                m_collectionList.Clear();
+            }
         }
 
         public List<TEntity> Find<TKey>(Expression<Func<TEntity, TKey>> keyExpression, TKey key)

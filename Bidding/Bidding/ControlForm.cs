@@ -424,6 +424,10 @@ namespace Bidding
                 }
                 m_auctions[m_auctionIdNow].winBidderNo = bidderNo;
                 winBidderTextBox.BackColor = Color.DarkBlue;
+                m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, m_auctions[m_auctionIdNow].lot, ae => ae.BidderNumber, bidderNo.ToString());
+                m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[m_auctionIdNow].lot, ae => ae.NowPrice, m_auctions[m_auctionIdNow].nowPrice);
+                m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, m_auctions[m_auctionIdNow].lot, ae => ae.HammerPrice, m_auctions[m_auctionIdNow].nowPrice);
+
                 DoSaveBiddingResult(Settings.biddingResultFP);
             }
             else
@@ -629,7 +633,11 @@ namespace Bidding
         private void LoadAuctionsFromSession(string sessionId)
         {
             if (m_auctions != null)
+            {
                 m_auctions.Clear();
+                m_auctions = null;
+                m_aeInternet.ClearCollectionList();
+            }
             Auction.LoadAuctions(sessionId, out m_auctions, ref m_aeInternet, false);
             //LoadPrices(Settings.pricesFP);
 
@@ -877,9 +885,9 @@ namespace Bidding
                     if (auction.winBidderNo != 0)
                     {
                         sw.WriteLine("{0}\t{1}\t{2}\t{3}", auction.lot, auction.artwork, auction.winBidderNo, auction.nowPrice);
-                        m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auction.lot, ae => ae.BidderNumber, auction.winBidderNo.ToString());
-                        m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auction.lot, ae => ae.NowPrice, auction.nowPrice);
-                        m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auction.lot, ae => ae.HammerPrice, auction.nowPrice);
+                        //m_aeInternet.UpdateField<string, string>(ae => ae.AuctionId, auction.lot, ae => ae.BidderNumber, auction.winBidderNo.ToString());
+                        //m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auction.lot, ae => ae.NowPrice, auction.nowPrice);
+                        //m_aeInternet.UpdateField<string, int>(ae => ae.AuctionId, auction.lot, ae => ae.HammerPrice, auction.nowPrice);
                     }
                 }
             }
