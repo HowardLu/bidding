@@ -497,25 +497,28 @@ namespace UtilityLibrary
     // Implements the manual sorting of items by columns.
     public class ListViewItemComparer : IComparer
     {
-        private int col;
-        private SortOrder order;
+        public int Column;
+        public SortOrder Order;
+
         public ListViewItemComparer()
         {
-            col = 0;
-            order = SortOrder.Ascending;
+            Column = 0;
+            Order = SortOrder.Ascending;
         }
+
         public ListViewItemComparer(int column, SortOrder order)
         {
-            col = column;
-            this.order = order;
+            this.Column = column;
+            this.Order = order;
         }
+
         public int Compare(object x, object y)
         {
             int returnVal = -1;
-            returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
-                                    ((ListViewItem)y).SubItems[col].Text);
+            returnVal = String.Compare(((ListViewItem)x).SubItems[Column].Text,
+                                    ((ListViewItem)y).SubItems[Column].Text);
             // Determine whether the sort order is descending.
-            if (order == SortOrder.Descending)
+            if (Order == SortOrder.Descending)
                 returnVal *= -1;    // Invert the value returned by String.Compare.
             return returnVal;
         }

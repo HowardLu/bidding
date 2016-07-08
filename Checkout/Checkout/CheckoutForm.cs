@@ -31,13 +31,13 @@ namespace Checkout
         private Object m_oMissing = System.Reflection.Missing.Value;
         private Size m_listViewSize;
         private int[] m_colWidths;
-        private int m_sortColumnId = -1;
         private string m_yesStr = "是";
         private string m_noStr = "否";
         private string m_cashFlowTemplateFN = "CashFlowTemp_";
         private int m_maxCheckoutNumber = 0;
         private Dictionary<int, string> m_checkoutTime;
         private float m_taxRate = 0f;
+        private ListViewItemComparer m_sorter;
         #endregion
 
         #region Properties
@@ -47,6 +47,8 @@ namespace Checkout
         public CheckoutForm()
         {
             InitializeComponent();
+            m_sorter = new ListViewItemComparer(0, SortOrder.Ascending);    // default column to 0 and default order
+            this.auctionsListView.ListViewItemSorter = m_sorter;
             m_listViewSize = this.auctionsListView.Size;
             m_colWidths = new int[auctionsListView.Columns.Count];
             for (int i = 0; i < auctionsListView.Columns.Count; i++)
@@ -258,25 +260,24 @@ namespace Checkout
         private void auctionsListView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
             // Determine whether the column is the same as the last column clicked.
-            if (e.Column != m_sortColumnId)
+            if (e.Column != m_sorter.Column)
             {
                 // Set the sort column to the new column.
-                m_sortColumnId = e.Column;
+                m_sorter.Column = e.Column;
                 // Set the sort order to ascending by default.
-                auctionsListView.Sorting = SortOrder.Ascending;
+                m_sorter.Order = SortOrder.Ascending;
             }
             else
             {
                 // Determine what the last sort order was and change it.
-                if (auctionsListView.Sorting == SortOrder.Ascending)
-                    auctionsListView.Sorting = SortOrder.Descending;
+                if (m_sorter.Order == SortOrder.Ascending)
+                    m_sorter.Order = SortOrder.Descending;
                 else
-                    auctionsListView.Sorting = SortOrder.Ascending;
+                    m_sorter.Order = SortOrder.Ascending;
             }
 
             // Call the sort method to manually sort.
             auctionsListView.Sort();
-            this.auctionsListView.ListViewItemSorter = new ListViewItemComparer(e.Column, auctionsListView.Sorting);
         }
 
         private void connectButton_Click(object sender, EventArgs e)
