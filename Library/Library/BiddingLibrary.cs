@@ -35,7 +35,7 @@ namespace BiddingLibrary
         public int serviceCharge;
         public int total;
         public string docName = "";
-        public _Document paymentDoc;
+        public _Document dealDoc;
         public bool isUseCreditCard;
         public string auctioneer;
         public int checkoutNumber;
@@ -46,7 +46,7 @@ namespace BiddingLibrary
         {
             hammerPrice = serviceCharge = total = 0;
             lot = "";
-            paymentDoc = null;
+            dealDoc = null;
             isUseCreditCard = false;
             checkoutNumber = 0;
             checkoutTime = "";
@@ -59,7 +59,7 @@ namespace BiddingLibrary
         {
             if (null != photo)
                 photo.Dispose();
-            paymentDoc = null;
+            dealDoc = null;
         }
 
         /// <summary>
@@ -368,7 +368,7 @@ namespace BiddingLibrary
         }
     }
 
-    public class PaymentDoc
+    public class DealDoc
     {
         public string name;
         public _Document doc;
@@ -390,7 +390,7 @@ namespace BiddingLibrary
         public BiddingCompany auctioneer;
         public Dictionary<string, Auction> auctions;
         public Dictionary<string, List<string>> auctionMappings;
-        public Dictionary<string, PaymentDoc> paymentDocs;
+        public Dictionary<string, DealDoc> dealDocs;
         public string cashFlowDocName;
         public _Document cashFlowDoc;
         public PayGuarantee payGuaranteeState;
@@ -408,10 +408,10 @@ namespace BiddingLibrary
                 auctionMappings.Clear();
                 auctionMappings = null;
             }
-            if (null != paymentDocs)
+            if (null != dealDocs)
             {
-                paymentDocs.Clear();
-                paymentDocs = null;
+                dealDocs.Clear();
+                dealDocs = null;
             }
             cashFlowDoc = null;
         }
@@ -445,11 +445,11 @@ namespace BiddingLibrary
             }
             MappingAuctions();
 
-            this.paymentDocs = new Dictionary<string, PaymentDoc>();
+            this.dealDocs = new Dictionary<string, DealDoc>();
             for (int i = 0; i < (int)BiddingCompany.Count; i++)
             {
                 string auctioneer = Utility.GetEnumString(typeof(BiddingCompany), i);
-                this.paymentDocs[auctioneer] = new PaymentDoc();
+                this.dealDocs[auctioneer] = new DealDoc();
             }
         }
 

@@ -615,14 +615,9 @@ namespace SetAuction
         #region Private Methods
         private void LoadAuctionToListView()
         {
-            bool isCached = false;
             if (!Utility.IsDirectoryExist(Settings.cachedFoler, true))
             {
                 Utility.CreateDirectory(Settings.cachedFoler);
-            }
-            else
-            {
-                isCached = true;
             }
 
             m_largeImgList.ImageSize = new Size(100, 100);
@@ -637,12 +632,12 @@ namespace SetAuction
             {
                 Bitmap largeBmp, smallBmp;
                 string filename = Path.GetFileName(auction.photoFilePath);
-                string largeFileName = Path.Combine(Settings.cachedFoler, "100X_" + filename);
-                string smallFileName = Path.Combine(Settings.cachedFoler, "10X_" + filename);
-                if (isCached)
+                string largeFilePath = Path.Combine(Settings.cachedFoler, "100X_" + filename);
+                string smallFilePath = Path.Combine(Settings.cachedFoler, "10X_" + filename);
+                if (Utility.IsFileExist(largeFilePath, true) && Utility.IsFileExist(smallFilePath, true))
                 {
-                    Utility.OpenBitmap(largeFileName, out largeBmp);
-                    Utility.OpenBitmap(smallFileName, out smallBmp);
+                    Utility.OpenBitmap(largeFilePath, out largeBmp);
+                    Utility.OpenBitmap(smallFilePath, out smallBmp);
                 }
                 else
                 {
@@ -650,8 +645,8 @@ namespace SetAuction
                     Utility.OpenBitmap(auction.photoFilePath, out bmp);
                     Utility.SizeImage(ref bmp, out largeBmp, 100, 100);
                     Utility.SizeImage(ref largeBmp, out smallBmp, 10, 10);
-                    largeBmp.Save(largeFileName);
-                    smallBmp.Save(smallFileName);
+                    largeBmp.Save(largeFilePath);
+                    smallBmp.Save(smallFilePath);
                     bmp.Dispose();
                 }
                 m_largeImgList.Images.Add(largeBmp);
