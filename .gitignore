@@ -13,6 +13,8 @@
 Accounting/Accounting/obj/
 Bidding/Bidding/obj/
 BiddingSystem/BiddingSystem/obj/
+BiddingSystem/BiddingSystem/bin/Debug/Config/*.txt
+BiddingSystem/BiddingSystem/bin/Debug/Save/*.txt
 Checkout/Checkout/obj/
 Library/Library/obj/
 SetAuction/SetAuction/obj/

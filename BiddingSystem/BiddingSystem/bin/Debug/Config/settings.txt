@@ -1,5 +1,0 @@
-port 27017
-service_charge 10
-card_fee 8
-dealDocPrintCount 3
-cashFlowDocPrintCount 1
