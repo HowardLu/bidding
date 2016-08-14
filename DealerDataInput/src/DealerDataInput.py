@@ -352,7 +352,7 @@ class MyBackground( model.Background ):
 		self.__show_serail( dict_data )
 		self.components.ListItem.selection = index
 		
-	# 按下 編輯買家資料 按鈕
+	# 按下 編輯賣家資料 按鈕
 	def on_ButtonFixDealer_mouseClick( self, event ):
 		# 沒有選取的項目
 		index, key_ori = self.__get_key_by_selection( "Dealer" )
@@ -380,6 +380,8 @@ class MyBackground( model.Background ):
 			
 			# 刪除舊牌號資料
 			self.__dbtable_main.remove( search_key )
+			
+			self.__dbtable_item.update( { "SrcDealer": key_ori }, { "$set": { "SrcDealer": key }} )
 			
 		self.__gen_list_ui_by_data()
 		self.__add_msg( Const[ "FIX_DATA_DONE" ] % self.__gen_dealer_title( dict_data ) )
