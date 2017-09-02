@@ -26,7 +26,13 @@ namespace Bidding
             純文字 = 0,
             影片,
             圖片
-        }
+        };
+
+        private enum DisplayResolution
+        {
+            四比三 = 0,
+            十六比九
+        };
         #endregion
 
         #region Member Variables
@@ -42,6 +48,7 @@ namespace Bidding
         private PlayerForm m_playerForm;
         //private Form2 m_form2;
         private DisplayMode m_curDisplayMode;
+        private DisplayResolution m_curDisplayResolution;
         #endregion
 
         #region Properties
@@ -67,6 +74,7 @@ namespace Bidding
                 Environment.Exit(Environment.ExitCode);
             }
             m_curDisplayMode = DisplayMode.純文字;
+            m_curDisplayResolution = DisplayResolution.四比三;
         }
         #endregion
 
@@ -138,6 +146,7 @@ namespace Bidding
             //SetPriceLevelForm setPLForm = new SetPriceLevelForm();
             //setPLForm.Show();
             displayModeComboBox.SelectedIndex = 0;
+            displayResolutionComboBox.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -441,15 +450,19 @@ namespace Bidding
         {
             if (m_auctions.Count == 0)
                 return;
+
             if (winBidderTextBox.BackColor == Color.Black)
             {
-                MessageBox.Show("請確認後再清除!");
+                MessageBox.Show("請輸入買家後再清除!");
                 return;
             }
 
-            winBidderTextBox.Text = "";
-            winBidderTextBox.BackColor = Color.Black;
-            ClearBidder(m_auctionIdNow);
+            if (System.Windows.Forms.DialogResult.OK == MessageBox.Show("是否清除買家", "警告", MessageBoxButtons.OKCancel))
+            {
+                winBidderTextBox.Text = "";
+                winBidderTextBox.BackColor = Color.Black;
+                ClearBidder(m_auctionIdNow);
+            }
         }
 
         private void playButton_Click(object sender, EventArgs e)
@@ -553,7 +566,7 @@ namespace Bidding
             if (modeSelected == m_curDisplayMode.ToString())
                 return;
 
-            if (DisplayMode.純文字.ToString() == modeSelected )
+            if (DisplayMode.純文字.ToString() == modeSelected)
             {
                 m_displayForm.Close();
                 m_displayForm.Dispose();
@@ -585,6 +598,82 @@ namespace Bidding
             m_displayForm.Show();
             m_curDisplayMode = (DisplayMode)displayModeComboBox.SelectedIndex;
         }
+
+        private void displayResolutionComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string resSelected = displayResolutionComboBox.SelectedItem.ToString();
+            if (resSelected == m_curDisplayMode.ToString())
+                return;
+
+            m_displayForm.Close();
+            m_displayForm.Dispose();
+            if (DisplayResolution.四比三.ToString() == resSelected)
+            {
+                if (BiddingCompany.M == Auction.DefaultBiddingCompany)
+                {
+                    m_displayForm = new DisplayForm_M_4_3();
+                }
+                else if (BiddingCompany.G == Auction.DefaultBiddingCompany)
+                {
+                    m_displayForm = new DisplayForm_G_4_3();
+                }
+            }
+            else if (DisplayResolution.十六比九.ToString() == resSelected)
+            {
+                if (BiddingCompany.M == Auction.DefaultBiddingCompany)
+                {
+                    m_displayForm = new DisplayForm_M_16_9();
+                }
+                else if (BiddingCompany.G == Auction.DefaultBiddingCompany)
+                {
+                    m_displayForm = new DisplayForm_G_16_9();
+                }
+            }
+            m_displayForm.SetAuctionOnForm(m_auctions[m_auctionIdNow]);
+
+            Screen otherScreen = Screen.FromControl(this);
+            if (Screen.AllScreens.Length > 1)
+            {
+                otherScreen = Screen.AllScreens[1];
+            }
+            m_displayForm.Left = otherScreen.WorkingArea.Left /*+ Settings.displayPos.X*/;
+            m_displayForm.Top = otherScreen.WorkingArea.Top /*+ Settings.displayPos.Y*/;
+            m_displayForm.WindowState = FormWindowState.Maximized;
+            m_displayForm.Show();
+            m_curDisplayMode = (DisplayMode)displayModeComboBox.SelectedIndex;
+        }
+
+        private void ControlForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (null != m_displayForm)
+            {
+                m_displayForm.Dispose();
+                m_displayForm = null;
+            }
+            if (null != m_sessions)
+            {
+                m_sessions.Clear();
+                m_sessions = null;
+            }
+            if (null != m_auctions)
+            {
+                m_auctions.Clear();
+                m_auctions = null;
+            }
+            if (null != m_aeInternet)
+            {
+                m_aeInternet = null;
+            }
+            if (null != m_beInternet)
+            {
+                m_beInternet = null;
+            }
+            if (null != m_playerForm)
+            {
+                m_playerForm.Dispose();
+                m_playerForm = null;
+            }
+        }
         #endregion
 
         #region Public Methods
@@ -609,8 +698,11 @@ namespace Bidding
             }
             else if (BiddingCompany.G == Auction.DefaultBiddingCompany)
             {
-                //m_displayForm = new DisplayForm_G_16_9();
                 m_displayForm = new DisplayForm_G_4_3();
+            }
+            else if (BiddingCompany.M == Auction.DefaultBiddingCompany)
+            {
+                m_displayForm = new DisplayForm_M_4_3();
             }
             else
             {
@@ -1017,37 +1109,5 @@ namespace Bidding
             }
         }
         #endregion
-
-        private void ControlForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (null != m_displayForm)
-            {
-                m_displayForm.Dispose();
-                m_displayForm = null;
-            }
-            if (null != m_sessions)
-            {
-                m_sessions.Clear();
-                m_sessions = null;
-            }
-            if (null != m_auctions)
-            {
-                m_auctions.Clear();
-                m_auctions = null;
-            }
-            if (null != m_aeInternet)
-            {
-                m_aeInternet = null;
-            }
-            if (null != m_beInternet)
-            {
-                m_beInternet = null;
-            }
-            if (null != m_playerForm)
-            {
-                m_playerForm.Dispose();
-                m_playerForm = null;
-            }
-        }
     }
 }

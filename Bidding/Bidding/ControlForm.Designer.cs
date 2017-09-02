@@ -40,7 +40,6 @@
             this.nowPriceLabel = new System.Windows.Forms.Label();
             this.nowPriceTextBox = new System.Windows.Forms.TextBox();
             this.increaseByLevelBtn = new System.Windows.Forms.Button();
-            this.prevsBtn = new System.Windows.Forms.Button();
             this.resetBtn = new System.Windows.Forms.Button();
             this.rateLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,11 +55,6 @@
             this.winBidderLabel = new System.Windows.Forms.Label();
             this.confirmBidderButton = new System.Windows.Forms.Button();
             this.clearBidderButton = new System.Windows.Forms.Button();
-            this.playButton = new System.Windows.Forms.Button();
-            this.stopButton = new System.Windows.Forms.Button();
-            this.nextBtn = new System.Windows.Forms.Button();
-            this.auctionPictureBox = new System.Windows.Forms.PictureBox();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.sessionLabel = new System.Windows.Forms.Label();
             this.sessionComboBox = new System.Windows.Forms.ComboBox();
             this.er1NameTextBox = new System.Windows.Forms.TextBox();
@@ -73,6 +67,14 @@
             this.displayModeLabel = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.isUseFastInputCheckBox = new System.Windows.Forms.CheckBox();
+            this.stopButton = new System.Windows.Forms.Button();
+            this.playButton = new System.Windows.Forms.Button();
+            this.nextBtn = new System.Windows.Forms.Button();
+            this.prevsBtn = new System.Windows.Forms.Button();
+            this.auctionPictureBox = new System.Windows.Forms.PictureBox();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.displayResolutionComboBox = new System.Windows.Forms.ComboBox();
+            this.displayResolutionLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.auctionPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -195,25 +197,6 @@
             this.increaseByLevelBtn.Text = "照階跳價";
             this.increaseByLevelBtn.UseVisualStyleBackColor = false;
             this.increaseByLevelBtn.Click += new System.EventHandler(this.increaseByLevelBtn_Click);
-            // 
-            // prevsBtn
-            // 
-            this.prevsBtn.BackColor = System.Drawing.Color.Transparent;
-            this.prevsBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.prevsBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.prevsBtn.FlatAppearance.BorderSize = 0;
-            this.prevsBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.prevsBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.prevsBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.prevsBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.prevsBtn.ForeColor = System.Drawing.Color.Transparent;
-            this.prevsBtn.Image = global::Bidding.Properties.Resources.Knob_Left;
-            this.prevsBtn.Location = new System.Drawing.Point(491, 367);
-            this.prevsBtn.Name = "prevsBtn";
-            this.prevsBtn.Size = new System.Drawing.Size(32, 32);
-            this.prevsBtn.TabIndex = 17;
-            this.prevsBtn.UseVisualStyleBackColor = false;
-            this.prevsBtn.Click += new System.EventHandler(this.prevsBtn_Click);
             // 
             // resetBtn
             // 
@@ -377,75 +360,6 @@
             this.clearBidderButton.UseVisualStyleBackColor = true;
             this.clearBidderButton.Click += new System.EventHandler(this.clearBidderButton_Click);
             // 
-            // playButton
-            // 
-            this.playButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.playButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.playButton.FlatAppearance.BorderSize = 0;
-            this.playButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.playButton.Image = global::Bidding.Properties.Resources.Knob_Play_Green;
-            this.playButton.Location = new System.Drawing.Point(597, 552);
-            this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(32, 32);
-            this.playButton.TabIndex = 35;
-            this.playButton.UseVisualStyleBackColor = true;
-            this.playButton.Click += new System.EventHandler(this.playButton_Click);
-            // 
-            // stopButton
-            // 
-            this.stopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.stopButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.stopButton.FlatAppearance.BorderSize = 0;
-            this.stopButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.stopButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.stopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.stopButton.Image = global::Bidding.Properties.Resources.Knob_Stop;
-            this.stopButton.Location = new System.Drawing.Point(644, 552);
-            this.stopButton.Name = "stopButton";
-            this.stopButton.Size = new System.Drawing.Size(32, 32);
-            this.stopButton.TabIndex = 36;
-            this.stopButton.UseVisualStyleBackColor = true;
-            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
-            // 
-            // nextBtn
-            // 
-            this.nextBtn.BackColor = System.Drawing.Color.Transparent;
-            this.nextBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.nextBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.nextBtn.FlatAppearance.BorderSize = 0;
-            this.nextBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.nextBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.nextBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.nextBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.nextBtn.ForeColor = System.Drawing.Color.Transparent;
-            this.nextBtn.Image = global::Bidding.Properties.Resources.Knob_Forward;
-            this.nextBtn.Location = new System.Drawing.Point(929, 367);
-            this.nextBtn.Name = "nextBtn";
-            this.nextBtn.Size = new System.Drawing.Size(32, 32);
-            this.nextBtn.TabIndex = 18;
-            this.nextBtn.UseVisualStyleBackColor = false;
-            this.nextBtn.Click += new System.EventHandler(this.nextBtn_Click);
-            // 
-            // auctionPictureBox
-            // 
-            this.auctionPictureBox.Location = new System.Drawing.Point(543, 216);
-            this.auctionPictureBox.Name = "auctionPictureBox";
-            this.auctionPictureBox.Size = new System.Drawing.Size(368, 329);
-            this.auctionPictureBox.TabIndex = 13;
-            this.auctionPictureBox.TabStop = false;
-            // 
-            // logoPictureBox
-            // 
-            this.logoPictureBox.Image = global::Bidding.Properties.Resources.LOGO_S;
-            this.logoPictureBox.Location = new System.Drawing.Point(861, 24);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(100, 101);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.logoPictureBox.TabIndex = 10;
-            this.logoPictureBox.TabStop = false;
-            // 
             // sessionLabel
             // 
             this.sessionLabel.AutoSize = true;
@@ -543,7 +457,7 @@
             "純文字",
             "影片",
             "圖片"});
-            this.displayModeComboBox.Location = new System.Drawing.Point(605, 178);
+            this.displayModeComboBox.Location = new System.Drawing.Point(605, 159);
             this.displayModeComboBox.Name = "displayModeComboBox";
             this.displayModeComboBox.Size = new System.Drawing.Size(75, 20);
             this.displayModeComboBox.TabIndex = 46;
@@ -553,7 +467,7 @@
             // 
             this.displayModeLabel.AutoSize = true;
             this.displayModeLabel.ForeColor = System.Drawing.Color.White;
-            this.displayModeLabel.Location = new System.Drawing.Point(541, 181);
+            this.displayModeLabel.Location = new System.Drawing.Point(541, 162);
             this.displayModeLabel.Name = "displayModeLabel";
             this.displayModeLabel.Size = new System.Drawing.Size(65, 12);
             this.displayModeLabel.TabIndex = 45;
@@ -573,11 +487,123 @@
             this.toolTip1.SetToolTip(this.isUseFastInputCheckBox, "使用快速輸入時，只需輸入千位以上數字；關閉則需輸入全部位數。");
             this.isUseFastInputCheckBox.UseVisualStyleBackColor = true;
             // 
+            // stopButton
+            // 
+            this.stopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.stopButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.stopButton.FlatAppearance.BorderSize = 0;
+            this.stopButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.stopButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.stopButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.stopButton.Image = global::Bidding.Properties.Resources.Knob_Stop;
+            this.stopButton.Location = new System.Drawing.Point(644, 552);
+            this.stopButton.Name = "stopButton";
+            this.stopButton.Size = new System.Drawing.Size(32, 32);
+            this.stopButton.TabIndex = 36;
+            this.stopButton.UseVisualStyleBackColor = true;
+            this.stopButton.Click += new System.EventHandler(this.stopButton_Click);
+            // 
+            // playButton
+            // 
+            this.playButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.playButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.playButton.FlatAppearance.BorderSize = 0;
+            this.playButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.playButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.playButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.playButton.Image = global::Bidding.Properties.Resources.Knob_Play_Green;
+            this.playButton.Location = new System.Drawing.Point(597, 552);
+            this.playButton.Name = "playButton";
+            this.playButton.Size = new System.Drawing.Size(32, 32);
+            this.playButton.TabIndex = 35;
+            this.playButton.UseVisualStyleBackColor = true;
+            this.playButton.Click += new System.EventHandler(this.playButton_Click);
+            // 
+            // nextBtn
+            // 
+            this.nextBtn.BackColor = System.Drawing.Color.Transparent;
+            this.nextBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.nextBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.nextBtn.FlatAppearance.BorderSize = 0;
+            this.nextBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.nextBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.nextBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.nextBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.nextBtn.ForeColor = System.Drawing.Color.Transparent;
+            this.nextBtn.Image = global::Bidding.Properties.Resources.Knob_Forward;
+            this.nextBtn.Location = new System.Drawing.Point(929, 367);
+            this.nextBtn.Name = "nextBtn";
+            this.nextBtn.Size = new System.Drawing.Size(32, 32);
+            this.nextBtn.TabIndex = 18;
+            this.nextBtn.UseVisualStyleBackColor = false;
+            this.nextBtn.Click += new System.EventHandler(this.nextBtn_Click);
+            // 
+            // prevsBtn
+            // 
+            this.prevsBtn.BackColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.prevsBtn.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.prevsBtn.FlatAppearance.BorderSize = 0;
+            this.prevsBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.prevsBtn.Font = new System.Drawing.Font("Microsoft JhengHei", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.prevsBtn.ForeColor = System.Drawing.Color.Transparent;
+            this.prevsBtn.Image = global::Bidding.Properties.Resources.Knob_Left;
+            this.prevsBtn.Location = new System.Drawing.Point(491, 367);
+            this.prevsBtn.Name = "prevsBtn";
+            this.prevsBtn.Size = new System.Drawing.Size(32, 32);
+            this.prevsBtn.TabIndex = 17;
+            this.prevsBtn.UseVisualStyleBackColor = false;
+            this.prevsBtn.Click += new System.EventHandler(this.prevsBtn_Click);
+            // 
+            // auctionPictureBox
+            // 
+            this.auctionPictureBox.Location = new System.Drawing.Point(543, 216);
+            this.auctionPictureBox.Name = "auctionPictureBox";
+            this.auctionPictureBox.Size = new System.Drawing.Size(368, 329);
+            this.auctionPictureBox.TabIndex = 13;
+            this.auctionPictureBox.TabStop = false;
+            // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Image = global::Bidding.Properties.Resources.LOGO_S;
+            this.logoPictureBox.Location = new System.Drawing.Point(861, 24);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(100, 101);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.logoPictureBox.TabIndex = 10;
+            this.logoPictureBox.TabStop = false;
+            // 
+            // displayResolutionComboBox
+            // 
+            this.displayResolutionComboBox.FormattingEnabled = true;
+            this.displayResolutionComboBox.Items.AddRange(new object[] {
+            "四比三",
+            "十六比九"});
+            this.displayResolutionComboBox.Location = new System.Drawing.Point(605, 183);
+            this.displayResolutionComboBox.Name = "displayResolutionComboBox";
+            this.displayResolutionComboBox.Size = new System.Drawing.Size(75, 20);
+            this.displayResolutionComboBox.TabIndex = 49;
+            this.displayResolutionComboBox.SelectedIndexChanged += new System.EventHandler(this.displayResolutionComboBox_SelectedIndexChanged);
+            // 
+            // displayResolutionLabel
+            // 
+            this.displayResolutionLabel.AutoSize = true;
+            this.displayResolutionLabel.ForeColor = System.Drawing.Color.White;
+            this.displayResolutionLabel.Location = new System.Drawing.Point(541, 186);
+            this.displayResolutionLabel.Name = "displayResolutionLabel";
+            this.displayResolutionLabel.Size = new System.Drawing.Size(65, 12);
+            this.displayResolutionLabel.TabIndex = 48;
+            this.displayResolutionLabel.Text = "投影比例：";
+            // 
             // ControlForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1016, 730);
+            this.Controls.Add(this.displayResolutionComboBox);
+            this.Controls.Add(this.displayResolutionLabel);
             this.Controls.Add(this.isUseFastInputCheckBox);
             this.Controls.Add(this.displayModeComboBox);
             this.Controls.Add(this.displayModeLabel);
@@ -682,6 +708,8 @@
         private System.Windows.Forms.Label displayModeLabel;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox isUseFastInputCheckBox;
+        private System.Windows.Forms.ComboBox displayResolutionComboBox;
+        private System.Windows.Forms.Label displayResolutionLabel;
     }
 }
 

@@ -73,49 +73,61 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DisplayForm_DS_4_3.cs">
+    <Compile Include="DisplayForm\DisplayForm_M_16_9.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm_DS_4_3.Designer.cs">
+    <Compile Include="DisplayForm\DisplayForm_M_16_9.Designer.cs">
+      <DependentUpon>DisplayForm_M_16_9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayForm\DisplayForm_M_4_3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DisplayForm\DisplayForm_M_4_3.Designer.cs">
+      <DependentUpon>DisplayForm_M_4_3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayForm\DisplayForm_DS_4_3.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DisplayForm\DisplayForm_DS_4_3.Designer.cs">
       <DependentUpon>DisplayForm_DS_4_3.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayForm_G_4_3.cs">
+    <Compile Include="DisplayForm\DisplayForm_G_4_3.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm_G_4_3.Designer.cs">
+    <Compile Include="DisplayForm\DisplayForm_G_4_3.Designer.cs">
       <DependentUpon>DisplayForm_G_4_3.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayForm_G_16_9.cs">
+    <Compile Include="DisplayForm\DisplayForm_G_16_9.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm_G_16_9.Designer.cs">
+    <Compile Include="DisplayForm\DisplayForm_G_16_9.Designer.cs">
       <DependentUpon>DisplayForm_G_16_9.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayForm_N_16_9.cs">
+    <Compile Include="DisplayForm\DisplayForm_N_16_9.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm_N_16_9.Designer.cs">
+    <Compile Include="DisplayForm\DisplayForm_N_16_9.Designer.cs">
       <DependentUpon>DisplayForm_N_16_9.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayFormBase.cs">
+    <Compile Include="DisplayForm\DisplayFormBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm_DS_Movie.cs">
+    <Compile Include="DisplayForm\DisplayForm_DS_Movie.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm_DS_Movie.Designer.cs">
+    <Compile Include="DisplayForm\DisplayForm_DS_Movie.Designer.cs">
       <DependentUpon>DisplayForm_DS_Movie.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayForm_DS_TextOnly.cs">
+    <Compile Include="DisplayForm\DisplayForm_DS_TextOnly.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm_DS_TextOnly.Designer.cs">
+    <Compile Include="DisplayForm\DisplayForm_DS_TextOnly.Designer.cs">
       <DependentUpon>DisplayForm_DS_TextOnly.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayForm.cs">
+    <Compile Include="DisplayForm\DisplayForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DisplayForm.Designer.cs">
+    <Compile Include="DisplayForm\DisplayForm.Designer.cs">
       <DependentUpon>DisplayForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ControlForm.cs">
@@ -138,25 +150,31 @@
     <Compile Include="SetPriceLevelForm.Designer.cs">
       <DependentUpon>SetPriceLevelForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="DisplayForm_DS_4_3.resx">
+    <EmbeddedResource Include="DisplayForm\DisplayForm_M_16_9.resx">
+      <DependentUpon>DisplayForm_M_16_9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayForm\DisplayForm_M_4_3.resx">
+      <DependentUpon>DisplayForm_M_4_3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DisplayForm\DisplayForm_DS_4_3.resx">
       <DependentUpon>DisplayForm_DS_4_3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DisplayForm_G_4_3.resx">
+    <EmbeddedResource Include="DisplayForm\DisplayForm_G_4_3.resx">
       <DependentUpon>DisplayForm_G_4_3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DisplayForm_G_16_9.resx">
+    <EmbeddedResource Include="DisplayForm\DisplayForm_G_16_9.resx">
       <DependentUpon>DisplayForm_G_16_9.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DisplayForm_N_16_9.resx">
+    <EmbeddedResource Include="DisplayForm\DisplayForm_N_16_9.resx">
       <DependentUpon>DisplayForm_N_16_9.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DisplayForm_DS_Movie.resx">
+    <EmbeddedResource Include="DisplayForm\DisplayForm_DS_Movie.resx">
       <DependentUpon>DisplayForm_DS_Movie.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DisplayForm_DS_TextOnly.resx">
+    <EmbeddedResource Include="DisplayForm\DisplayForm_DS_TextOnly.resx">
       <DependentUpon>DisplayForm_DS_TextOnly.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="DisplayForm.resx">
+    <EmbeddedResource Include="DisplayForm\DisplayForm.resx">
       <DependentUpon>DisplayForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ControlForm.resx">
